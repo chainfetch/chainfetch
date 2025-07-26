@@ -1,0 +1,65 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: bearer-auth
+  namespace: chainfetch
+  labels:
+    app: bearer-auth
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: bearer-auth
+  strategy:
+    type: RollingUpdate
+    rollingUpdate:
+      maxSurge: 25%
+      maxUnavailable: 25%
+  template:
+    metadata:
+      labels:
+        app: bearer-auth
+    spec:
+      imagePullSecrets:
+        - name: ghcr-cred
+      containers:
+        - name: bearer-auth
+          image: ghcr.io/dm0lz/bearer-auth:latest
+          imagePullPolicy: Always
+          ports:
+            - containerPort: 8000
+          env:
+            - name: PORT
+              value: "8000"
+            - name: BEARER_TOKEN
+              valueFrom:
+                secretKeyRef:
+                  name: chainfetch-secrets
+                  key: auth_bearer_token
+          resources:
+            requests:
+              cpu: "100m"
+              memory: "128Mi"
+            limits:
+              cpu: "200m"
+              memory: "256Mi"
+          securityContext:
+            capabilities:
+              drop:
+                - NET_RAW
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: bearer-auth
+  namespace: chainfetch
+  labels:
+    app: bearer-auth
+spec:
+  type: ClusterIP
+  selector:
+    app: bearer-auth
+  ports:
+    - port: 80
+      targetPort: 8000
+      protocol: TCP 

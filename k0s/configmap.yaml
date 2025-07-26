@@ -1,0 +1,9 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: chainfetch-config
+  namespace: chainfetch
+
+data:
+  RAILS_MAX_THREADS: "5"
+  DB_HOST: "postgres"

@@ -1,0 +1,13 @@
+namespace: chainfetch
+
+resources:
+  - namespace.yaml
+  - configmap.yaml
+  - secret.yaml
+  - postgres-longhorn-pvc.yaml
+  - deployment-db.yaml
+  - deployment-web.yaml
+  - deployment-job.yaml
+  - deployment-bearer-auth.yaml
+  - ingress.yaml
+  - cluster-issuer.yaml
