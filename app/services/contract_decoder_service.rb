@@ -301,14 +301,14 @@ class ContractDecoderService
   }.freeze
 
   def decode_transaction(tx)
-    return ['transfer', 'EOA Transfer'] if tx['input'] == '0x' && tx['value'].to_i(16) > 0
+    return ['transfer', 'EOA Transfer'] if tx['input'] == '0x' && (tx['value'] || '0x0').to_i(16) > 0
 
     return nil unless tx['input'] && tx['input'].length >= 10
     
     to_address = tx['to']&.downcase
     input_data = tx['input']
     function_signature = input_data[0..9]
-    value_eth = (tx['value'].to_i(16) / 1e18).round(6)
+    value_eth = ((tx['value'] || '0x0').to_i(16) / 1e18).round(6)
     
     decoded_info = {
       hash: tx['hash'],
@@ -407,9 +407,25 @@ class ContractDecoderService
       decoded = decode_transaction(tx)
       next unless decoded
       
-      value_eth = decoded[:value_eth]
+      # Handle both array and hash return formats from decode_transaction
+      if decoded.is_a?(Array)
+        # Handle array format: ['transfer', 'EOA Transfer']
+        activity_type, contract_name = decoded
+        value_eth = ((tx['value'] || '0x0').to_i(16) / 1e18).round(6)
+        category = 'Transfer'
+        function_name = 'transfer'
+        hash = tx['hash']
+      else
+        # Handle hash format
+        activity_type = decoded[:activity_type]
+        contract_name = decoded[:contract_name]
+        value_eth = decoded[:value_eth]
+        category = decoded[:category]
+        function_name = decoded[:function_name]
+        hash = decoded[:hash]
+      end
 
-      case decoded[:category]
+      case category
       when 'DeFi'
         activities[:defi_count] += 1
       when 'NFT'
@@ -422,16 +438,16 @@ class ContractDecoderService
       
       activities[:total_eth_volume] += value_eth
       
-      should_include = value_eth > 0.1 || ['DeFi', 'NFT'].include?(decoded[:category]) || !decoded[:contract_name].start_with?('Unknown')
+      should_include = value_eth > 0.1 || ['DeFi', 'NFT'].include?(category) || !(contract_name.to_s.start_with?('Unknown') || contract_name.to_s.start_with?('0x'))
       
       if should_include
         activities[:top_activities] << {
-          type: decoded[:activity_type],
-          contract: decoded[:contract_name],
-          function: decoded[:function_name],
+          type: activity_type,
+          contract: contract_name,
+          function: function_name,
           value: value_eth,
-          category: decoded[:category],
-          hash: decoded[:hash][0..9] + '...'
+          category: category,
+          hash: hash[0..9] + '...'
         }
       end
     end
@@ -440,7 +456,7 @@ class ContractDecoderService
       [
         a[:value] > 0.1 ? 0 : 1,
         ['DeFi', 'NFT'].include?(a[:category]) ? 0 : 1,
-        !a[:contract].start_with?('0x') ? 0 : 1,
+        !a[:contract].to_s.start_with?('0x') ? 0 : 1,
         -a[:value]
       ]
     end.first(10)

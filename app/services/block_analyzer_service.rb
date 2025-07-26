@@ -44,9 +44,10 @@ class BlockAnalyzerService
 
     transactions = result[:transactions]
 
+    # Apply filters
     if filters[:min_value]
       min_wei = (filters[:min_value].to_f * 1e18).to_i
-      transactions = transactions.select { |tx| tx['value'].to_i(16) >= min_wei }
+      transactions = transactions.select { |tx| (tx['value'] || '0x0').to_i(16) >= min_wei }
     end
 
     if filters[:contract_only]
@@ -168,7 +169,9 @@ class BlockAnalyzerService
     base_fee_gwei = (base_fee_wei / 1e9).round(2)
 
     transactions = block_data['transactions'] || []
-    total_eth_value = transactions.sum { |tx| tx['value'].to_i(16) / 1e18.to_f }.round(4)
+    total_eth_value = transactions.sum do |tx|
+      (tx['value'] || '0x0').to_i(16) / 1e18.to_f
+    end
 
     # Fetch previous block for accurate interval
     prev_block_number = block_data['number'].to_i(16) - 1
@@ -200,22 +203,19 @@ class BlockAnalyzerService
   def find_whale_transactions(transactions)
     whale_threshold_wei = (WHALE_THRESHOLD * 1e18).to_i
 
-    whale_txs = transactions.select do |tx|
-      tx['value'].to_i(16) >= whale_threshold_wei || (tx['input'] != '0x' && analyze_transaction(tx)[:value_eth] >= WHALE_THRESHOLD) # Include high-value contracts
-    end
-
-    whale_txs.map do |tx|
-      value_eth = tx['value'].to_i(16) / 1e18.to_f
-      activity_type, contract_name = @decoder.decode_transaction(tx)
+    whale_transactions = transactions.select do |tx|
+      (tx['value'] || '0x0').to_i(16) >= whale_threshold_wei || (tx['input'] != '0x' && analyze_transaction(tx)[:value_eth] >= WHALE_THRESHOLD)
+    end.map do |tx|
+      value_eth = (tx['value'] || '0x0').to_i(16) / 1e18.to_f
+      
       {
         hash: tx['hash'],
         from: tx['from'],
         to: tx['to'],
         value_eth: value_eth.round(6),
-        gas_price_gwei: (tx['gasPrice'] || tx['maxFeePerGas']).to_i(16) / 1e9.to_f.round(2),
-        activity_type: activity_type,
-        contract_name: contract_name,
-        input_data: tx['input']&.length > 2 ? "#{tx['input'][0..10]}..." : nil
+        gas_price_gwei: ((tx['gasPrice'] || tx['maxFeePerGas'] || '0x0').to_i(16) / 1e9.to_f).round(2),
+        function_signature: tx['input'] && tx['input'].length > 10 ? tx['input'][0..9] : nil,
+        input_data: tx['input'] && tx['input'].length > 2 ? "#{tx['input'][0..10]}..." : tx['input']
       }
     end
   end
@@ -224,19 +224,26 @@ class BlockAnalyzerService
     transactions = block_data['transactions'] || []
     base_fee_wei = block_data['baseFeePerGas']&.to_i(16) || 0
     base_fee_gwei = (base_fee_wei / 1e9).round(2)
-
-    gas_prices = transactions.map { |tx| (tx['gasPrice'] || tx['maxFeePerGas']).to_i(16) / 1e9 }.compact
-    priority_fees = transactions.map { |tx| tx['maxPriorityFeePerGas'].to_i(16) / 1e9 }.compact
-
-    total_gas_used = transactions.sum { |tx| tx['gas'].to_i(16) }
-
+    
+    gas_prices = transactions.map do |tx|
+      gas_price = tx['gasPrice'] || tx['maxFeePerGas'] || '0x0'
+      gas_price.to_i(16) / 1e9
+    end.compact
+    
+    priority_fees = transactions.map do |tx|
+      priority_fee = tx['maxPriorityFeePerGas'] || '0x0'
+      priority_fee.to_i(16) / 1e9
+    end.compact
+    
+    total_gas_used = transactions.sum { |tx| (tx['gas'] || '0x0').to_i(16) }
+    
     {
       base_fee_gwei: base_fee_gwei,
       avg_gas_price_gwei: gas_prices.any? ? (gas_prices.sum / gas_prices.length).round(2) : 0,
       median_gas_price_gwei: gas_prices.any? ? gas_prices.sort[gas_prices.length / 2].round(2) : 0,
       max_gas_price_gwei: gas_prices.any? ? gas_prices.max.round(2) : 0,
       avg_priority_fee_gwei: priority_fees.any? ? (priority_fees.sum / priority_fees.length).round(2) : 0,
-      high_fee_transactions: transactions.count { |tx| (tx['maxFeePerGas'] || tx['gasPrice']).to_i(16) / 1e9 > 100 },
+      high_fee_transactions: transactions.count { |tx| ((tx['maxFeePerGas'] || tx['gasPrice'] || '0x0').to_i(16) / 1e9) > 100 },
       total_gas_used: total_gas_used,
       estimated_total_fees_eth: (total_gas_used * base_fee_wei / 1e18.to_f).round(6)
     }
@@ -267,8 +274,11 @@ class BlockAnalyzerService
   end
 
   def calculate_recommended_gas_price(block_data)
-    base_fee_gwei = (block_data['baseFeePerGas'].to_i(16) / 1e9).round(2)
-    priority_fees = block_data['transactions'].map { |tx| tx['maxPriorityFeePerGas'].to_i(16) / 1e9 }.compact
+    base_fee_gwei = ((block_data['baseFeePerGas'] || '0x0').to_i(16) / 1e9).round(2)
+    priority_fees = (block_data['transactions'] || []).map do |tx|
+      priority_fee = tx['maxPriorityFeePerGas'] || '0x0'
+      priority_fee.to_i(16) / 1e9
+    end.compact
     avg_priority_fee_gwei = priority_fees.any? ? (priority_fees.sum / priority_fees.length).round(2) : 1.5
 
     standard = (base_fee_gwei + avg_priority_fee_gwei).round(2)
@@ -276,13 +286,13 @@ class BlockAnalyzerService
       base_fee_gwei: base_fee_gwei,
       recommended_gwei: standard,
       fast_gwei: (standard + 3.0).round(2),
-      slow_gwei: (base_fee_gwei + [avg_priority_fee_gwei - 1, 0.5].max).round(2)
+      instant_gwei: (standard + 6.0).round(2)
     }
   end
 
   def analyze_transaction(tx)
-    value_eth = tx['value'].to_i(16) / 1e18.to_f
-    gas_price_gwei = (tx['gasPrice'] || tx['maxFeePerGas']).to_i(16) / 1e9.to_f.round(2)
+    value_eth = (tx['value'] || '0x0').to_i(16) / 1e18.to_f
+    gas_price_gwei = ((tx['gasPrice'] || tx['maxFeePerGas'] || '0x0').to_i(16) / 1e9.to_f).round(2)
     activity_type, contract_name = @decoder.decode_transaction(tx)
 
     {
@@ -294,7 +304,11 @@ class BlockAnalyzerService
       activity_type: activity_type,
       contract_name: contract_name,
       is_contract_interaction: tx['input'] && tx['input'] != '0x',
-      is_eip1559: tx.key?('maxFeePerGas')
+      is_eip1559: tx.key?('maxFeePerGas'),
+      function_signature: tx['input'] && tx['input'].length > 10 ? tx['input'][0..9] : nil,
+      function_name: activity_type == 'contract_call' ? 'Unknown' : activity_type,
+      category: contract_name ? 'Contract' : 'Transfer',
+      input_data: tx['input'] && tx['input'].length > 2 ? "#{tx['input'][0..10]}..." : tx['input']
     }
   end
 
@@ -335,7 +349,8 @@ class BlockAnalyzerService
       activity_type, contract_name = @decoder.decode_transaction(tx)
 
       if is_defi_transaction?(tx, activity_type, contract_name)
-        value_eth = tx['value'].to_i(16) / 1e18.to_f
+        value_eth = (tx['value'] || '0x0').to_i(16) / 1e18.to_f
+        
         defi_tx = {
           hash: tx['hash'],
           protocol: contract_name || 'Unknown',
@@ -383,7 +398,7 @@ class BlockAnalyzerService
       activity_type, contract_name = @decoder.decode_transaction(tx)
 
       if is_nft_transaction?(tx, activity_type, contract_name)
-        value_eth = tx['value'].to_i(16) / 1e18.to_f
+        value_eth = (tx['value'] || '0x0').to_i(16) / 1e18.to_f
         nft_tx = {
           hash: tx['hash'],
           marketplace: contract_name || 'Direct Transfer',
