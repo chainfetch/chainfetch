@@ -1,12 +1,13 @@
 require 'json'
 require 'net/http'
 require 'uri'
+require 'singleton'
 
 class ContractDecoderService
   include Singleton
 
   def initialize
-    # No longer need caching or RPC endpoint since we only use hardcoded contracts
+    # No caching or RPC endpoint needed since we use hardcoded contracts
   end
 
   # Popular DeFi and NFT contract addresses and their ABIs
@@ -41,6 +42,56 @@ class ContractDecoderService
       }
     },
 
+    # Uniswap V3 Factory
+    '0x1f98431c8ad98523631ae4a59f267346ea31f984' => {
+      name: 'Uniswap V3 Factory',
+      category: 'DeFi',
+      functions: {
+        '0xc6a502d6' => { name: 'createPool', type: 'liquidity' }
+      }
+    },
+
+    # Aave V3 Pool
+    '0x87870bca3f3fd6335c3f4ce8392d69350b4fa4e2' => {
+      name: 'Aave V3 Pool',
+      category: 'DeFi',
+      functions: {
+        '0x617ba037' => { name: 'supply', type: 'deposit' },
+        '0xa415bcad' => { name: 'borrow', type: 'borrow' },
+        '0x573ade81' => { name: 'repay', type: 'repay' },
+        '0x02c205f0' => { name: 'withdraw', type: 'withdraw' }
+      }
+    },
+
+    # MakerDAO DAI Token
+    '0x6b175474e89094c44da98b954eedeac495271d0f' => {
+      name: 'MakerDAO DAI',
+      category: 'DeFi',
+      functions: {
+        '0xa9059cbb' => { name: 'transfer', type: 'transfer' },
+        '0x095ea7b3' => { name: 'approve', type: 'approval' }
+      }
+    },
+
+    # Curve Finance Factory
+    '0xb9fc157394af804a3578134a6585c0dc9cc990d4' => {
+      name: 'Curve Finance Factory',
+      category: 'DeFi',
+      functions: {
+        '0x0fe4abd0' => { name: 'deploy_plain_pool', type: 'liquidity' }
+      }
+    },
+
+    # Yearn Finance Vault
+    '0xe11e3382487dc8022d3e4328dcc5a8fc53a3a5f8' => {
+      name: 'Yearn Finance Vault',
+      category: 'DeFi',
+      functions: {
+        '0xb6b55f25' => { name: 'deposit', type: 'deposit' },
+        '0x2e1a7d4d' => { name: 'withdraw', type: 'withdraw' }
+      }
+    },
+
     # OpenSea Seaport
     '0x00000000006c3852cbef3e08e8df289169ede581' => {
       name: 'OpenSea Seaport',
@@ -52,7 +103,43 @@ class ContractDecoderService
       }
     },
 
-    # USDC Contract (fixed address)
+    # OpenSea Seaport 1.5
+    '0x00000000000000adc04c56bf30ac9d3c0aaf14dc' => {
+      name: 'OpenSea Seaport 1.5',
+      category: 'NFT',
+      functions: {
+        '0x56d5c4d8' => { name: 'fulfillBasicOrder', type: 'nft_trade' }
+      }
+    },
+
+    # Blur Marketplace
+    '0x000000000000ad05ccc4f1004560a89f02fc946e' => {
+      name: 'Blur Marketplace',
+      category: 'NFT',
+      functions: {
+        '0xef7038b0' => { name: 'execute', type: 'nft_trade' }
+      }
+    },
+
+    # Rarible Exchange
+    '0x60f80121c31a0d46b527970bf2ff3d1b5c3220d1' => {
+      name: 'Rarible Exchange',
+      category: 'NFT',
+      functions: {
+        '0x6e9d84a5' => { name: 'matchOrders', type: 'nft_trade' }
+      }
+    },
+
+    # Magic Eden Ethereum
+    '0x68327a91e51f87f833d0d1f2fa446e0d8fd3c5c5' => {
+      name: 'Magic Eden Ethereum',
+      category: 'NFT',
+      functions: {
+        '0x6e9d84a5' => { name: 'matchOrders', type: 'nft_trade' }
+      }
+    },
+
+    # USDC Contract
     '0xa0b86991c6218b36c1d19d4a2e9eb0ce3606eb48' => {
       name: 'USD Coin',
       category: 'Token',
@@ -136,6 +223,15 @@ class ContractDecoderService
       functions: {
         '0xab834bab' => { name: 'atomicMatch', type: 'trade' }
       }
+    },
+
+    # Synthetix Proxy
+    '0xc011a73ee8576fb46f5e1c5751ca3b9fe0af2a6f' => {
+      name: 'Synthetix Proxy',
+      category: 'DeFi',
+      functions: {
+        '0xcee2261c' => { name: 'exchange', type: 'swap' }
+      }
     }
   }.freeze
 
@@ -155,12 +251,63 @@ class ContractDecoderService
     '0xa22cb465' => { name: 'setApprovalForAll', type: 'nft_approval' }
   }.freeze
 
+  # Known event signatures (full keccak hash)
+  EVENT_SIGNATURES = {
+    '0xddf252ad1be2c89b69c2b068fc378daa952ba7f163c4a11628f55a4df523b3ef' => {
+      name: 'Transfer',
+      category: 'Token',
+      description: 'Token transfer (ERC-20/721/1155)'
+    },
+    '0x8c5be1e5ebec7d5bd14f71427d1e84f3dd0314c0f7b2291e5b200ac8c7c3b925' => {
+      name: 'Approval',
+      category: 'Token',
+      description: 'Token approval'
+    },
+    '0xd78ad95fa46c994b6551d0da85fc275fe613ce37657fb8d5e3d130840159d822' => {
+      name: 'Swap',
+      category: 'DeFi',
+      description: 'Uniswap V2 token swap'
+    },
+    '0xc42079f94a6350d7e6235f29174924f928cc2ac818eb64fed8004e115fbcca67' => {
+      name: 'Swap',
+      category: 'DeFi',
+      description: 'Uniswap V3 token swap'
+    },
+    '0x7e1db2a5ca5f333392285e7c4aec4cf0e5bdc675bc4dddf151b12d0c96778d93' => {
+      name: 'Deposit',
+      category: 'DeFi',
+      description: 'Deposit event (common in lending/vaults)'
+    },
+    '0x4c209b5fc8ad50758f13e2e1088ba56a560dff690a1c6fef26394f4c03821c4f' => {
+      name: 'Mint',
+      category: 'Token',
+      description: 'Token mint'
+    },
+    '0x17307eab39ab6107e8899845ad3d59bd9653f200f220920489ca2b5937696c31' => {
+      name: 'ApprovalForAll',
+      category: 'NFT',
+      description: 'Set approval for all (ERC-721/1155)'
+    },
+    '0xe1fffcc4923d04b559f4d29a8bfc6cda04eb5b0d3c460751c2402c5c5cc9109c' => {
+      name: 'Deposit',
+      category: 'DeFi',
+      description: 'WETH deposit'
+    },
+    '0x7fcf532c15f0a6db0bd6d0e038bea71d30d808c7d98cb3bf7268a95bf5081b65' => {
+      name: 'Withdrawal',
+      category: 'DeFi',
+      description: 'WETH withdrawal'
+    }
+  }.freeze
+
   def decode_transaction(tx)
+    return ['transfer', 'EOA Transfer'] if tx['input'] == '0x' && tx['value'].to_i(16) > 0
+
     return nil unless tx['input'] && tx['input'].length >= 10
     
     to_address = tx['to']&.downcase
     input_data = tx['input']
-    function_signature = input_data[0..9] # First 4 bytes (0x + 8 chars)
+    function_signature = input_data[0..9]
     value_eth = (tx['value'].to_i(16) / 1e18).round(6)
     
     decoded_info = {
@@ -174,7 +321,6 @@ class ContractDecoderService
       category: 'Other'
     }
 
-    # Check known contracts first
     if contract_info = CONTRACTS[to_address]
       if function_info = contract_info[:functions][function_signature]
         decoded_info.merge!(
@@ -185,7 +331,6 @@ class ContractDecoderService
         )
         return decoded_info
       else
-        # Even if function is unknown, use the contract name
         decoded_info.merge!(
           contract_name: contract_info[:name],
           function_name: 'unknown',
@@ -196,9 +341,7 @@ class ContractDecoderService
       end
     end
 
-    # Check ERC-20 functions
-    if ERC20_FUNCTIONS.key?(function_signature)
-      function_info = ERC20_FUNCTIONS[function_signature]
+    if function_info = ERC20_FUNCTIONS[function_signature]
       decoded_info.merge!(
         contract_name: 'ERC-20 Token',
         function_name: function_info[:name],
@@ -208,9 +351,7 @@ class ContractDecoderService
       return decoded_info
     end
 
-    # Check ERC-721 functions
-    if ERC721_FUNCTIONS.key?(function_signature)
-      function_info = ERC721_FUNCTIONS[function_signature]
+    if function_info = ERC721_FUNCTIONS[function_signature]
       decoded_info.merge!(
         contract_name: 'ERC-721 NFT',
         function_name: function_info[:name],
@@ -220,13 +361,36 @@ class ContractDecoderService
       return decoded_info
     end
 
-    # For any other contract call, use shortened address
-    short_address = "#{to_address[0..5]}...#{to_address[-4..-1]}"
+    short_address = to_address ? "#{to_address[0..5]}...#{to_address[-4..-1]}" : 'Contract Creation'
     decoded_info[:contract_name] = short_address
     decoded_info[:category] = 'Contract'
-
-    # Default for any contract interaction
     decoded_info
+  end
+
+  def decode_event_signature(signature, log, tx)
+    if event_info = EVENT_SIGNATURES[signature]
+      {
+        signature: signature,
+        name: event_info[:name],
+        category: event_info[:category],
+        description: event_info[:description],
+        contract_address: log['address'],
+        transaction_hash: tx['hash'],
+        topics: log['topics'],
+        data: log['data']
+      }
+    else
+      {
+        signature: signature,
+        name: 'unknown',
+        category: 'Unknown',
+        description: 'Unknown event',
+        contract_address: log['address'],
+        transaction_hash: tx['hash'],
+        topics: log['topics'],
+        data: log['data']
+      }
+    end
   end
 
   def categorize_block_activities(transactions)
@@ -240,12 +404,11 @@ class ContractDecoderService
     }
 
     transactions.each do |tx|
-      next unless tx['to'] && tx['input'] && tx['input'] != '0x'
-      
       decoded = decode_transaction(tx)
       next unless decoded
       
-      # Count by category
+      value_eth = decoded[:value_eth]
+
       case decoded[:category]
       when 'DeFi'
         activities[:defi_count] += 1
@@ -257,48 +420,30 @@ class ContractDecoderService
         activities[:other_count] += 1
       end
       
-      # Track ETH volume
-      activities[:total_eth_volume] += decoded[:value_eth]
+      activities[:total_eth_volume] += value_eth
       
-      # Collect notable activities - only include interesting ones
-      should_include = false
-      
-      # Include high-value transactions
-      should_include = true if decoded[:value_eth] > 0.1
-      
-      # Include DeFi and NFT activities from known contracts
-      should_include = true if ['DeFi', 'NFT'].include?(decoded[:category])
-      
-      # Include known contracts (not generic ERC-20/721)
-      should_include = true if decoded[:contract_name] && 
-                              !['ERC-20 Token', 'ERC-721 NFT'].include?(decoded[:contract_name]) &&
-                              !decoded[:contract_name].start_with?('0x')
+      should_include = value_eth > 0.1 || ['DeFi', 'NFT'].include?(decoded[:category]) || !decoded[:contract_name].start_with?('Unknown')
       
       if should_include
-        activity_entry = {
+        activities[:top_activities] << {
           type: decoded[:activity_type],
           contract: decoded[:contract_name],
           function: decoded[:function_name],
-          value: decoded[:value_eth],
+          value: value_eth,
           category: decoded[:category],
           hash: decoded[:hash][0..9] + '...'
         }
-        
-        activities[:top_activities] << activity_entry
       end
     end
 
-    # Sort top activities by priority and limit to 10
-    activities[:top_activities] = activities[:top_activities]
-      .sort_by do |a| 
-        [
-          a[:value] > 0.1 ? 0 : 1,  # High value transactions first
-          ['DeFi', 'NFT'].include?(a[:category]) ? 0 : 1,  # DeFi/NFT second
-          !a[:contract].start_with?('0x') ? 0 : 1,  # Named contracts third
-          -a[:value]  # Then by value descending
-        ]
-      end
-      .first(10)
+    activities[:top_activities] = activities[:top_activities].sort_by do |a|
+      [
+        a[:value] > 0.1 ? 0 : 1,
+        ['DeFi', 'NFT'].include?(a[:category]) ? 0 : 1,
+        !a[:contract].start_with?('0x') ? 0 : 1,
+        -a[:value]
+      ]
+    end.first(10)
 
     activities
   end
@@ -312,4 +457,4 @@ class ContractDecoderService
       }
     end
   end
-end 
+end

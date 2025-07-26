@@ -46,7 +46,6 @@ Rails.application.routes.draw do
     
     # Convenience aliases for common methods (optional)
     post 'eth/rpc', to: 'ethereum#rpc_proxy'
-    get 'eth/methods', to: 'ethereum#supported_methods'
     get 'eth/stats', to: 'ethereum#api_stats'
   end
   
