@@ -25,8 +25,8 @@ class EthereumStreamService
     @task = Async do |task|
       begin
         # Force HTTP/1.1 for WebSocket compatibility (discovered via debugging)
-        endpoint = Async::HTTP::Endpoint.parse('wss://ethereum-rpc.publicnode.com', 
-          alpn_protocols: ['http/1.1'])
+        endpoint = Async::HTTP::Endpoint.parse('wss://ethereum-ws.chainfetch.app', alpn_protocols: ['http/1.1'])
+        # endpoint = Async::HTTP::Endpoint.parse('wss://ethereum-rpc.publicnode.com', alpn_protocols: ['http/1.1'])
         
         # Connect using the working configuration: basic connection, no special protocols
         Async::WebSocket::Client.connect(endpoint) do |ws|
@@ -136,7 +136,7 @@ class EthereumStreamService
     end
 
     # Handle block details response (same as Node.js block_ ID check)
-    if data['id']&.start_with?('block_') && data['result']&.key?('transactions')
+    if data['id']&.to_s&.start_with?('block_') && data['result']&.key?('transactions')
       handle_block_details(data['result'])
     end
 

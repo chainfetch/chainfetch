@@ -2,7 +2,7 @@
 # ChainFetch Ethereum Intelligence API provides comprehensive blockchain analysis tools
 # including block analysis, DeFi/NFT tracking, smart contract intelligence, and RPC proxy services.
 #
-class Api::EthereumController < ActionController::API
+class Api::V1::EthereumController < Api::V1::BaseController
   require 'net/http'
   require 'json'
   
@@ -259,7 +259,7 @@ class Api::EthereumController < ActionController::API
       'POST /api/ethereum/address/:address/behavior' => 'Address behavior analysis and classification'
     }
 
-    render json: {
+      render json: {
       rpc_methods: methods,
       total_rpc_methods: methods.values.flatten.length,
       block_analysis_endpoints: block_analysis,

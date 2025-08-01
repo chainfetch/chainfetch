@@ -5,7 +5,7 @@ class AddressAnalyzerService
   ETHEREUM_URL = 'https://ethereum.chainfetch.app'
   BEARER_TOKEN = 'u82736GTDV28DME08HD87H3D3JHGD33ed'
   ETHERSCAN_URL = 'https://api.etherscan.io/api'
-  ETHERSCAN_API_KEY = 'YOUR_ETHERSCAN_API_KEY' # Replace with actual key
+  ETHERSCAN_API_KEY = Rails.application.credentials.etherscan_api_key
 
   # Classification thresholds
   WHALE_THRESHOLD = 100 # ETH
