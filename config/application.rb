@@ -35,7 +35,7 @@ module Chainfetch
           
           Rails.logger.info "🚀 Auto-starting Ethereum stream service..."
           begin
-            EthereumStreamService.instance.start
+            # EthereumStreamService.instance.start
             Rails.logger.info "✅ Ethereum stream service started successfully"
           rescue => e
             Rails.logger.error "❌ Failed to auto-start Ethereum stream service: #{e.message}"

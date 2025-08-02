@@ -32,26 +32,33 @@ Rails.application.routes.draw do
       post 'ethereum/rpc', to: 'ethereum#rpc_proxy'
       
       # API information and management endpoints
-      get 'ethereum/methods', to: 'ethereum#supported_methods'
-      get 'ethereum/stats', to: 'ethereum#api_stats'
+      # get 'ethereum/methods', to: 'ethereum#supported_methods'
+      # get 'ethereum/stats', to: 'ethereum#api_stats'
       
-      # Block analysis endpoints
-      get 'ethereum/block/:number/summary', to: 'ethereum#block_summary'
-      get 'ethereum/block/:number/transactions', to: 'ethereum#block_transactions'
-      get 'ethereum/block/:number/whale', to: 'ethereum#block_whale'
-      get 'ethereum/block/:number/fees', to: 'ethereum#block_fees'
-      get 'ethereum/block/:number/health', to: 'ethereum#block_health'
+      # # Block analysis endpoints
+      # get 'ethereum/block/:number/summary', to: 'ethereum#block_summary'
+      # get 'ethereum/block/:number/transactions', to: 'ethereum#block_transactions'
+      # get 'ethereum/block/:number/whale', to: 'ethereum#block_whale'
+      # get 'ethereum/block/:number/fees', to: 'ethereum#block_fees'
+      # get 'ethereum/block/:number/health', to: 'ethereum#block_health'
       
-      # Phase 2: Smart Contract Intelligence
-      get 'ethereum/block/:number/defi', to: 'ethereum#block_defi'
-      get 'ethereum/block/:number/nft', to: 'ethereum#block_nft'
-      get 'ethereum/block/:number/events', to: 'ethereum#block_events'
-      post 'ethereum/address/:address/behavior', to: 'ethereum#address_behavior'
+      # # Phase 2: Smart Contract Intelligence
+      # get 'ethereum/block/:number/defi', to: 'ethereum#block_defi'
+      # get 'ethereum/block/:number/nft', to: 'ethereum#block_nft'
+      # get 'ethereum/block/:number/events', to: 'ethereum#block_events'
+      # post 'ethereum/address/:address/behavior', to: 'ethereum#address_behavior'
       
-      # Convenience aliases for common methods (optional)
-      post 'eth/rpc', to: 'ethereum#rpc_proxy'
-      get 'eth/stats', to: 'ethereum#api_stats'
-      get 'chains', to: 'supported_chains#index'
+      # # Convenience aliases for common methods (optional)
+      # post 'eth/rpc', to: 'ethereum#rpc_proxy'
+      # get 'eth/stats', to: 'ethereum#api_stats'
+      # get 'chains', to: 'supported_chains#index'
+
+      get 'ethereum/addresses/:address', to: 'ethereum/addresses#show'
+      get 'ethereum/transactions/:transaction', to: 'ethereum/transactions#show'
+      get 'ethereum/blocks/:block', to: 'ethereum/blocks#show'
+      get 'ethereum/tokens/:token', to: 'ethereum/tokens#show'
+      get 'ethereum/token-instances/:token/:instance_id', to: 'ethereum/token_instances#show'
+      get 'ethereum/smart-contracts/:address', to: 'ethereum/smart_contracts#show'
     end
   end
   
