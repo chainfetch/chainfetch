@@ -203,6 +203,8 @@ GEM
     mini_mime (1.1.5)
     minitest (5.25.5)
     msgpack (1.8.0)
+    neighbor (0.6.0)
+      activerecord (>= 7.1)
     net-imap (0.5.9)
       date
       net-protocol
@@ -456,6 +458,7 @@ DEPENDENCIES
   jbuilder
   jsbundling-rails
   kamal
+  neighbor
   oas_rails
   pg (~> 1.1)
   propshaft

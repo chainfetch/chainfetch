@@ -1,2 +1,9 @@
-# This file is intentionally left empty.
-# The tests for AddressService create their own records from scratch.
+# Read about fixtures at https://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
+
+one:
+  summary: MyText
+  summary_embedding: 
+
+two:
+  summary: MyText
+  summary_embedding: 

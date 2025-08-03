@@ -75,3 +75,4 @@ gem 'async-websocket'
 gem 'async-http'
 
 gem "oas_rails"
+gem "neighbor"
