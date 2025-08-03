@@ -18,7 +18,7 @@ ActiveRecord::Schema[8.0].define(version: 2025_08_02_232830) do
   create_table "addresses", force: :cascade do |t|
     t.string "address_hash", null: false
     t.text "summary"
-    t.vector "summary_embedding", limit: 3072
+    t.vector "summary_embedding", limit: 4096
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.index ["address_hash"], name: "index_addresses_on_address_hash", unique: true

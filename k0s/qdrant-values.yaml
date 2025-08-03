@@ -1,0 +1,64 @@
+# Qdrant Helm Chart Values - Unified Cluster using both disks
+# This configuration creates a 2-node Qdrant cluster that will
+# automatically distribute across both available disks
+
+# Enable clustering for unified database
+replicaCount: 2
+
+# Cluster configuration
+config:
+  cluster:
+    enabled: true
+  storage:
+    optimizers:
+      deleted_threshold: 0.2
+      vacuum_min_vector_number: 1000
+      default_segment_number: 2
+      max_segment_size_kb: null
+      memmap_threshold_kb: null
+      indexing_threshold_kb: 20000
+      flush_interval_sec: 5
+      max_optimization_threads: 1
+
+# Resource configuration
+resources:
+  limits:
+    cpu: "2"
+    memory: 4Gi
+  requests:
+    cpu: "1"
+    memory: 4Gi
+
+# Storage configuration - Longhorn will automatically distribute across disks
+persistence:
+  accessModes: ["ReadWriteOnce"]
+  size: 350Gi
+  storageClassName: "longhorn-qdrant-distributed"
+
+# Distribution across nodes/disks
+affinity:
+  podAntiAffinity:
+    preferredDuringSchedulingIgnoredDuringExecution:
+    - weight: 100
+      podAffinityTerm:
+        labelSelector:
+          matchExpressions:
+          - key: app.kubernetes.io/name
+            operator: In
+            values:
+            - qdrant
+        topologyKey: kubernetes.io/hostname
+
+# Ensure proper startup order
+livenessProbe:
+  enabled: true
+  initialDelaySeconds: 60
+
+readinessProbe:
+  enabled: true
+  initialDelaySeconds: 30
+
+# Pod disruption budget for high availability
+podDisruptionBudget:
+  enabled: true
+  maxUnavailable: 1 
