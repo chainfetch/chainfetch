@@ -214,7 +214,7 @@ These manifests spin up the full **FetchSERP stack** (Rails app + workers + auxi
    ssh root@91.99.173.214
 
    # Build the image for linux/amd64 and push it to GHCR
-   docker build --platform=linux/amd64 -t ghcr.io/fetchserp/fetchserp:latest --push .
+   docker build --platform=linux/amd64 -t ghcr.io/dm0lz/chainfetch:latest --push .
 
    # Roll out the new image to the running workloads
    k0s kubectl rollout restart deployment fetchserp-web  -n fetchserp

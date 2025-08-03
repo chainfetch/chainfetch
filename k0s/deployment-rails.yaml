@@ -98,7 +98,7 @@ spec:
         - name: ghcr-cred
       containers:
         - name: jobs
-          image: ghcr.io/chainfetch/chainfetch:latest
+          image: ghcr.io/dm0lz/chainfetch:latest
           imagePullPolicy: Always
           command: ["./bin/jobs"]
           envFrom:
@@ -141,7 +141,7 @@ spec:
         - name: ghcr-cred
       containers:
         - name: web
-          image: ghcr.io/chainfetch/chainfetch:latest
+          image: ghcr.io/dm0lz/chainfetch:latest
           imagePullPolicy: Always
           ports:
             - containerPort: 3000
