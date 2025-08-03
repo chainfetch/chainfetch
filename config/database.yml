@@ -83,7 +83,7 @@ production:
   primary: &primary_production
     <<: *default
     database: chainfetch_production
-    username: chainfetch
+    username: chainfetch-db-instance
     password: <%= ENV["POSTGRES_PASSWORD"] %>
   cache:
     <<: *primary_production
