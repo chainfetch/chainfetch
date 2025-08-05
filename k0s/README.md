@@ -217,8 +217,8 @@ These manifests spin up the full **FetchSERP stack** (Rails app + workers + auxi
    docker build --platform=linux/amd64 -t ghcr.io/dm0lz/chainfetch:latest --push .
 
    # Roll out the new image to the running workloads
-   k0s kubectl rollout restart deployment fetchserp-web  -n fetchserp
-   k0s kubectl rollout restart deployment fetchserp-jobs -n fetchserp
+   k0s kubectl rollout restart deployment chainfetch-web  -n fetchserp
+   k0s kubectl rollout restart deployment chainfetch-jobs -n fetchserp
 
    # delete pods
    k0s kubectl delete pods -n chainfetch -l app=chainfetch-web

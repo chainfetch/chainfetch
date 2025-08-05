@@ -3,7 +3,7 @@ require 'uri'
 require 'json'
 
 class Ethereum::AddressDataService < Ethereum::BaseService
-  BASE_URL = Rails.env.production? ? "https://www.chainfetch.com/api/v1" : "http://localhost:3000/api/v1"
+  BASE_URL = Rails.env.production? ? "https://www.chainfetch.app/api/v1" : "http://localhost:3000/api/v1"
 
   def initialize(address_hash)
     @address_hash = address_hash.downcase
