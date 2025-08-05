@@ -24,24 +24,5 @@ module Chainfetch
     # config.time_zone = "Central Time (US & Canada)"
     # config.eager_load_paths << Rails.root.join("extras")
     
-    # Auto-start the Ethereum stream service when the app initializes
-    config.after_initialize do
-      # Only start in production/development, not during asset compilation or rake tasks
-      if defined?(Rails::Server) || Rails.env.development?
-        # Start the service asynchronously to avoid blocking server startup
-        Thread.new do
-          # Give Rails a moment to fully boot
-          sleep(2)
-          
-          Rails.logger.info "🚀 Auto-starting Ethereum stream service..."
-          begin
-            # EthereumStreamService.instance.start
-            Rails.logger.info "✅ Ethereum stream service started successfully"
-          rescue => e
-            Rails.logger.error "❌ Failed to auto-start Ethereum stream service: #{e.message}"
-          end
-        end
-      end
-    end
   end
 end
