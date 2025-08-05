@@ -190,3 +190,40 @@ spec:
       targetPort: 3000
   selector:
     app: chainfetch-web 
+---
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: chainfetch-web-ingress
+  namespace: chainfetch
+  annotations:
+    cert-manager.io/cluster-issuer: letsencrypt-prod
+    nginx.ingress.kubernetes.io/ssl-redirect: "true"
+spec:
+  ingressClassName: nginx
+  tls:
+    - hosts:
+        - chainfetch.app
+        - www.chainfetch.app
+      secretName: chainfetch-web-tls
+  rules:
+    - host: chainfetch.app
+      http:
+        paths:
+          - path: /
+            pathType: Prefix
+            backend:
+              service:
+                name: chainfetch-web
+                port:
+                  number: 80
+    - host: www.chainfetch.app
+      http:
+        paths:
+          - path: /
+            pathType: Prefix
+            backend:
+              service:
+                name: chainfetch-web
+                port:
+                  number: 80 

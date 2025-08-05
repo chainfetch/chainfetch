@@ -62,7 +62,8 @@ class Address < ApplicationRecord
   end
 
   def summary
-    Ethereum::AddressSummaryService.new(self.data).call
+    address_data = Ethereum::AddressDataService.new(self.address_hash).call
+    Ethereum::AddressSummaryService.new(address_data).call
   end
 
   def embedding
