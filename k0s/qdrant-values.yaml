@@ -29,11 +29,11 @@ resources:
     cpu: "1"
     memory: 4Gi
 
-# Storage configuration - Longhorn will automatically distribute across disks
+# Storage configuration - Use healthy disk only
 persistence:
   accessModes: ["ReadWriteOnce"]
-  size: 350Gi
-  storageClassName: "longhorn-qdrant-distributed"
+  size: 150Gi
+  storageClassName: "longhorn"
 
 # Distribution across nodes/disks
 affinity:

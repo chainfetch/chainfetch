@@ -2,7 +2,7 @@
 # Two-node cluster with automatic disk distribution:
 # - Node 0: Automatically assigned to available disk
 # - Node 1: Automatically assigned to available disk  
-# - Total: ~750Gi unified cluster across both disks
+# - Total: ~300Gi unified cluster across both disks (2x150Gi)
 #
 # Deployment: kubectl apply -f qdrant-complete.yaml
 # Access: http://qdrant-headless.qdrant.svc.cluster.local:6333
@@ -126,7 +126,7 @@ spec:
       name: qdrant-storage
     spec:
       accessModes: ["ReadWriteOnce"]
-      storageClassName: "longhorn-qdrant-distributed"
+      storageClassName: "longhorn"
       resources:
         requests:
-          storage: 350Gi 
+          storage: 150Gi 

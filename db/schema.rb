@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.0].define(version: 2025_08_02_232830) do
+ActiveRecord::Schema[8.0].define(version: 2025_08_05_122226) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_catalog.plpgsql"
   enable_extension "vector"
@@ -19,6 +19,8 @@ ActiveRecord::Schema[8.0].define(version: 2025_08_02_232830) do
     t.string "address_hash", null: false
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.jsonb "data"
     t.index ["address_hash"], name: "index_addresses_on_address_hash", unique: true
+    t.index ["data"], name: "index_addresses_on_data", using: :gin
   end
 end

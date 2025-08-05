@@ -1,44 +1,19 @@
-require 'net/http'
-require 'uri'
-require 'json'
 require 'bigdecimal'
 require 'time'
 require 'set'
 
-# This service fetches a complete address profile from an internal API and
-# immediately generates a descriptive text document suitable for creating an embedding.
-#
-# IT DOES NOT SAVE ANY DATA TO THE DATABASE.
-#
-# It acts as a stateless transformer: JSON API response -> Descriptive Text.
-# This is useful for on-the-fly embedding generation, such as for natural language queries,
-# without needing to persist the address data first.
-#
-# Usage:
-#   text_document = Ethereum::AddressTextGeneratorService.call("0x...")
-#
-class Ethereum::AddressTextGeneratorService < Ethereum::BaseService
-  BASE_URL = "http://localhost:3000/api/v1".freeze
-  attr_reader :address_hash
+class Ethereum::AddressSummaryService < Ethereum::BaseService
+  attr_reader :address_data
 
-  def initialize(address_hash)
-    @address_hash = address_hash.downcase
-    raise "Invalid Ethereum address format" unless @address_hash.match?(/\A0x[a-f0-9]{40}\z/)
+  def initialize(address_data)
+    @address_data = address_data || {}
   end
 
-  # The main entry point.
-  #
-  # @param address_hash [String] The Ethereum address to process.
-  # @return [String] The generated descriptive text document.
-  def self.call(address_hash)
-    new(address_hash).generate_text_from_api
-  end
-
-  def generate_text_from_api
-    address_data = fetch_full_address_data
-    generate_text_representation(address_data)
+  def call
+    generate_text_representation(@address_data)
   rescue => e
-    puts "Error generating text for address #{@address_hash}: #{e.message}"
+    address_hash = @address_data.dig('info', 'hash') || 'unknown'
+    puts "Error generating text for address #{address_hash}: #{e.message}"
     puts e.backtrace
     nil
   end
@@ -47,7 +22,6 @@ class Ethereum::AddressTextGeneratorService < Ethereum::BaseService
 
   # This is our main feature engineering function, using your precise logic.
   def generate_text_representation(data)
-    # Ensure data is a hash to prevent crashes on nil, and provide safe defaults.
     data ||= {}
     parts = []
 
@@ -168,32 +142,5 @@ class Ethereum::AddressTextGeneratorService < Ethereum::BaseService
   def to_eth(wei_string, decimals = 18)
     return BigDecimal("0") if wei_string.nil?
     BigDecimal(wei_string) / (10**decimals)
-  end
-
-  def make_request(uri_string)
-    uri = URI.parse(uri_string)
-    http = Net::HTTP.new(uri.host, uri.port)
-    http.use_ssl = (uri.scheme == 'https')
-    
-    request = Net::HTTP::Get.new(uri.request_uri)
-    # Add authorization headers if needed
-    
-    response = http.request(request)
-    
-    if response.is_a?(Net::HTTPSuccess)
-      JSON.parse(response.body)
-    else
-      Rails.logger.error "API request failed for #{uri_string}: #{response.code} #{response.message}"
-      {}
-    end
-  rescue => e
-    Rails.logger.error "Error during API request to #{uri_string}: #{e.class.name} - #{e.message}"
-    {} # Return empty hash on failure
-  end
-
-  # Fetches all necessary data points from the single, correct API endpoint.
-  def fetch_full_address_data
-    uri_string = "#{BASE_URL}/ethereum/addresses/#{@address_hash}"
-    make_request(uri_string)
   end
 end
