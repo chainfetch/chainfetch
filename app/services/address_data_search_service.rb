@@ -39,12 +39,12 @@ class AddressDataSearchService
     # Sample JSONB structure to provide context
     sample_jsonb = {
       "info" => {
-        "block_number_balance_updated_at" => 23066996,
+        "block_number_balance_updated_at" => 23076754,
         "coin_balance" => "345285048595154",
         "creation_transaction_hash" => nil,
         "creator_address_hash" => nil,
         "ens_domain_name" => nil,
-        "exchange_rate" => "3548.64",
+        "exchange_rate" => "3588.91",
         "has_beacon_chain_withdrawals" => false,
         "has_logs" => false,
         "has_token_transfers" => true,
@@ -70,24 +70,216 @@ class AddressDataSearchService
         "token_transfers_count" => "13",
         "validations_count" => "0"
       },
-      "transactions" => {
+      "logs" => {
+        "items" => [],
+        "next_page_params" => nil
+      },
+      "blocks_validated" => {
+        "items" => [],
+        "next_page_params" => nil
+      },
+      "token_balances" => [
+        {
+          "token" => {
+            "address" => "0x8eB24319393716668D768dCEC29356ae9CfFe285",
+            "address_hash" => "0x8eB24319393716668D768dCEC29356ae9CfFe285",
+            "circulating_market_cap" => nil,
+            "decimals" => "8",
+            "exchange_rate" => nil,
+            "holders" => "26247",
+            "holders_count" => "26247",
+            "icon_url" => "https://raw.githubusercontent.com/trustwallet/assets/master/blockchains/ethereum/assets/0x8eB24319393716668D768dCEC29356ae9CfFe285/logo.png",
+            "name" => "SingularityNET Token",
+            "symbol" => "AGI",
+            "total_supply" => "99993398717278375",
+            "type" => "ERC-20",
+            "volume_24h" => nil
+          },
+          "token_id" => nil,
+          "token_instance" => nil,
+          "value" => "55188200000"
+        },
+        {
+          "token" => {
+            "address" => "0xC31ED16220EA819e0516Fc4960ddfeCb7Ec42CAB",
+            "address_hash" => "0xC31ED16220EA819e0516Fc4960ddfeCb7Ec42CAB",
+            "circulating_market_cap" => nil,
+            "decimals" => nil,
+            "exchange_rate" => nil,
+            "holders" => "13501",
+            "holders_count" => "13501",
+            "icon_url" => nil,
+            "name" => "genesis-eth.net",
+            "symbol" => "claim rewards on genesis-eth.net",
+            "total_supply" => "20000",
+            "type" => "ERC-1155",
+            "volume_24h" => nil
+          },
+          "token_id" => "0",
+          "token_instance" => nil,
+          "value" => "1"
+        }
+      ],
+      "tokens" => {
         "items" => [
           {
-            "priority_fee" => "26250000000000",
-            "hash" => "0x18716cdff9964bd904ca553d857d6ccaa5994776fd2575d421938a4b881c15dd",
-            "value" => "199000000000000000",
-            "from" => {
-              "hash" => "0xb71630a6995Bc76283d3010697D0b7833181D910"
+            "token" => {
+              "address" => "0x8eB24319393716668D768dCEC29356ae9CfFe285",
+              "address_hash" => "0x8eB24319393716668D768dCEC29356ae9CfFe285",
+              "circulating_market_cap" => nil,
+              "decimals" => "8",
+              "exchange_rate" => nil,
+              "holders" => "26247",
+              "holders_count" => "26247",
+              "icon_url" => "https://raw.githubusercontent.com/trustwallet/assets/master/blockchains/ethereum/assets/0x8eB24319393716668D768dCEC29356ae9CfFe285/logo.png",
+              "name" => "SingularityNET Token",
+              "symbol" => "AGI",
+              "total_supply" => "99993398717278375",
+              "type" => "ERC-20",
+              "volume_24h" => nil
             },
-            "to" => {
-              "hash" => "0xA58F1C42FAE774EA8974dbf0Fc8AFAb22bc710bA"
+            "token_id" => nil,
+            "token_instance" => nil,
+            "value" => "55188200000"
+          },
+          {
+            "token" => {
+              "address" => "0xC31ED16220EA819e0516Fc4960ddfeCb7Ec42CAB",
+              "address_hash" => "0xC31ED16220EA819e0516Fc4960ddfeCb7Ec42CAB",
+              "circulating_market_cap" => nil,
+              "decimals" => nil,
+              "exchange_rate" => nil,
+              "holders" => "13501",
+              "holders_count" => "13501",
+              "icon_url" => nil,
+              "name" => "genesis-eth.net",
+              "symbol" => "claim rewards on genesis-eth.net",
+              "total_supply" => "20000",
+              "type" => "ERC-1155",
+              "volume_24h" => nil
             },
-            "gas_used" => "21000",
-            "gas_price" => "1958834765",
-            "block_number" => 22602298,
-            "timestamp" => "2025-05-31T11:05:35.000000Z"
+            "token_id" => "0",
+            "token_instance" => {
+              "animation_url" => nil,
+              "external_app_url" => nil,
+              "id" => "0",
+              "image_url" => "https://ipfs.io/ipfs/QmeTAazmYyHgw2TBgRjH52vSoPMkgd79YdUgqJzBu6wsnx",
+              "is_unique" => nil,
+              "media_type" => nil,
+              "media_url" => "https://ipfs.io/ipfs/QmeTAazmYyHgw2TBgRjH52vSoPMkgd79YdUgqJzBu6wsnx",
+              "metadata" => {
+                "description" => "Visit genesis-eth.net to claim rewards",
+                "image" => "https://ipfs.io/ipfs/QmeTAazmYyHgw2TBgRjH52vSoPMkgd79YdUgqJzBu6wsnx",
+                "name" => "Visit genesis-eth.net to claim rewards"
+              },
+              "owner" => nil,
+              "thumbnails" => nil,
+              "token" => {
+                "address" => "0xC31ED16220EA819e0516Fc4960ddfeCb7Ec42CAB",
+                "address_hash" => "0xC31ED16220EA819e0516Fc4960ddfeCb7Ec42CAB",
+                "circulating_market_cap" => nil,
+                "decimals" => nil,
+                "exchange_rate" => nil,
+                "holders" => "13501",
+                "holders_count" => "13501",
+                "icon_url" => nil,
+                "name" => "genesis-eth.net",
+                "symbol" => "claim rewards on genesis-eth.net",
+                "total_supply" => "20000",
+                "type" => "ERC-1155",
+                "volume_24h" => nil
+              }
+            },
+            "value" => "1"
           }
-        ]
+        ],
+        "next_page_params" => nil
+      },
+      "withdrawals" => {
+        "items" => [],
+        "next_page_params" => nil
+      },
+      "nft" => {
+        "items" => [
+          {
+            "animation_url" => nil,
+            "external_app_url" => nil,
+            "id" => "0",
+            "image_url" => "https://ipfs.io/ipfs/QmeTAazmYyHgw2TBgRjH52vSoPMkgd79YdUgqJzBu6wsnx",
+            "is_unique" => nil,
+            "media_type" => nil,
+            "media_url" => "https://ipfs.io/ipfs/QmeTAazmYyHgw2TBgRjH52vSoPMkgd79YdUgqJzBu6wsnx",
+            "metadata" => {
+              "description" => "Visit genesis-eth.net to claim rewards",
+              "image" => "https://ipfs.io/ipfs/QmeTAazmYyHgw2TBgRjH52vSoPMkgd79YdUgqJzBu6wsnx",
+              "name" => "Visit genesis-eth.net to claim rewards"
+            },
+            "owner" => nil,
+            "thumbnails" => nil,
+            "token" => {
+              "address" => "0xC31ED16220EA819e0516Fc4960ddfeCb7Ec42CAB",
+              "address_hash" => "0xC31ED16220EA819e0516Fc4960ddfeCb7Ec42CAB",
+              "circulating_market_cap" => nil,
+              "decimals" => nil,
+              "exchange_rate" => nil,
+              "holders" => "13501",
+              "holders_count" => "13501",
+              "icon_url" => nil,
+              "name" => "genesis-eth.net",
+              "symbol" => "claim rewards on genesis-eth.net",
+              "total_supply" => "20000",
+              "type" => "ERC-1155",
+              "volume_24h" => nil
+            },
+            "token_type" => "ERC-1155",
+            "value" => "1"
+          }
+        ],
+        "next_page_params" => nil
+      },
+      "nft_collections" => {
+        "items" => [
+          {
+            "amount" => "1",
+            "token" => {
+              "address" => "0xC31ED16220EA819e0516Fc4960ddfeCb7Ec42CAB",
+              "address_hash" => "0xC31ED16220EA819e0516Fc4960ddfeCb7Ec42CAB",
+              "circulating_market_cap" => nil,
+              "decimals" => nil,
+              "exchange_rate" => nil,
+              "holders" => "13501",
+              "holders_count" => "13501",
+              "icon_url" => nil,
+              "name" => "genesis-eth.net",
+              "symbol" => "claim rewards on genesis-eth.net",
+              "total_supply" => "20000",
+              "type" => "ERC-1155",
+              "volume_24h" => nil
+            },
+            "token_instances" => [
+              {
+                "animation_url" => nil,
+                "external_app_url" => nil,
+                "id" => "0",
+                "image_url" => "https://ipfs.io/ipfs/QmeTAazmYyHgw2TBgRjH52vSoPMkgd79YdUgqJzBu6wsnx",
+                "is_unique" => nil,
+                "media_type" => nil,
+                "media_url" => "https://ipfs.io/ipfs/QmeTAazmYyHgw2TBgRjH52vSoPMkgd79YdUgqJzBu6wsnx",
+                "metadata" => {
+                  "description" => "Visit genesis-eth.net to claim rewards",
+                  "image" => "https://ipfs.io/ipfs/QmeTAazmYyHgw2TBgRjH52vSoPMkgd79YdUgqJzBu6wsnx",
+                  "name" => "Visit genesis-eth.net to claim rewards"
+                },
+                "owner" => nil,
+                "thumbnails" => nil,
+                "token" => nil,
+                "token_type" => "ERC-1155",
+                "value" => "1"
+              }
+            ]
+          }
+        ],
+        "next_page_params" => nil
       },
       "token_transfers" => {
         "items" => [
@@ -105,19 +297,6 @@ class AddressDataSearchService
               "symbol" => "claim rewards on genesis-eth.net",
               "type" => "ERC-1155"
             }
-          }
-        ]
-      },
-      "tokens" => {
-        "items" => [
-          {
-            "token" => {
-              "address" => "0x8eB24319393716668D768dCEC29356ae9CfFe285",
-              "name" => "SingularityNET Token",
-              "symbol" => "AGI",
-              "type" => "ERC-20"
-            },
-            "value" => "55188200000"
           }
         ]
       }
