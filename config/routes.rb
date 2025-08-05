@@ -53,6 +53,7 @@ Rails.application.routes.draw do
       # get 'eth/stats', to: 'ethereum#api_stats'
       # get 'chains', to: 'supported_chains#index'
 
+      get 'ethereum/addresses/search', to: 'ethereum/addresses#search'
       get 'ethereum/addresses/:address', to: 'ethereum/addresses#show'
       get 'ethereum/transactions/:transaction', to: 'ethereum/transactions#show'
       get 'ethereum/blocks/:block', to: 'ethereum/blocks#show'

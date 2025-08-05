@@ -102,7 +102,7 @@ class EthereumAddressStreamService
     now = Time.now
     @last_requests.reject! { |t| now - t >= 1.0 }
   
-    if @last_requests.size < 10
+    if @last_requests.size < 7
       @last_requests << now
       get_transaction_details(tx_hash)
     else

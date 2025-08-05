@@ -27,6 +27,15 @@ class Api::V1::Ethereum::AddressesController < Api::V1::Ethereum::BaseController
     end
   end
 
+  # @summary Search for addresses
+  # @parameter query(query) [!String] The query to search for
+  # @response success(200) [Hash{response: String}]
+  def search
+    query = params[:query]
+    response = Address.search(query)
+    render json: { response: response }
+  end
+
   private
 
   def get_address_info(address)
