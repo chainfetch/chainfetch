@@ -5,15 +5,13 @@ require 'async/http/protocol'
 require 'json'
 require 'singleton'
 
-class EthereumAddressEmbeddingService
+class EthereumAddressStreamService
   include Singleton
 
   def initialize
     @task = nil
     @ws = nil
     @running = false
-    @total_transactions = 0
-    @total_pending_transactions = 0
   end
 
   def start
@@ -131,9 +129,6 @@ class EthereumAddressEmbeddingService
     from_address = transaction['from']
     return unless from_address
 
-    @total_pending_transactions += 1
-    @total_transactions += 1
-    
     # Process this single address (keep original format)
     process_addresses([from_address])
   end
@@ -168,8 +163,6 @@ class EthereumAddressEmbeddingService
         puts "❌ Error processing address #{address_hash[0..8]}...: #{e.message}"
       end
     end
-
-    # puts "📊 Stats: #{@total_pending_transactions} pending transactions, #{@total_transactions} unique addresses processed"
   end
 
   def store_address_embedding(address_hash, summary, embedding)
@@ -188,7 +181,7 @@ class EthereumAddressEmbeddingService
 end
 
 # Usage:
-# service = EthereumAddressEmbeddingService.instance
+# service = EthereumAddressStreamService.instance
 # service.start
 # 
 # # To stop:

@@ -54,23 +54,26 @@ class QdrantService < BaseService
     handle_response(response)
   end
 
-  # Searches for similar points in a collection.
-  #
-  # @param collection [String] The name of the collection.
-  # @param vector [Array<Float>] The query vector.
-  # @param limit [Integer] The maximum number of results to return.
-  # @return [Hash] The parsed JSON response containing search results.
-  def search(collection:, vector:, limit: 5)
+
+  def retrieve_point(collection:, id:)
     uri = @base_uri.dup
-    uri.path = "/collections/#{collection}/points/search"
+    uri.path = "/collections/#{collection}/points/#{id}"
+    response = http_request(uri, Net::HTTP::Get)
+    handle_response(response)
+  end
 
-    payload = {
-      vector: vector,
+  def query_points(collection:, query:, prefetch: nil, limit: 10)
+    uri = @base_uri.dup
+    uri.path = "/collections/#{collection}/points/query"
+  
+    body = {
+      query: query,
       limit: limit,
-      with_payload: true # Include the payload in the search results.
+      with_payload: true
     }
-
-    response = http_request(uri, Net::HTTP::Post, payload)
+    body[:prefetch] = prefetch if prefetch
+  
+    response = http_request(uri, Net::HTTP::Post, body)
     handle_response(response)
   end
 
