@@ -9,4 +9,4 @@ data:
     - name: public-ip
       protocol: layer2
       addresses:
-      - 188.40.119.247/32
+      - 95.217.88.254/32

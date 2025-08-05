@@ -1,44 +1,41 @@
+
 class EmbeddingService < BaseService
-  
+  OLLAMA_URL = "https://ollama.chainfetch.app"
+
   def initialize(text)
     @text = text
   end
 
   def call
-    uri = URI("http://localhost:11434/v1/embeddings")
+    uri = URI("#{OLLAMA_URL}/api/embeddings")
     
+    # Create HTTPS connection
+    http = Net::HTTP.new(uri.host, uri.port)
+    http.use_ssl = true
+    http.verify_mode = OpenSSL::SSL::VERIFY_PEER
+    
+    # Create request with correct headers
     request = Net::HTTP::Post.new(uri)
-    request["Content-Type"] = "application/json"
+    request["Authorization"] = "Bearer #{Rails.application.credentials.auth_bearer_token}"
+    request['Content-Type'] = 'application/json'
     
+    # Correct payload format (matches working curl)
     payload = {
-      model: "dengcao/Qwen3-Embedding-4B:F16",
-      input: @text
+      model: "dengcao/Qwen3-Embedding-0.6B:Q8_0",
+      prompt: @text
     }
     request.body = payload.to_json
     
-    response = Net::HTTP.start(uri.hostname, uri.port) do |http|
-      http.request(request)
-    end
+    # Make request
+    response = http.request(request)
     
-    if response.is_a?(Net::HTTPSuccess)
+    if response.code == '200'
       result = JSON.parse(response.body)
-      embedding = result.dig("data", 0, "embedding")
-      
-      unless embedding
-        error_message = "Embedding not found in Ollama response: #{response.body}"
-        Rails.logger.error(error_message) if defined?(Rails)
-        raise error_message
-      end
-      
-      return embedding
+      result['embedding']  # Return the embedding array
     else
-      error_message = "Ollama API Error: #{response.code} #{response.message} - #{response.body}"
-      Rails.logger.error(error_message) if defined?(Rails)
-      raise error_message
+      raise "Ollama API Error: #{response.code} #{response.message} - #{response.body}"
     end
   rescue => e
-    error_message = "Ollama Embedding Error: #{e.class.name} - #{e.message}"
-    Rails.logger.error(error_message) if defined?(Rails)
-    raise error_message
+    raise "Ollama Embedding Error: #{e.class} - #{e.message}"
   end
 end

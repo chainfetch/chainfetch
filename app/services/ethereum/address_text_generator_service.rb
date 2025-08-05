@@ -99,10 +99,15 @@ class Ethereum::AddressTextGeneratorService < Ethereum::BaseService
       end
       
       if transactions.any? && transactions.first.is_a?(Hash) && transactions.last.is_a?(Hash)
-        first_tx_time = Time.parse(transactions.last['timestamp'])
-        last_tx_time = Time.parse(transactions.first['timestamp'])
-        active_days = ((last_tx_time - first_tx_time) / (3600 * 24)).to_i
-        parts << "Its transaction history spans over #{active_days} days."
+        first_timestamp = transactions.last['timestamp']
+        last_timestamp = transactions.first['timestamp']
+        
+        if first_timestamp && last_timestamp
+          first_tx_time = Time.parse(first_timestamp)
+          last_tx_time = Time.parse(last_timestamp)
+          active_days = ((last_tx_time - first_tx_time) / (3600 * 24)).to_i
+          parts << "Its transaction history spans over #{active_days} days."
+        end
       end
 
       parts << "In total, it has sent #{total_sent.to_f.round(4)} ETH across #{sent_count} transactions and received #{total_received.to_f.round(4)} ETH from #{received_count} transactions."

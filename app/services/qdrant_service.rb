@@ -11,6 +11,7 @@ class QdrantService < BaseService
   # @param name [String] The name of the collection.
   # @param vector_size [Integer] The dimensionality of the vectors.
   # @return [Hash] The parsed JSON response from the API.
+  # QdrantService.new.create_collection(name: "addresses", vector_size: 1024)
   def create_collection(name:, vector_size:)
     uri = @base_uri.dup
     uri.path = "/collections/#{name}"

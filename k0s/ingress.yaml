@@ -12,6 +12,7 @@ spec:
         - chainfetch.app
         - www.chainfetch.app
         - api.chainfetch.app
+        - ollama.chainfetch.app
       secretName: chainfetch-tls
   rules:
     - host: chainfetch.app
@@ -44,3 +45,41 @@ spec:
                 name: chainfetch-web
                 port:
                   number: 80
+    - host: ollama.chainfetch.app
+      http:
+        paths:
+          - path: /
+            pathType: Prefix
+            backend:
+              service:
+                name: ollama
+                port:
+                  number: 11434
+---
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: ollama-protected-ingress
+  namespace: chainfetch
+  annotations:
+    cert-manager.io/cluster-issuer: letsencrypt-prod
+    nginx.ingress.kubernetes.io/auth-url: "http://bearer-auth.chainfetch.svc.cluster.local/auth"
+    nginx.ingress.kubernetes.io/auth-method: "GET"
+    nginx.ingress.kubernetes.io/auth-response-headers: "X-Auth-Request-User,X-Auth-Request-Email"
+spec:
+  ingressClassName: nginx
+  tls:
+    - hosts:
+        - ollama.chainfetch.app
+      secretName: chainfetch-tls
+  rules:
+    - host: ollama.chainfetch.app
+      http:
+        paths:
+          - path: /
+            pathType: Prefix
+            backend:
+              service:
+                name: ollama
+                port:
+                  number: 11434

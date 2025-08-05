@@ -108,11 +108,11 @@ spec:
                 name: chainfetch-secrets
           resources:
             requests:
-              cpu: "500m"
+              cpu: "400m"
               memory: "1Gi"
               ephemeral-storage: "1Gi"
             limits:
-              cpu: "1000m"
+              cpu: "700m"
               memory: "1536Mi"
               ephemeral-storage: "1Gi"
           securityContext:
@@ -164,11 +164,11 @@ spec:
             periodSeconds: 30
           resources:
             requests:
-              cpu: "750m"
+              cpu: "600m"
               memory: "1Gi"
               ephemeral-storage: "1.5Gi"
             limits:
-              cpu: "1000m"
+              cpu: "700m"
               memory: "1.5Gi"
               ephemeral-storage: "1.5Gi"
           securityContext:

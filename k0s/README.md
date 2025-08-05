@@ -221,8 +221,8 @@ These manifests spin up the full **FetchSERP stack** (Rails app + workers + auxi
    k0s kubectl rollout restart deployment fetchserp-jobs -n fetchserp
 
    # delete pods
-   k0s kubectl delete pods -n fetchserp -l app=fetchserp-web
-   k0s kubectl delete pods -n fetchserp -l app=fetchserp-jobs
+   k0s kubectl delete pods -n chainfetch -l app=chainfetch-web
+   k0s kubectl delete pods -n chainfetch -l app=chainfetch-jobs
 
    ```
 12. 🗂️ **Access Longhorn UI**

@@ -1,5 +1,5 @@
-# Simplified Ollama Deployment
-# No persistent storage - model downloads on first use
+# Ollama Deployment with Persistent Shared Storage
+# Models are shared across all pods - no re-downloading needed
 #
 # Deployment: kubectl apply -f deployment-ollama.yaml
 # Access: http://ollama.chainfetch.svc.cluster.local:11434
@@ -9,6 +9,19 @@ kind: Namespace
 metadata:
   name: chainfetch
 ---
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: ollama-models-pvc
+  namespace: chainfetch
+spec:
+  accessModes:
+    - ReadWriteOnce  # Single-node cluster - RWO works fine
+  storageClassName: longhorn
+  resources:
+    requests:
+      storage: 50Gi  # Enough for multiple models
+---
 apiVersion: apps/v1
 kind: Deployment
 metadata:
@@ -17,7 +30,7 @@ metadata:
   labels:
     app: ollama
 spec:
-  replicas: 1
+  replicas: 5  # Scale to 5 pods for optimal load distribution and performance
   selector:
     matchLabels:
       app: ollama
@@ -26,6 +39,29 @@ spec:
       labels:
         app: ollama
     spec:
+      runtimeClassName: nvidia  # Use NVIDIA runtime for GPU access
+      initContainers:
+      - name: model-puller
+        image: ollama/ollama:latest
+        command: ["/bin/sh"]
+        args:
+          - -c
+          - |
+            /bin/ollama serve &
+            sleep 10
+            /bin/ollama pull dengcao/Qwen3-Embedding-0.6B:Q8_0
+            sleep 5
+            pkill ollama
+        volumeMounts:
+        - name: ollama-storage
+          mountPath: /root/.ollama
+        env:
+        - name: OLLAMA_HOST
+          value: "0.0.0.0"
+        - name: NVIDIA_VISIBLE_DEVICES
+          value: "all"
+        - name: NVIDIA_DRIVER_CAPABILITIES
+          value: "compute,utility"
       containers:
       - name: ollama
         image: ollama/ollama:latest
@@ -34,9 +70,25 @@ spec:
           name: http
         env:
         - name: OLLAMA_HOST
-          value: "0.0.0.0:11434"
+          value: "0.0.0.0"
         - name: OLLAMA_ORIGINS
           value: "*"
+        - name: OLLAMA_KEEP_ALIVE
+          value: "-1"  # Keep models loaded forever (never unload)
+        - name: NVIDIA_VISIBLE_DEVICES
+          value: "all"
+        - name: NVIDIA_DRIVER_CAPABILITIES
+          value: "compute,utility"
+        volumeMounts:
+        - name: ollama-storage
+          mountPath: /root/.ollama  # Default Ollama data directory
+        resources:
+          requests:
+            memory: "8192Mi"         # 8GB per pod (optimal allocation)
+            cpu: "300m"              # Keep optimized CPU
+          limits:
+            memory: "8192Mi"         # Match requests for clean allocation
+            cpu: "300m"              # Keep optimized for GPU acceleration
         readinessProbe:
           httpGet:
             path: /api/tags
@@ -44,6 +96,7 @@ spec:
           initialDelaySeconds: 30
           periodSeconds: 10
           timeoutSeconds: 5
+          failureThreshold: 3
         livenessProbe:
           httpGet:
             path: /api/tags
@@ -51,13 +104,10 @@ spec:
           initialDelaySeconds: 60
           periodSeconds: 30
           timeoutSeconds: 10
-        resources:
-          requests:
-            memory: "6Gi"
-            cpu: "1"
-          limits:
-            memory: "12Gi"
-            cpu: "4"
+      volumes:
+      - name: ollama-storage
+        persistentVolumeClaim:
+          claimName: ollama-models-pvc
 ---
 apiVersion: v1
 kind: Service
@@ -75,3 +125,31 @@ spec:
     name: http
   selector:
     app: ollama
+---
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: ollama-protected-ingress
+  namespace: chainfetch
+  annotations:
+    cert-manager.io/cluster-issuer: letsencrypt-prod
+    nginx.ingress.kubernetes.io/auth-url: "http://bearer-auth.chainfetch.svc.cluster.local/auth"
+    nginx.ingress.kubernetes.io/auth-method: "GET"
+    nginx.ingress.kubernetes.io/auth-response-headers: "X-Auth-Request-User,X-Auth-Request-Email"
+spec:
+  ingressClassName: nginx
+  tls:
+    - hosts:
+        - ollama.chainfetch.app
+      secretName: chainfetch-tls
+  rules:
+    - host: ollama.chainfetch.app
+      http:
+        paths:
+          - path: /
+            pathType: Prefix
+            backend:
+              service:
+                name: ollama
+                port:
+                  number: 11434
