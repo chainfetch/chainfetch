@@ -37,14 +37,15 @@ class AddressDataSearchService
 
   def generate_query_conditions(user_query)
     # Sample JSONB structure to provide context
+    # NOTE: coin_balance is in WEI (1 ETH = 10^18 wei)
     sample_jsonb = {
       "info" => {
         "block_number_balance_updated_at" => 23076754,
-        "coin_balance" => "345285048595154",
+        "coin_balance" => "345285048595154", # This is in WEI! (~0.000345 ETH)
         "creation_transaction_hash" => nil,
         "creator_address_hash" => nil,
         "ens_domain_name" => nil,
-        "exchange_rate" => "3588.91",
+        "exchange_rate" => "3588.91", # USD price per ETH
         "has_beacon_chain_withdrawals" => false,
         "has_logs" => false,
         "has_token_transfers" => true,
@@ -319,14 +320,41 @@ class AddressDataSearchService
       - tokens: array of token balance objects
       - And other blockchain-related data
 
+      IMPORTANT: BALANCE UNITS
+      - coin_balance is stored in WEI (smallest unit of ETH)
+      - 1 ETH = 1,000,000,000,000,000,000 wei (10^18)
+      - 1 Gwei = 1,000,000,000 wei (10^9)
+      
+      For balance queries, you MUST convert ETH amounts to wei:
+      - "1 ETH" = "1000000000000000000" wei
+      - "0.1 ETH" = "100000000000000000" wei
+      - "10 ETH" = "10000000000000000000" wei
+
       Generate ActiveRecord where conditions using JSONB operators as strings:
       - "data -> 'key'" for accessing JSON object keys
       - "data ->> 'key'" for getting text values  
       - "data @> ?" for containment with parameters
       - "data ? 'key'" for key existence
-      - "CAST(data ->> 'path' AS INTEGER) > ?" for numeric comparisons
+      - "CAST(data -> 'info' ->> 'coin_balance' AS NUMERIC) > ?" for balance comparisons (remember: coin_balance is in wei!)
       
-      Return conditions that can be used directly with Address.where(condition, *params)
+      For ORDER BY clauses, provide the order string separately:
+      - "CAST(data -> 'info' ->> 'coin_balance' AS NUMERIC) DESC" for balance descending
+      - "CAST(data -> 'info' ->> 'coin_balance' AS NUMERIC) ASC" for balance ascending
+      - "data ->> 'address_hash'" for alphabetical ordering
+      
+      For ordering-only queries (no specific filtering), use a basic condition like:
+      - "data -> 'info' ->> 'coin_balance' IS NOT NULL" to get addresses with balance data
+      - "data -> 'info' ->> 'hash' IS NOT NULL" to get valid addresses
+      
+      IMPORTANT: Never generate empty conditions as this would query all addresses (millions of records).
+      Always include some basic filtering condition.
+      
+      For LIMIT clauses, specify the number of records to return:
+      - For "top 10" queries, use limit: 10
+      - For "first 100" queries, use limit: 100
+      - Default limit is 1000 if not specified to prevent large result sets
+      
+      Return conditions that can be used with Address.where(condition, *params).order(order_clause).limit(limit)
       Use the generate_query_conditions function to return your response.
       PROMPT
 
@@ -339,7 +367,7 @@ class AddressDataSearchService
       PROMPT
 
     response = @client.messages.create(
-      model: "claude-opus-4-1-20250805",
+      model: "claude-sonnet-4-20250514",
       max_tokens: 1000,
       system: system_prompt,
       messages: [
@@ -357,7 +385,7 @@ class AddressDataSearchService
             properties: {
               condition: {
                 type: "string",
-                description: "ActiveRecord where condition string using JSONB operators"
+                description: "ActiveRecord where condition string using JSONB operators (can be empty for ordering-only queries)"
               },
               parameters: {
                 type: "array",
@@ -366,12 +394,20 @@ class AddressDataSearchService
                   type: ["string", "number", "boolean", "object"]
                 }
               },
+              order_clause: {
+                type: "string",
+                description: "ActiveRecord order clause string (e.g., 'CAST(data -> 'info' ->> 'coin_balance' AS NUMERIC) DESC')"
+              },
+              limit: {
+                type: "integer",
+                description: "Number of records to return (default: 1000)"
+              },
               explanation: {
                 type: "string", 
                 description: "Brief explanation of what the condition searches for"
               }
             },
-            required: ["condition", "parameters", "explanation"]
+            required: ["condition", "parameters", "order_clause", "explanation"]
           }
         }
       ],
@@ -388,6 +424,8 @@ class AddressDataSearchService
     function_result = tool_use.input
     condition = function_result["condition"] || function_result[:condition]
     parameters = function_result["parameters"] || function_result[:parameters] || []
+    order_clause = function_result["order_clause"] || function_result[:order_clause]
+    limit = function_result["limit"] || function_result[:limit] || 1000 # Default to 1000
     explanation = function_result["explanation"] || function_result[:explanation]
 
     if condition.blank?
@@ -401,7 +439,7 @@ class AddressDataSearchService
     Rails.logger.info "Parameters: #{parameters.inspect}"
     Rails.logger.info "Query explanation: #{explanation}"
 
-    { condition: condition, parameters: parameters }
+    { condition: condition, parameters: parameters, order_clause: order_clause, limit: limit }
   end
 
   def validate_safe_condition(condition)
@@ -414,6 +452,11 @@ class AddressDataSearchService
       end
     end
 
+    # Always require a condition to prevent querying all records
+    if condition.blank?
+      raise SecurityError, "Condition cannot be empty. Use a basic filter like 'data -> 'info' ->> 'hash' IS NOT NULL' for ordering-only queries."
+    end
+
     # Additional validation: ensure it's working with the data column
     unless condition.include?('data')
       raise SecurityError, "Invalid condition: must query the 'data' JSONB column"
@@ -423,6 +466,8 @@ class AddressDataSearchService
   def execute_safe_query(query_conditions)
     condition = query_conditions[:condition]
     parameters = query_conditions[:parameters]
+    order_clause = query_conditions[:order_clause]
+    limit = query_conditions[:limit]
     
     # Convert hash parameters to JSON strings for JSONB queries
     processed_parameters = parameters.map do |param|
@@ -433,16 +478,33 @@ class AddressDataSearchService
       end
     end
     
-    # Execute the query safely using ActiveRecord where clauses  
-    addresses = if processed_parameters.any?
+    # Build the query relation (condition is always required now)
+    addresses_relation = if processed_parameters.any?
       Address.where(condition, *processed_parameters)
     else
       Address.where(condition)
     end
+
+    # Add order clause if provided
+    if order_clause.present?
+      addresses_relation = addresses_relation.order(Arel.sql(order_clause))
+    end
+
+    # Add limit if provided
+    if limit.present?
+      addresses_relation = addresses_relation.limit(limit)
+    end
+    
+    # Capture the generated SQL query
+    generated_sql = addresses_relation.to_sql
+    
+    # Execute the query safely using ActiveRecord where clauses  
+    addresses_result = addresses_relation.to_a
     
     {
-      count: addresses.count,
-      addresses: addresses.map do |address|
+      count: addresses_result.count,
+      sql_query: generated_sql,
+      addresses: addresses_result.map do |address|
         {
           id: address.id,
           address_hash: address.address_hash,

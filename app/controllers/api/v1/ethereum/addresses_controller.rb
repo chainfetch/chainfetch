@@ -49,7 +49,7 @@ class Api::V1::Ethereum::AddressesController < Api::V1::Ethereum::BaseController
 
   # @summary JSON Search for addresses
   # @parameter query(query) [!String] The query to search for
-  # @response success(200) [Hash{response: String}]
+  # @response success(200) [Hash{response: Hash{sql_query: String, results: Array<Hash{id: Integer, address_summary: String}>}}]
   def json_search
     query = params[:query]
     response = Address.json_search(query)

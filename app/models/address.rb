@@ -37,12 +37,16 @@ class Address < ApplicationRecord
       end
       
       qdrant_objects = tasks.map(&:wait)
-      qdrant_objects.compact.map do |obj|
+      results = qdrant_objects.compact.map do |obj|
         {
           id: obj.dig("result", "id"),
           address_summary: obj.dig("result", "payload", "address_summary")
         }
       end
+      {
+        sql_query: addresses[:sql_query],
+        results: results
+      }
     end.wait
   rescue => e
     Rails.logger.error "Error in json_search: #{e.message}"
