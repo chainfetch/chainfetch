@@ -44,7 +44,11 @@ OasRails.configure do |config|
   config.info.contact.url = 'https://a-chacon.com'
 
   # Servers Information. For more details follow: https://spec.openapis.org/oas/latest.html#server-object
-  config.servers = [{ url: 'http://localhost:3000', description: 'Local' }]
+  config.servers = Rails.env.production? ? [
+    { url: "https://www.chainfetch.app", description: "Production" }
+  ] : [
+    { url: "http://localhost:3000", description: "Development" }
+  ]
 
   # Tag Information. For more details follow: https://spec.openapis.org/oas/latest.html#tag-object
   # config.tags = [{ name: "Users", description: "Manage the `amazing` Users table." }]

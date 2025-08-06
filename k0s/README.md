@@ -224,6 +224,8 @@ These manifests spin up the full **FetchSERP stack** (Rails app + workers + auxi
    export KUBECONFIG=/Users/olivier/Desktop/kubeconfig && kubectl delete pods -n chainfetch -l app=chainfetch-web
    export KUBECONFIG=/Users/olivier/Desktop/kubeconfig && kubectl delete pods -n chainfetch -l app=chainfetch-jobs
 
+export KUBECONFIG=/Users/olivier/Desktop/kubeconfig && kubectl get pods -n chainfetch
+export KUBECONFIG=/Users/olivier/Desktop/kubeconfig && kubectl exec -it chainfetch-web-75574c7ffd-nc8ds -n chainfetch -- /bin/bash
    ```
 12. 🗂️ **Access Longhorn UI**
 
