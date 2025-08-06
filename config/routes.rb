@@ -55,6 +55,7 @@ Rails.application.routes.draw do
 
       get 'ethereum/addresses/semantic_search', to: 'ethereum/addresses#semantic_search'
       get 'ethereum/addresses/json_search', to: 'ethereum/addresses#json_search'
+      get 'ethereum/addresses/search', to: 'ethereum/addresses#search'
       get 'ethereum/addresses/:address', to: 'ethereum/addresses#show'
       get 'ethereum/transactions/:transaction', to: 'ethereum/transactions#show'
       get 'ethereum/blocks/:block', to: 'ethereum/blocks#show'

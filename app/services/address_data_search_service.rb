@@ -1,524 +1,337 @@
-require 'anthropic'
-require 'json'
-
 class AddressDataSearchService
-  # Error classes for better error handling
   class ApiError < StandardError; end
   class InvalidQueryError < StandardError; end
-  class DatabaseError < StandardError; end
-  class SecurityError < StandardError; end
 
   def initialize(query)
     @query = query
-    @client = Anthropic::Client.new(api_key: Rails.application.credentials.anthropic_api_key)
+    @api_url = "https://llama.chainfetch.app"
+    @model = "llama3.1:8b"
+    @api_key = Rails.application.credentials.auth_bearer_token
+    @base_url = Rails.env.production? ? 'https://chainfetch.app' : 'http://localhost:3000'
   end
 
   def call
-    # Use Claude 4 with function calling to generate safe query conditions
-    query_conditions = generate_query_conditions(@query)
-    
-    # Execute the query safely using ActiveRecord where clauses
-    execute_safe_query(query_conditions)
-  rescue Anthropic::APIErrorObject, Anthropic::InvalidRequestError, Anthropic::AuthenticationError => e
-    Rails.logger.error "Claude API error: #{e.message}"
+    tool_call_response = generate_tool_call(@query)
+    execute_api_request(tool_call_response)
+  rescue Net::HTTPError, SocketError, Errno::ECONNREFUSED => e
     raise ApiError, "AI service unavailable: #{e.message}"
-  rescue SecurityError => e
-    Rails.logger.error "Security violation: #{e.message}"
-    raise e
-  rescue DatabaseError => e
-    Rails.logger.error "Database error: #{e.message}"
-    raise e
   rescue => e
-    Rails.logger.error "Unexpected error in AddressDataSearchService: #{e.message}"
+    Rails.logger.error "Unexpected error: #{e.message}"
     raise e
   end
 
   private
 
-  def generate_query_conditions(user_query)
-    # Sample JSONB structure to provide context
-    # NOTE: coin_balance is in WEI (1 ETH = 10^18 wei)
-    sample_jsonb = {
-      "info" => {
-        "block_number_balance_updated_at" => 23076754,
-        "coin_balance" => "345285048595154", # This is in WEI! (~0.000345 ETH)
-        "creation_transaction_hash" => nil,
-        "creator_address_hash" => nil,
-        "ens_domain_name" => nil,
-        "exchange_rate" => "3588.91", # USD price per ETH
-        "has_beacon_chain_withdrawals" => false,
-        "has_logs" => false,
-        "has_token_transfers" => true,
-        "has_tokens" => true,
-        "has_validated_blocks" => false,
-        "hash" => "0xb71630a6995Bc76283d3010697D0b7833181D910",
-        "implementations" => [],
-        "is_contract" => false,
-        "is_scam" => false,
-        "is_verified" => false,
-        "metadata" => nil,
-        "name" => nil,
-        "private_tags" => [],
-        "proxy_type" => nil,
-        "public_tags" => [],
-        "token" => nil,
-        "watchlist_address_id" => nil,
-        "watchlist_names" => []
-      },
-      "counters" => {
-        "transactions_count" => "29",
-        "gas_usage_count" => "887617", 
-        "token_transfers_count" => "13",
-        "validations_count" => "0"
-      },
-      "logs" => {
-        "items" => [],
-        "next_page_params" => nil
-      },
-      "blocks_validated" => {
-        "items" => [],
-        "next_page_params" => nil
-      },
-      "token_balances" => [
-        {
-          "token" => {
-            "address" => "0x8eB24319393716668D768dCEC29356ae9CfFe285",
-            "address_hash" => "0x8eB24319393716668D768dCEC29356ae9CfFe285",
-            "circulating_market_cap" => nil,
-            "decimals" => "8",
-            "exchange_rate" => nil,
-            "holders" => "26247",
-            "holders_count" => "26247",
-            "icon_url" => "https://raw.githubusercontent.com/trustwallet/assets/master/blockchains/ethereum/assets/0x8eB24319393716668D768dCEC29356ae9CfFe285/logo.png",
-            "name" => "SingularityNET Token",
-            "symbol" => "AGI",
-            "total_supply" => "99993398717278375",
-            "type" => "ERC-20",
-            "volume_24h" => nil
-          },
-          "token_id" => nil,
-          "token_instance" => nil,
-          "value" => "55188200000"
-        },
-        {
-          "token" => {
-            "address" => "0xC31ED16220EA819e0516Fc4960ddfeCb7Ec42CAB",
-            "address_hash" => "0xC31ED16220EA819e0516Fc4960ddfeCb7Ec42CAB",
-            "circulating_market_cap" => nil,
-            "decimals" => nil,
-            "exchange_rate" => nil,
-            "holders" => "13501",
-            "holders_count" => "13501",
-            "icon_url" => nil,
-            "name" => "genesis-eth.net",
-            "symbol" => "claim rewards on genesis-eth.net",
-            "total_supply" => "20000",
-            "type" => "ERC-1155",
-            "volume_24h" => nil
-          },
-          "token_id" => "0",
-          "token_instance" => nil,
-          "value" => "1"
-        }
-      ],
-      "tokens" => {
-        "items" => [
-          {
-            "token" => {
-              "address" => "0x8eB24319393716668D768dCEC29356ae9CfFe285",
-              "address_hash" => "0x8eB24319393716668D768dCEC29356ae9CfFe285",
-              "circulating_market_cap" => nil,
-              "decimals" => "8",
-              "exchange_rate" => nil,
-              "holders" => "26247",
-              "holders_count" => "26247",
-              "icon_url" => "https://raw.githubusercontent.com/trustwallet/assets/master/blockchains/ethereum/assets/0x8eB24319393716668D768dCEC29356ae9CfFe285/logo.png",
-              "name" => "SingularityNET Token",
-              "symbol" => "AGI",
-              "total_supply" => "99993398717278375",
-              "type" => "ERC-20",
-              "volume_24h" => nil
-            },
-            "token_id" => nil,
-            "token_instance" => nil,
-            "value" => "55188200000"
-          },
-          {
-            "token" => {
-              "address" => "0xC31ED16220EA819e0516Fc4960ddfeCb7Ec42CAB",
-              "address_hash" => "0xC31ED16220EA819e0516Fc4960ddfeCb7Ec42CAB",
-              "circulating_market_cap" => nil,
-              "decimals" => nil,
-              "exchange_rate" => nil,
-              "holders" => "13501",
-              "holders_count" => "13501",
-              "icon_url" => nil,
-              "name" => "genesis-eth.net",
-              "symbol" => "claim rewards on genesis-eth.net",
-              "total_supply" => "20000",
-              "type" => "ERC-1155",
-              "volume_24h" => nil
-            },
-            "token_id" => "0",
-            "token_instance" => {
-              "animation_url" => nil,
-              "external_app_url" => nil,
-              "id" => "0",
-              "image_url" => "https://ipfs.io/ipfs/QmeTAazmYyHgw2TBgRjH52vSoPMkgd79YdUgqJzBu6wsnx",
-              "is_unique" => nil,
-              "media_type" => nil,
-              "media_url" => "https://ipfs.io/ipfs/QmeTAazmYyHgw2TBgRjH52vSoPMkgd79YdUgqJzBu6wsnx",
-              "metadata" => {
-                "description" => "Visit genesis-eth.net to claim rewards",
-                "image" => "https://ipfs.io/ipfs/QmeTAazmYyHgw2TBgRjH52vSoPMkgd79YdUgqJzBu6wsnx",
-                "name" => "Visit genesis-eth.net to claim rewards"
-              },
-              "owner" => nil,
-              "thumbnails" => nil,
-              "token" => {
-                "address" => "0xC31ED16220EA819e0516Fc4960ddfeCb7Ec42CAB",
-                "address_hash" => "0xC31ED16220EA819e0516Fc4960ddfeCb7Ec42CAB",
-                "circulating_market_cap" => nil,
-                "decimals" => nil,
-                "exchange_rate" => nil,
-                "holders" => "13501",
-                "holders_count" => "13501",
-                "icon_url" => nil,
-                "name" => "genesis-eth.net",
-                "symbol" => "claim rewards on genesis-eth.net",
-                "total_supply" => "20000",
-                "type" => "ERC-1155",
-                "volume_24h" => nil
-              }
-            },
-            "value" => "1"
-          }
-        ],
-        "next_page_params" => nil
-      },
-      "withdrawals" => {
-        "items" => [],
-        "next_page_params" => nil
-      },
-      "nft" => {
-        "items" => [
-          {
-            "animation_url" => nil,
-            "external_app_url" => nil,
-            "id" => "0",
-            "image_url" => "https://ipfs.io/ipfs/QmeTAazmYyHgw2TBgRjH52vSoPMkgd79YdUgqJzBu6wsnx",
-            "is_unique" => nil,
-            "media_type" => nil,
-            "media_url" => "https://ipfs.io/ipfs/QmeTAazmYyHgw2TBgRjH52vSoPMkgd79YdUgqJzBu6wsnx",
-            "metadata" => {
-              "description" => "Visit genesis-eth.net to claim rewards",
-              "image" => "https://ipfs.io/ipfs/QmeTAazmYyHgw2TBgRjH52vSoPMkgd79YdUgqJzBu6wsnx",
-              "name" => "Visit genesis-eth.net to claim rewards"
-            },
-            "owner" => nil,
-            "thumbnails" => nil,
-            "token" => {
-              "address" => "0xC31ED16220EA819e0516Fc4960ddfeCb7Ec42CAB",
-              "address_hash" => "0xC31ED16220EA819e0516Fc4960ddfeCb7Ec42CAB",
-              "circulating_market_cap" => nil,
-              "decimals" => nil,
-              "exchange_rate" => nil,
-              "holders" => "13501",
-              "holders_count" => "13501",
-              "icon_url" => nil,
-              "name" => "genesis-eth.net",
-              "symbol" => "claim rewards on genesis-eth.net",
-              "total_supply" => "20000",
-              "type" => "ERC-1155",
-              "volume_24h" => nil
-            },
-            "token_type" => "ERC-1155",
-            "value" => "1"
-          }
-        ],
-        "next_page_params" => nil
-      },
-      "nft_collections" => {
-        "items" => [
-          {
-            "amount" => "1",
-            "token" => {
-              "address" => "0xC31ED16220EA819e0516Fc4960ddfeCb7Ec42CAB",
-              "address_hash" => "0xC31ED16220EA819e0516Fc4960ddfeCb7Ec42CAB",
-              "circulating_market_cap" => nil,
-              "decimals" => nil,
-              "exchange_rate" => nil,
-              "holders" => "13501",
-              "holders_count" => "13501",
-              "icon_url" => nil,
-              "name" => "genesis-eth.net",
-              "symbol" => "claim rewards on genesis-eth.net",
-              "total_supply" => "20000",
-              "type" => "ERC-1155",
-              "volume_24h" => nil
-            },
-            "token_instances" => [
-              {
-                "animation_url" => nil,
-                "external_app_url" => nil,
-                "id" => "0",
-                "image_url" => "https://ipfs.io/ipfs/QmeTAazmYyHgw2TBgRjH52vSoPMkgd79YdUgqJzBu6wsnx",
-                "is_unique" => nil,
-                "media_type" => nil,
-                "media_url" => "https://ipfs.io/ipfs/QmeTAazmYyHgw2TBgRjH52vSoPMkgd79YdUgqJzBu6wsnx",
-                "metadata" => {
-                  "description" => "Visit genesis-eth.net to claim rewards",
-                  "image" => "https://ipfs.io/ipfs/QmeTAazmYyHgw2TBgRjH52vSoPMkgd79YdUgqJzBu6wsnx",
-                  "name" => "Visit genesis-eth.net to claim rewards"
-                },
-                "owner" => nil,
-                "thumbnails" => nil,
-                "token" => nil,
-                "token_type" => "ERC-1155",
-                "value" => "1"
-              }
-            ]
-          }
-        ],
-        "next_page_params" => nil
-      },
-      "token_transfers" => {
-        "items" => [
-          {
-            "block_number" => 22154359,
-            "from" => {
-              "hash" => "0xD8d98eE915A5A4f52C40D97fCD8ffaDEa1eE8604"
-            },
-            "to" => {
-              "hash" => "0xb71630a6995Bc76283d3010697D0b7833181D910"
-            },
-            "token" => {
-              "address" => "0xC31ED16220EA819e0516Fc4960ddfeCb7Ec42CAB",
-              "name" => "genesis-eth.net",
-              "symbol" => "claim rewards on genesis-eth.net",
-              "type" => "ERC-1155"
-            }
-          }
-        ]
-      }
-    }
-
-    # Create the prompt for Claude
+  def generate_tool_call(user_query)
     system_prompt = <<~PROMPT
-      You are an expert in ActiveRecord and PostgreSQL JSONB queries for blockchain address data.
-      You will generate safe ActiveRecord where conditions to search the 'addresses' table which has:
-      - id (primary key)
-      - address_hash (string, indexed)  
-      - data (jsonb column with GIN index, contains address information)
-      - created_at, updated_at (timestamps)
-
-      The JSONB data structure contains blockchain address information with nested objects for:
-      - info: basic address info (hash, balance, contract status, etc.)
-      - counters: transaction counts and statistics
-      - transactions: array of transaction objects
-      - token_transfers: array of token transfer objects  
-      - tokens: array of token balance objects
-      - And other blockchain-related data
-
-      IMPORTANT: BALANCE UNITS
-      - coin_balance is stored in WEI (smallest unit of ETH)
-      - 1 ETH = 1,000,000,000,000,000,000 wei (10^18)
-      - 1 Gwei = 1,000,000,000 wei (10^9)
+      Your task is to convert natural language queries into the correct parameters for the "search_addresses" tool.
       
-      For balance queries, you MUST convert ETH amounts to wei:
-      - "1 ETH" = "1000000000000000000" wei
-      - "0.1 ETH" = "100000000000000000" wei
-      - "10 ETH" = "10000000000000000000" wei
-
-      Generate ActiveRecord where conditions using JSONB operators as strings:
-      - "data -> 'key'" for accessing JSON object keys
-      - "data ->> 'key'" for getting text values  
-      - "data @> ?" for containment with parameters
-      - "data ? 'key'" for key existence
-      - "CAST(data -> 'info' ->> 'coin_balance' AS NUMERIC) > ?" for balance comparisons (remember: coin_balance is in wei!)
+      Analyze the user's query and call the search_addresses tool with the appropriate parameters to fulfill their request.
       
-      For ORDER BY clauses, provide the order string separately:
-      - "CAST(data -> 'info' ->> 'coin_balance' AS NUMERIC) DESC" for balance descending
-      - "CAST(data -> 'info' ->> 'coin_balance' AS NUMERIC) ASC" for balance ascending
-      - "data ->> 'address_hash'" for alphabetical ordering
+      CRITICAL: Pay careful attention to comparison operators in natural language:
+      - "more than", "greater than", "above", "at least" → use _min parameters
+      - "less than", "below", "under", "at most" → use _max parameters  
+      - "between X and Y" → use both _min and _max parameters
+      - "exactly", "equal to" → use the exact value without min/max suffix
       
-      For ordering-only queries (no specific filtering), use a basic condition like:
-      - "data -> 'info' ->> 'coin_balance' IS NOT NULL" to get addresses with balance data
-      - "data -> 'info' ->> 'hash' IS NOT NULL" to get valid addresses
+      Parameter mapping guide:
+      - ETH amounts → eth_balance_min/max (in ETH units like "1.5")
+      - WEI amounts → coin_balance_min/max (in WEI like "1500000000000000000")
+      - Transaction counts → transactions_count_min/max
+      - Gas usage → tx_gas_used_min/max, tx_gas_limit_min/max, etc.
+      - Address types → is_contract, is_verified, is_scam
+      - Token filters → token_symbol, token_name, token_address, token_type
+      - NFT filters → nft_* parameters
+      - Activity flags → has_logs, has_token_transfers, has_tokens, etc.
+      - Result limits → limit (default: 100, max: 1000)
       
-      IMPORTANT: Never generate empty conditions as this would query all addresses (millions of records).
-      Always include some basic filtering condition.
+      Examples of correct tool calls:
+      - "addresses with more than 1 ETH" → search_addresses({"eth_balance_min": "1"})
+      - "verified contracts" → search_addresses({"is_contract": true, "is_verified": true})
+      - "addresses holding USDC" → search_addresses({"token_symbol": "USDC"})
+      - "100+ transaction addresses" → search_addresses({"transactions_count_min": 100})
+      - "top 50 by balance" → search_addresses({"limit": 50})
       
-      For LIMIT clauses, specify the number of records to return:
-      - For "top 10" queries, use limit: 10
-      - For "first 100" queries, use limit: 100
-      - Default limit is 1000 if not specified to prevent large result sets
-      
-      Return conditions that can be used with Address.where(condition, *params).order(order_clause).limit(limit)
-      Use the generate_query_conditions function to return your response.
-      PROMPT
+      Always call the search_addresses tool with the parameters that best match the user's intent.
+    PROMPT
 
-    user_prompt = <<~PROMPT
-      Based on this sample JSONB structure: #{sample_jsonb.to_json}
+    response = make_llama_request(system_prompt, user_query)
+    parse_tool_call_response(response)
+  end
 
-      Generate ActiveRecord where conditions for: "#{user_query}"
+  def parse_tool_call_response(response)
+    tool_calls = JSON.parse(response)
+    
+    if tool_calls.is_a?(Array) && tool_calls.first&.dig("function", "name") == "search_addresses"
+      arguments = JSON.parse(tool_calls.first.dig("function", "arguments"))
+      return arguments
+    elsif tool_calls.is_a?(Hash) && tool_calls.dig("function", "name") == "search_addresses"
+      arguments = JSON.parse(tool_calls.dig("function", "arguments"))
+      return arguments
+    else
+      raise InvalidQueryError, "No valid tool call found in response"
+    end
+  rescue JSON::ParserError => e
+    raise InvalidQueryError, "Invalid JSON response from AI: #{e.message}"
+  end
 
-      Use the generate_query_conditions function to provide the where condition string and any parameters needed.
-      PROMPT
+  def execute_api_request(parameters)
+    uri = URI("#{@base_url}/api/v1/ethereum/addresses/json_search")
+    uri.query = URI.encode_www_form(parameters) if parameters&.any?
+    
+    http = Net::HTTP.new(uri.host, uri.port)
+    http.read_timeout = 30
+    
+    if uri.scheme == 'https'
+      http.use_ssl = true
+      http.verify_mode = OpenSSL::SSL::VERIFY_PEER
+    end
+    
+    request = Net::HTTP::Get.new(uri)
+    request['Content-Type'] = 'application/json'
+    
+    response = http.request(request)
+    
+    if response.code == '200'
+      result = JSON.parse(response.body)
+      {
+        count: result.dig("results")&.length || 0,
+        parameters_used: parameters,
+        api_endpoint: uri.to_s,
+        addresses: result.dig("results") || []
+      }
+    else
+      {
+        error: "API request failed with status: #{response.code}",
+        response_body: response.body,
+        parameters_used: parameters,
+        count: 0,
+        addresses: []
+      }
+    end
+  rescue JSON::ParserError => e
+    {
+      error: "Failed to parse API response: #{e.message}",
+      parameters_used: parameters,
+      count: 0,
+      addresses: []
+    }
+  rescue => e
+    {
+      error: "Request failed: #{e.message}",
+      parameters_used: parameters,
+      count: 0,
+      addresses: []
+    }
+  end
 
-    response = @client.messages.create(
-      model: "claude-sonnet-4-20250514",
-      max_tokens: 1000,
-      system: system_prompt,
+  def make_llama_request(system_prompt, user_prompt)
+    uri = URI("#{@api_url}/v1/chat/completions")
+    http = Net::HTTP.new(uri.host, uri.port)
+    http.read_timeout = 30
+    
+    if uri.scheme == 'https'
+      http.use_ssl = true
+      http.verify_mode = OpenSSL::SSL::VERIFY_PEER
+    end
+    
+    request = Net::HTTP::Post.new(uri)
+    request['Content-Type'] = 'application/json'
+    request['Authorization'] = "Bearer #{@api_key}"
+    request.body = {
       messages: [
-        {
-          role: "user", 
-          content: user_prompt
-        }
+        { role: "system", content: system_prompt },
+        { role: "user", content: user_prompt }
       ],
-      tools: [
-        {
-          name: "generate_query_conditions",
-          description: "Generate ActiveRecord where conditions to search address data stored in JSONB format",
-          input_schema: {
+      model: @model,
+      tools: [{
+        type: "function",
+        function: {
+          name: "search_addresses",
+          description: "Search for Ethereum addresses based on various criteria",
+          parameters: {
             type: "object",
             properties: {
-              condition: {
-                type: "string",
-                description: "ActiveRecord where condition string using JSONB operators (can be empty for ordering-only queries)"
-              },
-              parameters: {
-                type: "array",
-                description: "Array of parameters to bind to the condition (if any)",
-                items: {
-                  type: ["string", "number", "boolean", "object"]
-                }
-              },
-              order_clause: {
-                type: "string",
-                description: "ActiveRecord order clause string (e.g., 'CAST(data -> 'info' ->> 'coin_balance' AS NUMERIC) DESC')"
-              },
-              limit: {
-                type: "integer",
-                description: "Number of records to return (default: 1000)"
-              },
-              explanation: {
-                type: "string", 
-                description: "Brief explanation of what the condition searches for"
-              }
+              eth_balance_min: { type: "string", description: "Minimum ETH balance in ETH units" },
+              eth_balance_max: { type: "string", description: "Maximum ETH balance in ETH units" },
+              coin_balance_min: { type: "string", description: "Minimum coin balance in WEI" },
+              coin_balance_max: { type: "string", description: "Maximum coin balance in WEI" },
+              exchange_rate_min: { type: "string", description: "Minimum exchange rate" },
+              exchange_rate_max: { type: "string", description: "Maximum exchange rate" },
+              has_logs: { type: "boolean", description: "Whether the address has logs" },
+              is_contract: { type: "boolean", description: "Whether the address is a contract" },
+              has_beacon_chain_withdrawals: { type: "boolean", description: "Whether the address has beacon chain withdrawals" },
+              has_token_transfers: { type: "boolean", description: "Whether the address has token transfers" },
+              has_tokens: { type: "boolean", description: "Whether the address has tokens" },
+              has_validated_blocks: { type: "boolean", description: "Whether the address has validated blocks" },
+              is_scam: { type: "boolean", description: "Whether the address is a scam" },
+              is_verified: { type: "boolean", description: "Whether the address is verified" },
+              ens_domain_name: { type: "string", description: "ENS domain name" },
+              name: { type: "string", description: "Address name" },
+              hash: { type: "string", description: "Address hash" },
+              creation_transaction_hash: { type: "string", description: "Creation transaction hash" },
+              creator_address_hash: { type: "string", description: "Creator address hash" },
+              proxy_type: { type: "string", description: "Proxy type" },
+              watchlist_address_id: { type: "string", description: "Watchlist address ID" },
+              block_number_balance_updated_at_min: { type: "integer", description: "Minimum block number balance updated at" },
+              block_number_balance_updated_at_max: { type: "integer", description: "Maximum block number balance updated at" },
+              coin_balance_history_block_number_min: { type: "integer", description: "Minimum coin balance history block number" },
+              coin_balance_history_block_number_max: { type: "integer", description: "Maximum coin balance history block number" },
+              coin_balance_history_block_timestamp_min: { type: "string", description: "Minimum coin balance history block timestamp" },
+              coin_balance_history_block_timestamp_max: { type: "string", description: "Maximum coin balance history block timestamp" },
+              coin_balance_history_delta_min: { type: "string", description: "Minimum coin balance history delta" },
+              coin_balance_history_delta_max: { type: "string", description: "Maximum coin balance history delta" },
+              coin_balance_history_value_min: { type: "string", description: "Minimum coin balance history value" },
+              coin_balance_history_value_max: { type: "string", description: "Maximum coin balance history value" },
+              coin_balance_history_tx_hash: { type: "string", description: "Coin balance history transaction hash" },
+              coin_balance_history_by_day_days_min: { type: "integer", description: "Minimum days in coin balance history by day" },
+              coin_balance_history_by_day_days_max: { type: "integer", description: "Maximum days in coin balance history by day" },
+              transactions_count_min: { type: "integer", description: "Minimum transaction count" },
+              transactions_count_max: { type: "integer", description: "Maximum transaction count" },
+              token_transfers_count_min: { type: "integer", description: "Minimum token transfer count" },
+              token_transfers_count_max: { type: "integer", description: "Maximum token transfer count" },
+              gas_usage_count_min: { type: "integer", description: "Minimum gas usage count" },
+              gas_usage_count_max: { type: "integer", description: "Maximum gas usage count" },
+              validations_count_min: { type: "integer", description: "Minimum validation count" },
+              validations_count_max: { type: "integer", description: "Maximum validation count" },
+              tx_hash: { type: "string", description: "Transaction hash" },
+              tx_status: { type: "string", description: "Transaction status" },
+              tx_result: { type: "string", description: "Transaction result" },
+              tx_method: { type: "string", description: "Transaction method" },
+              tx_type_min: { type: "integer", description: "Minimum transaction type" },
+              tx_type_max: { type: "integer", description: "Maximum transaction type" },
+              tx_value_min: { type: "string", description: "Minimum transaction value" },
+              tx_value_max: { type: "string", description: "Maximum transaction value" },
+              tx_gas_used_min: { type: "string", description: "Minimum gas used" },
+              tx_gas_used_max: { type: "string", description: "Maximum gas used" },
+              tx_gas_limit_min: { type: "string", description: "Minimum gas limit" },
+              tx_gas_limit_max: { type: "string", description: "Maximum gas limit" },
+              tx_gas_price_min: { type: "string", description: "Minimum gas price" },
+              tx_gas_price_max: { type: "string", description: "Maximum gas price" },
+              tx_from_hash: { type: "string", description: "Transaction from hash" },
+              tx_to_hash: { type: "string", description: "Transaction to hash" },
+              tx_block_number_min: { type: "integer", description: "Minimum transaction block number" },
+              tx_block_number_max: { type: "integer", description: "Maximum transaction block number" },
+              tx_block_hash: { type: "string", description: "Transaction block hash" },
+              tx_priority_fee_min: { type: "string", description: "Minimum transaction priority fee" },
+              tx_priority_fee_max: { type: "string", description: "Maximum transaction priority fee" },
+              tx_raw_input: { type: "string", description: "Transaction raw input" },
+              tx_max_fee_per_gas_min: { type: "string", description: "Minimum max fee per gas" },
+              tx_max_fee_per_gas_max: { type: "string", description: "Maximum max fee per gas" },
+              tx_revert_reason: { type: "string", description: "Transaction revert reason" },
+              tx_transaction_burnt_fee_min: { type: "string", description: "Minimum transaction burnt fee" },
+              tx_transaction_burnt_fee_max: { type: "string", description: "Maximum transaction burnt fee" },
+              tx_token_transfers_overflow: { type: "boolean", description: "Transaction token transfers overflow" },
+              tx_confirmations_min: { type: "integer", description: "Minimum transaction confirmations" },
+              tx_confirmations_max: { type: "integer", description: "Maximum transaction confirmations" },
+              tx_position_min: { type: "integer", description: "Minimum transaction position" },
+              tx_position_max: { type: "integer", description: "Maximum transaction position" },
+              tx_max_priority_fee_per_gas_min: { type: "string", description: "Minimum max priority fee per gas" },
+              tx_max_priority_fee_per_gas_max: { type: "string", description: "Maximum max priority fee per gas" },
+              tx_transaction_tag: { type: "string", description: "Transaction tag" },
+              tx_created_contract: { type: "string", description: "Transaction created contract" },
+              tx_base_fee_per_gas_min: { type: "string", description: "Minimum base fee per gas" },
+              tx_base_fee_per_gas_max: { type: "string", description: "Maximum base fee per gas" },
+              tx_timestamp_min: { type: "string", description: "Minimum transaction timestamp" },
+              tx_timestamp_max: { type: "string", description: "Maximum transaction timestamp" },
+              tx_nonce_min: { type: "integer", description: "Minimum transaction nonce" },
+              tx_nonce_max: { type: "integer", description: "Maximum transaction nonce" },
+              tx_historic_exchange_rate_min: { type: "string", description: "Minimum historic exchange rate" },
+              tx_historic_exchange_rate_max: { type: "string", description: "Maximum historic exchange rate" },
+              tx_exchange_rate_min: { type: "string", description: "Minimum transaction exchange rate" },
+              tx_exchange_rate_max: { type: "string", description: "Maximum transaction exchange rate" },
+              tx_has_error_in_internal_transactions: { type: "boolean", description: "Transaction has error in internal transactions" },
+              tx_log_index_min: { type: "integer", description: "Minimum transaction log index" },
+              tx_log_index_max: { type: "integer", description: "Maximum transaction log index" },
+              tx_decoded_input: { type: "string", description: "Transaction decoded input" },
+              tx_token_transfers: { type: "string", description: "Transaction token transfers" },
+              tx_fee_type: { type: "string", description: "Transaction fee type" },
+              tx_fee_value_min: { type: "string", description: "Minimum transaction fee value" },
+              tx_fee_value_max: { type: "string", description: "Maximum transaction fee value" },
+              tx_total_decimals_min: { type: "integer", description: "Minimum transaction total decimals" },
+              tx_total_decimals_max: { type: "integer", description: "Maximum transaction total decimals" },
+              tx_total_value_min: { type: "string", description: "Minimum transaction total value" },
+              tx_total_value_max: { type: "string", description: "Maximum transaction total value" },
+              tx_from_ens_domain_name: { type: "string", description: "Transaction from ENS domain name" },
+              tx_from_is_contract: { type: "boolean", description: "Transaction from is contract" },
+              tx_from_is_scam: { type: "boolean", description: "Transaction from is scam" },
+              tx_from_is_verified: { type: "boolean", description: "Transaction from is verified" },
+              tx_from_name: { type: "string", description: "Transaction from name" },
+              tx_from_proxy_type: { type: "string", description: "Transaction from proxy type" },
+              tx_to_ens_domain_name: { type: "string", description: "Transaction to ENS domain name" },
+              tx_to_is_contract: { type: "boolean", description: "Transaction to is contract" },
+              tx_to_is_scam: { type: "boolean", description: "Transaction to is scam" },
+              tx_to_is_verified: { type: "boolean", description: "Transaction to is verified" },
+              tx_to_name: { type: "string", description: "Transaction to name" },
+              tx_to_proxy_type: { type: "string", description: "Transaction to proxy type" },
+              token_address: { type: "string", description: "Token address" },
+              token_name: { type: "string", description: "Token name" },
+              token_symbol: { type: "string", description: "Token symbol" },
+              token_type: { type: "string", description: "Token type (ERC-20, ERC-721, ERC-1155)" },
+              token_decimals_min: { type: "integer", description: "Minimum token decimals" },
+              token_decimals_max: { type: "integer", description: "Maximum token decimals" },
+              token_holders_min: { type: "integer", description: "Minimum token holders" },
+              token_holders_max: { type: "integer", description: "Maximum token holders" },
+              token_total_supply_min: { type: "string", description: "Minimum token total supply" },
+              token_total_supply_max: { type: "string", description: "Maximum token total supply" },
+              token_balance_value_min: { type: "string", description: "Minimum token balance value" },
+              token_balance_value_max: { type: "string", description: "Maximum token balance value" },
+              token_id: { type: "string", description: "Token ID" },
+              token_circulating_market_cap_min: { type: "string", description: "Minimum token circulating market cap" },
+              token_circulating_market_cap_max: { type: "string", description: "Maximum token circulating market cap" },
+              token_icon_url: { type: "string", description: "Token icon URL" },
+              token_volume_24h_min: { type: "string", description: "Minimum token 24h volume" },
+              token_volume_24h_max: { type: "string", description: "Maximum token 24h volume" },
+              token_instance_animation_url: { type: "string", description: "Token instance animation URL" },
+              token_instance_external_app_url: { type: "string", description: "Token instance external app URL" },
+              token_instance_id: { type: "string", description: "Token instance ID" },
+              token_instance_image_url: { type: "string", description: "Token instance image URL" },
+              token_instance_is_unique: { type: "boolean", description: "Token instance is unique" },
+              token_instance_media_type: { type: "string", description: "Token instance media type" },
+              token_instance_media_url: { type: "string", description: "Token instance media URL" },
+              token_instance_owner: { type: "string", description: "Token instance owner" },
+              token_instance_thumbnails: { type: "string", description: "Token instance thumbnails" },
+              token_instance_metadata_description: { type: "string", description: "Token instance metadata description" },
+              token_instance_metadata_image: { type: "string", description: "Token instance metadata image" },
+              token_instance_metadata_name: { type: "string", description: "Token instance metadata name" },
+              nft_animation_url: { type: "string", description: "NFT animation URL" },
+              nft_external_app_url: { type: "string", description: "NFT external app URL" },
+              nft_image_url: { type: "string", description: "NFT image URL" },
+              nft_media_url: { type: "string", description: "NFT media URL" },
+              nft_media_type: { type: "string", description: "NFT media type" },
+              nft_is_unique: { type: "boolean", description: "Whether NFT is unique" },
+              nft_token_type: { type: "string", description: "NFT token type" },
+              nft_metadata_description: { type: "string", description: "NFT metadata description" },
+              nft_metadata_name: { type: "string", description: "NFT metadata name" },
+              nft_collections_amount_min: { type: "integer", description: "Minimum NFT collections amount" },
+              nft_collections_amount_max: { type: "integer", description: "Maximum NFT collections amount" },
+              metadata_tags_name: { type: "string", description: "Metadata tags name" },
+              metadata_tags_slug: { type: "string", description: "Metadata tags slug" },
+              metadata_tags_tag_type: { type: "string", description: "Metadata tags tag type" },
+              metadata_tags_ordinal_min: { type: "integer", description: "Minimum metadata tags ordinal" },
+              metadata_tags_ordinal_max: { type: "integer", description: "Maximum metadata tags ordinal" },
+              metadata_tags_meta_main_entity: { type: "string", description: "Metadata tags meta main entity" },
+              metadata_tags_meta_tooltip_url: { type: "string", description: "Metadata tags meta tooltip URL" },
+              limit: { type: "integer", description: "Number of results to return (default: 100, max: 1000)" }
             },
-            required: ["condition", "parameters", "order_clause", "explanation"]
-          }
+            required: [],
+            additionalProperties: false
+          },
+          strict: true
         }
-      ],
-      tool_choice: { type: "tool", name: "generate_query_conditions" }
-    )
+      }]
+    }.to_json
 
-    # Extract the function call result
-    tool_use = response.content.find { |c| c.type == :tool_use }
+    response = http.request(request)
+    raise ApiError, "API error: #{response.code}" unless response.code == '200'
     
-    if tool_use.nil?
-      raise InvalidQueryError, "Claude did not generate valid query conditions"
-    end
-
-    function_result = tool_use.input
-    condition = function_result["condition"] || function_result[:condition]
-    parameters = function_result["parameters"] || function_result[:parameters] || []
-    order_clause = function_result["order_clause"] || function_result[:order_clause]
-    limit = function_result["limit"] || function_result[:limit] || 1000 # Default to 1000
-    explanation = function_result["explanation"] || function_result[:explanation]
-
-    if condition.blank?
-      raise InvalidQueryError, "No query condition generated"
-    end
-
-    # Validate that condition only contains safe read operations
-    validate_safe_condition(condition)
-
-    Rails.logger.info "Generated condition: #{condition}"
-    Rails.logger.info "Parameters: #{parameters.inspect}"
-    Rails.logger.info "Query explanation: #{explanation}"
-
-    { condition: condition, parameters: parameters, order_clause: order_clause, limit: limit }
-  end
-
-  def validate_safe_condition(condition)
-    # Ensure the condition only contains safe read operations
-    dangerous_keywords = %w[INSERT UPDATE DELETE DROP CREATE ALTER GRANT REVOKE TRUNCATE EXECUTE]
+    parsed_response = JSON.parse(response.body)
+    tool_calls = parsed_response.dig("choices", 0, "message", "tool_calls")
     
-    dangerous_keywords.each do |keyword|
-      if condition.upcase.include?(keyword)
-        raise SecurityError, "Unsafe operation detected: #{keyword}. Only read operations are allowed."
-      end
-    end
-
-    # Always require a condition to prevent querying all records
-    if condition.blank?
-      raise SecurityError, "Condition cannot be empty. Use a basic filter like 'data -> 'info' ->> 'hash' IS NOT NULL' for ordering-only queries."
-    end
-
-    # Additional validation: ensure it's working with the data column
-    unless condition.include?('data')
-      raise SecurityError, "Invalid condition: must query the 'data' JSONB column"
-    end
-  end
-
-  def execute_safe_query(query_conditions)
-    condition = query_conditions[:condition]
-    parameters = query_conditions[:parameters]
-    order_clause = query_conditions[:order_clause]
-    limit = query_conditions[:limit]
-    
-    # Convert hash parameters to JSON strings for JSONB queries
-    processed_parameters = parameters.map do |param|
-      if param.is_a?(Hash)
-        param.to_json
-      else
-        param
-      end
+    if tool_calls.nil?
+      raise InvalidQueryError, "No tool calls found in response"
     end
     
-    # Build the query relation (condition is always required now)
-    addresses_relation = if processed_parameters.any?
-      Address.where(condition, *processed_parameters)
-    else
-      Address.where(condition)
-    end
-
-    # Add order clause if provided
-    if order_clause.present?
-      addresses_relation = addresses_relation.order(Arel.sql(order_clause))
-    end
-
-    # Add limit if provided
-    if limit.present?
-      addresses_relation = addresses_relation.limit(limit)
-    end
-    
-    # Capture the generated SQL query
-    generated_sql = addresses_relation.to_sql
-    
-    # Execute the query safely using ActiveRecord where clauses  
-    addresses_result = addresses_relation.to_a
-    
-    {
-      count: addresses_result.count,
-      sql_query: generated_sql,
-      addresses: addresses_result.map do |address|
-        {
-          id: address.id,
-          address_hash: address.address_hash,
-          data: address.data,
-          created_at: address.created_at,
-          updated_at: address.updated_at
-        }
-      end
-    }
-  rescue ActiveRecord::StatementInvalid => e
-    # Log the error and raise a more user-friendly message
-    Rails.logger.error "Query execution failed: #{e.message}"
-    Rails.logger.error "Condition was: #{condition}"
-    Rails.logger.error "Parameters were: #{processed_parameters.inspect}"
-    raise DatabaseError, "Invalid query conditions or database error"
+    tool_calls.to_json
   end
 end

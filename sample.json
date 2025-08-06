@@ -1,0 +1,439 @@
+{
+  "info": {
+    "block_number_balance_updated_at": 23082421,
+    "coin_balance": "345285048595154",
+    "creation_transaction_hash": null,
+    "creator_address_hash": null,
+    "ens_domain_name": null,
+    "exchange_rate": "3679.09",
+    "has_beacon_chain_withdrawals": false,
+    "has_logs": false,
+    "has_token_transfers": true,
+    "has_tokens": true,
+    "has_validated_blocks": false,
+    "hash": "0xb71630a6995Bc76283d3010697D0b7833181D910",
+    "implementations": [],
+    "is_contract": false,
+    "is_scam": false,
+    "is_verified": false,
+    "metadata": null,
+    "name": null,
+    "private_tags": [],
+    "proxy_type": null,
+    "public_tags": [],
+    "token": null,
+    "watchlist_address_id": null,
+    "watchlist_names": []
+  },
+  "counters": {
+    "transactions_count": "29",
+    "token_transfers_count": "13",
+    "gas_usage_count": "887617",
+    "validations_count": "0"
+  },
+  "transactions": {
+    "items": [
+      {
+        "priority_fee": "26250000000000",
+        "raw_input": "0x",
+        "result": "success",
+        "hash": "0x18716cdff9964bd904ca553d857d6ccaa5994776fd2575d421938a4b881c15dd",
+        "max_fee_per_gas": "2268528038",
+        "revert_reason": null,
+        "confirmation_duration": [
+          0,
+          12000
+        ],
+        "transaction_burnt_fee": "14885530065000",
+        "type": 2,
+        "token_transfers_overflow": null,
+        "confirmations": 482048,
+        "position": 91,
+        "max_priority_fee_per_gas": "1250000000",
+        "transaction_tag": null,
+        "created_contract": null,
+        "value": "199000000000000000",
+        "from": {
+          "ens_domain_name": null,
+          "hash": "0xb71630a6995Bc76283d3010697D0b7833181D910",
+          "implementations": [],
+          "is_contract": false,
+          "is_scam": false,
+          "is_verified": false,
+          "metadata": null,
+          "name": null,
+          "private_tags": [],
+          "proxy_type": null,
+          "public_tags": [],
+          "watchlist_names": []
+        },
+        "gas_used": "21000",
+        "status": "ok",
+        "to": {
+          "ens_domain_name": null,
+          "hash": "0xA58F1C42FAE774EA8974dbf0Fc8AFAb22bc710bA",
+          "implementations": [],
+          "is_contract": false,
+          "is_scam": false,
+          "is_verified": false,
+          "metadata": null,
+          "name": null,
+          "private_tags": [],
+          "proxy_type": null,
+          "public_tags": [],
+          "watchlist_names": []
+        },
+        "authorization_list": [],
+        "method": null,
+        "fee": {
+          "type": "actual",
+          "value": "41135530065000"
+        },
+        "actions": [],
+        "gas_limit": "21000",
+        "gas_price": "1958834765",
+        "decoded_input": null,
+        "token_transfers": null,
+        "base_fee_per_gas": "708834765",
+        "timestamp": "2025-05-31T11:05:35.000000Z",
+        "nonce": 21,
+        "historic_exchange_rate": "2519.85",
+        "transaction_types": [
+          "coin_transfer"
+        ],
+        "exchange_rate": "3679.42",
+        "block_number": 22602298,
+        "has_error_in_internal_transactions": false
+      },
+      {
+        "block_hash": "0xa6bbfb4ad29f315e7a7ea052e660c2631dd4693d401f32e883e221f3218f8ab3",
+        "block_number": 4859320,
+        "from": {
+          "ens_domain_name": null,
+          "hash": "0x3f5CE5FBFe3E9af3971dD833D26bA9b5C936f0bE",
+          "implementations": [],
+          "is_contract": false,
+          "is_scam": false,
+          "is_verified": false,
+          "metadata": {
+            "tags": [
+              {
+                "meta": {},
+                "name": "Binance",
+                "ordinal": 0,
+                "slug": "binance",
+                "tagType": "protocol"
+              },
+              {
+                "meta": {},
+                "name": "HOT WALLET",
+                "ordinal": 0,
+                "slug": "hot-wallet",
+                "tagType": "generic"
+              },
+              {
+                "meta": {
+                  "main_entity": "Binance",
+                  "tooltipUrl": "https://www.binance.com/"
+                },
+                "name": "Binance: Hot Wallet",
+                "ordinal": 10,
+                "slug": "binance-hot-wallet",
+                "tagType": "name"
+              },
+              {
+                "meta": {},
+                "name": "Exchange",
+                "ordinal": 0,
+                "slug": "exchange",
+                "tagType": "generic"
+              }
+            ]
+          },
+          "name": null,
+          "private_tags": [],
+          "proxy_type": null,
+          "public_tags": [],
+          "watchlist_names": []
+        },
+        "log_index": 3,
+        "method": "transfer",
+        "timestamp": "2018-01-05T17:45:43.000000Z",
+        "to": {
+          "ens_domain_name": null,
+          "hash": "0xb71630a6995Bc76283d3010697D0b7833181D910",
+          "implementations": [],
+          "is_contract": false,
+          "is_scam": false,
+          "is_verified": false,
+          "metadata": null,
+          "name": null,
+          "private_tags": [],
+          "proxy_type": null,
+          "public_tags": [],
+          "watchlist_names": []
+        },
+        "token": {
+          "address": "0x80fB784B7eD66730e8b1DBd9820aFD29931aab03",
+          "address_hash": "0x80fB784B7eD66730e8b1DBd9820aFD29931aab03",
+          "circulating_market_cap": "360003.73715700395",
+          "decimals": "18",
+          "exchange_rate": "0.01001484",
+          "holders": "143546",
+          "holders_count": "143546",
+          "icon_url": "https://assets.coingecko.com/coins/images/1365/small/ethlend.png?1696502424",
+          "name": "Aave  OLD",
+          "symbol": "LEND",
+          "total_supply": "1299999941703168126810575000",
+          "type": "ERC-20",
+          "volume_24h": "0.0"
+        },
+        "total": {
+          "decimals": "18",
+          "value": "949000000000000000000"
+        },
+        "transaction_hash": "0xe3140f88e1a306e31fe0cba991e7b214693f3ea389556a6dd338763ae26a69e1",
+        "type": "token_transfer"
+      }
+    ],
+    "next_page_params": null
+  },
+  "internal_transactions": {
+    "items": [],
+    "next_page_params": null
+  },
+  "logs": {
+    "items": [],
+    "next_page_params": null
+  },
+  "blocks_validated": {
+    "items": [],
+    "next_page_params": null
+  },
+  "token_balances": [
+    {
+      "token": {
+        "address": "0x8eB24319393716668D768dCEC29356ae9CfFe285",
+        "address_hash": "0x8eB24319393716668D768dCEC29356ae9CfFe285",
+        "circulating_market_cap": null,
+        "decimals": "8",
+        "exchange_rate": null,
+        "holders": "26247",
+        "holders_count": "26247",
+        "icon_url": "https://raw.githubusercontent.com/trustwallet/assets/master/blockchains/ethereum/assets/0x8eB24319393716668D768dCEC29356ae9CfFe285/logo.png",
+        "name": "SingularityNET Token",
+        "symbol": "AGI",
+        "total_supply": "99993398717278375",
+        "type": "ERC-20",
+        "volume_24h": null
+      },
+      "token_id": null,
+      "token_instance": null,
+      "value": "55188200000"
+    },
+    {
+      "token": {
+        "address": "0xC31ED16220EA819e0516Fc4960ddfeCb7Ec42CAB",
+        "address_hash": "0xC31ED16220EA819e0516Fc4960ddfeCb7Ec42CAB",
+        "circulating_market_cap": null,
+        "decimals": null,
+        "exchange_rate": null,
+        "holders": "13501",
+        "holders_count": "13501",
+        "icon_url": null,
+        "name": "genesis-eth.net",
+        "symbol": "claim rewards on genesis-eth.net",
+        "total_supply": "20000",
+        "type": "ERC-1155",
+        "volume_24h": null
+      },
+      "token_id": "0",
+      "token_instance": null,
+      "value": "1"
+    }
+  ],
+  "tokens": {
+    "items": [
+      {
+        "token": {
+          "address": "0x8eB24319393716668D768dCEC29356ae9CfFe285",
+          "address_hash": "0x8eB24319393716668D768dCEC29356ae9CfFe285",
+          "circulating_market_cap": null,
+          "decimals": "8",
+          "exchange_rate": null,
+          "holders": "26247",
+          "holders_count": "26247",
+          "icon_url": "https://raw.githubusercontent.com/trustwallet/assets/master/blockchains/ethereum/assets/0x8eB24319393716668D768dCEC29356ae9CfFe285/logo.png",
+          "name": "SingularityNET Token",
+          "symbol": "AGI",
+          "total_supply": "99993398717278375",
+          "type": "ERC-20",
+          "volume_24h": null
+        },
+        "token_id": null,
+        "token_instance": null,
+        "value": "55188200000"
+      },
+      {
+        "token": {
+          "address": "0xC31ED16220EA819e0516Fc4960ddfeCb7Ec42CAB",
+          "address_hash": "0xC31ED16220EA819e0516Fc4960ddfeCb7Ec42CAB",
+          "circulating_market_cap": null,
+          "decimals": null,
+          "exchange_rate": null,
+          "holders": "13501",
+          "holders_count": "13501",
+          "icon_url": null,
+          "name": "genesis-eth.net",
+          "symbol": "claim rewards on genesis-eth.net",
+          "total_supply": "20000",
+          "type": "ERC-1155",
+          "volume_24h": null
+        },
+        "token_id": "0",
+        "token_instance": {
+          "animation_url": null,
+          "external_app_url": null,
+          "id": "0",
+          "image_url": "https://ipfs.io/ipfs/QmeTAazmYyHgw2TBgRjH52vSoPMkgd79YdUgqJzBu6wsnx",
+          "is_unique": null,
+          "media_type": null,
+          "media_url": "https://ipfs.io/ipfs/QmeTAazmYyHgw2TBgRjH52vSoPMkgd79YdUgqJzBu6wsnx",
+          "metadata": {
+            "description": "Visit genesis-eth.net to claim rewards",
+            "image": "https://ipfs.io/ipfs/QmeTAazmYyHgw2TBgRjH52vSoPMkgd79YdUgqJzBu6wsnx",
+            "name": "Visit genesis-eth.net to claim rewards"
+          },
+          "owner": null,
+          "thumbnails": null,
+          "token": {
+            "address": "0xC31ED16220EA819e0516Fc4960ddfeCb7Ec42CAB",
+            "address_hash": "0xC31ED16220EA819e0516Fc4960ddfeCb7Ec42CAB",
+            "circulating_market_cap": null,
+            "decimals": null,
+            "exchange_rate": null,
+            "holders": "13501",
+            "holders_count": "13501",
+            "icon_url": null,
+            "name": "genesis-eth.net",
+            "symbol": "claim rewards on genesis-eth.net",
+            "total_supply": "20000",
+            "type": "ERC-1155",
+            "volume_24h": null
+          }
+        },
+        "value": "1"
+      }
+    ],
+    "next_page_params": null
+  },
+  "coin_balance_history": {
+    "items": [
+      {
+        "block_number": 22602298,
+        "block_timestamp": "2025-05-31T11:05:35Z",
+        "delta": "-199041135530065000",
+        "transaction_hash": "0x18716cdff9964bd904ca553d857d6ccaa5994776fd2575d421938a4b881c15dd",
+        "value": "345285048595154"
+      },
+      {
+        "block_number": 21185233,
+        "block_timestamp": "2024-10-27T05:48:58Z",
+        "delta": "-40547601772879000",
+        "transaction_hash": "0x7731ea002c37922b8558a3bfab3b1c20a67f82cb69b12783695b53eec8196747",
+        "value": "199386420578660154"
+      },
+    ],
+    "next_page_params": null
+  },
+  "coin_balance_history_by_day": {
+    "items": [],
+    "days": 10
+  },
+  "withdrawals": {
+    "items": [],
+    "next_page_params": null
+  },
+  "nft": {
+    "items": [
+      {
+        "animation_url": null,
+        "external_app_url": null,
+        "id": "0",
+        "image_url": "https://ipfs.io/ipfs/QmeTAazmYyHgw2TBgRjH52vSoPMkgd79YdUgqJzBu6wsnx",
+        "is_unique": null,
+        "media_type": null,
+        "media_url": "https://ipfs.io/ipfs/QmeTAazmYyHgw2TBgRjH52vSoPMkgd79YdUgqJzBu6wsnx",
+        "metadata": {
+          "description": "Visit genesis-eth.net to claim rewards",
+          "image": "https://ipfs.io/ipfs/QmeTAazmYyHgw2TBgRjH52vSoPMkgd79YdUgqJzBu6wsnx",
+          "name": "Visit genesis-eth.net to claim rewards"
+        },
+        "owner": null,
+        "thumbnails": null,
+        "token": {
+          "address": "0xC31ED16220EA819e0516Fc4960ddfeCb7Ec42CAB",
+          "address_hash": "0xC31ED16220EA819e0516Fc4960ddfeCb7Ec42CAB",
+          "circulating_market_cap": null,
+          "decimals": null,
+          "exchange_rate": null,
+          "holders": "13501",
+          "holders_count": "13501",
+          "icon_url": null,
+          "name": "genesis-eth.net",
+          "symbol": "claim rewards on genesis-eth.net",
+          "total_supply": "20000",
+          "type": "ERC-1155",
+          "volume_24h": null
+        },
+        "token_type": "ERC-1155",
+        "value": "1"
+      }
+    ],
+    "next_page_params": null
+  },
+  "nft_collections": {
+    "items": [
+      {
+        "amount": "1",
+        "token": {
+          "address": "0xC31ED16220EA819e0516Fc4960ddfeCb7Ec42CAB",
+          "address_hash": "0xC31ED16220EA819e0516Fc4960ddfeCb7Ec42CAB",
+          "circulating_market_cap": null,
+          "decimals": null,
+          "exchange_rate": null,
+          "holders": "13501",
+          "holders_count": "13501",
+          "icon_url": null,
+          "name": "genesis-eth.net",
+          "symbol": "claim rewards on genesis-eth.net",
+          "total_supply": "20000",
+          "type": "ERC-1155",
+          "volume_24h": null
+        },
+        "token_instances": [
+          {
+            "animation_url": null,
+            "external_app_url": null,
+            "id": "0",
+            "image_url": "https://ipfs.io/ipfs/QmeTAazmYyHgw2TBgRjH52vSoPMkgd79YdUgqJzBu6wsnx",
+            "is_unique": null,
+            "media_type": null,
+            "media_url": "https://ipfs.io/ipfs/QmeTAazmYyHgw2TBgRjH52vSoPMkgd79YdUgqJzBu6wsnx",
+            "metadata": {
+              "description": "Visit genesis-eth.net to claim rewards",
+              "image": "https://ipfs.io/ipfs/QmeTAazmYyHgw2TBgRjH52vSoPMkgd79YdUgqJzBu6wsnx",
+              "name": "Visit genesis-eth.net to claim rewards"
+            },
+            "owner": null,
+            "thumbnails": null,
+            "token": null,
+            "token_type": "ERC-1155",
+            "value": "1"
+          }
+        ]
+      }
+    ],
+    "next_page_params": null
+  }
+}

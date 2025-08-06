@@ -153,3 +153,149 @@ spec:
                 name: ollama
                 port:
                   number: 11434
+---
+# Llama3.1 8B Dedicated Deployment - Single Pod
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: ollama-llama
+  namespace: chainfetch
+  labels:
+    app: ollama-llama
+spec:
+  replicas: 1  # Single pod for Llama3.1 8B
+  selector:
+    matchLabels:
+      app: ollama-llama
+  template:
+    metadata:
+      labels:
+        app: ollama-llama
+    spec:
+      runtimeClassName: nvidia  # Use NVIDIA runtime for GPU access
+      initContainers:
+      - name: llama-model-puller
+        image: ollama/ollama:latest
+        command: ["/bin/sh"]
+        args:
+          - -c
+          - |
+            /bin/ollama serve &
+            sleep 10
+            /bin/ollama pull llama3.1:8b
+            sleep 5
+            pkill ollama
+        volumeMounts:
+        - name: llama-storage
+          mountPath: /root/.ollama
+        env:
+        - name: OLLAMA_HOST
+          value: "0.0.0.0"
+        - name: NVIDIA_VISIBLE_DEVICES
+          value: "all"
+        - name: NVIDIA_DRIVER_CAPABILITIES
+          value: "compute,utility"
+      containers:
+      - name: ollama-llama
+        image: ollama/ollama:latest
+        ports:
+        - containerPort: 11434
+          name: http
+        env:
+        - name: OLLAMA_HOST
+          value: "0.0.0.0"
+        - name: OLLAMA_ORIGINS
+          value: "*"
+        - name: OLLAMA_KEEP_ALIVE
+          value: "-1"  # Keep model loaded forever
+        - name: NVIDIA_VISIBLE_DEVICES
+          value: "all"
+        - name: NVIDIA_DRIVER_CAPABILITIES
+          value: "compute,utility"
+        volumeMounts:
+        - name: llama-storage
+          mountPath: /root/.ollama
+        resources:
+          requests:
+            memory: "12Gi"        # 12GB for Llama3.1 8B model
+            cpu: "1000m"          # 1 CPU core
+          limits:
+            memory: "16Gi"        # 16GB limit for headroom
+            cpu: "2000m"          # 2 CPU cores limit
+        readinessProbe:
+          httpGet:
+            path: /api/tags
+            port: 11434
+          initialDelaySeconds: 30
+          periodSeconds: 10
+          timeoutSeconds: 5
+          failureThreshold: 3
+        livenessProbe:
+          httpGet:
+            path: /api/tags
+            port: 11434
+          initialDelaySeconds: 60
+          periodSeconds: 30
+          timeoutSeconds: 10
+      volumes:
+      - name: llama-storage
+        persistentVolumeClaim:
+          claimName: llama-models-pvc
+---
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: llama-models-pvc
+  namespace: chainfetch
+spec:
+  accessModes:
+    - ReadWriteOnce
+  storageClassName: longhorn
+  resources:
+    requests:
+      storage: 25Gi  # 25GB for Llama3.1 8B model
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: ollama-llama
+  namespace: chainfetch
+  labels:
+    app: ollama-llama
+spec:
+  type: ClusterIP
+  ports:
+  - port: 11434
+    targetPort: 11434
+    protocol: TCP
+    name: http
+  selector:
+    app: ollama-llama
+---
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: ollama-llama-protected-ingress
+  namespace: chainfetch
+  annotations:
+    cert-manager.io/cluster-issuer: letsencrypt-prod
+    nginx.ingress.kubernetes.io/auth-url: "http://bearer-auth.chainfetch.svc.cluster.local/auth"
+    nginx.ingress.kubernetes.io/auth-method: "GET"
+    nginx.ingress.kubernetes.io/auth-response-headers: "X-Auth-Request-User,X-Auth-Request-Email"
+spec:
+  ingressClassName: nginx
+  tls:
+    - hosts:
+        - llama.chainfetch.app
+      secretName: llama-tls  # Use separate certificate for Llama
+  rules:
+    - host: llama.chainfetch.app
+      http:
+        paths:
+          - path: /
+            pathType: Prefix
+            backend:
+              service:
+                name: ollama-llama
+                port:
+                  number: 11434
