@@ -355,7 +355,7 @@ class Api::V1::Ethereum::AddressesController < Api::V1::Ethereum::BaseController
     addresses = addresses.where("data->'transactions'->'items' @> ?", [{ from: { metadata: { tags: [{ meta: { tooltipUrl: params[:metadata_tags_meta_tooltip_url] } }] } } }].to_json) if params[:metadata_tags_meta_tooltip_url].present?
     
     # Apply limit with default and maximum
-    limit = params[:limit]&.to_i || 100
+    limit = params[:limit]&.to_i || 10
     
     render json: { results: addresses.limit(limit) }
   end
