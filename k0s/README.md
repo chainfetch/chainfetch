@@ -224,8 +224,53 @@ These manifests spin up the full **FetchSERP stack** (Rails app + workers + auxi
    export KUBECONFIG=/Users/olivier/Desktop/kubeconfig && kubectl delete pods -n chainfetch -l app=chainfetch-web
    export KUBECONFIG=/Users/olivier/Desktop/kubeconfig && kubectl delete pods -n chainfetch -l app=chainfetch-jobs
 
-export KUBECONFIG=/Users/olivier/Desktop/kubeconfig && kubectl get pods -n chainfetch
-export KUBECONFIG=/Users/olivier/Desktop/kubeconfig && kubectl exec -it chainfetch-web-75574c7ffd-nc8ds -n chainfetch -- /bin/bash
+   export KUBECONFIG=/Users/olivier/Desktop/kubeconfig && kubectl get pods -n chainfetch
+   export KUBECONFIG=/Users/olivier/Desktop/kubeconfig && kubectl exec -it chainfetch-web-75574c7ffd-nc8ds -n chainfetch -- /bin/bash
+
+   export KUBECONFIG=/Users/olivier/Desktop/kubeconfig && kubectl top nodes
+   export KUBECONFIG=/Users/olivier/Desktop/kubeconfig && kubectl top pods -n chainfetch
+   export KUBECONFIG=/Users/olivier/Desktop/kubeconfig && kubectl top pods --all-namespaces
+
+   export KUBECONFIG=/Users/olivier/Desktop/kubeconfig && kubectl get nodes
+   export KUBECONFIG=/Users/olivier/Desktop/kubeconfig && kubectl describe node ubuntu-2404-noble-amd64-base
+
+   export KUBECONFIG=/Users/olivier/Desktop/kubeconfig && watch -n 1 kubectl top pods -n chainfetch
+   export KUBECONFIG=/Users/olivier/Desktop/kubeconfig && watch -n 1 kubectl top pods --all-namespaces
+
+   export KUBECONFIG=/Users/olivier/Desktop/kubeconfig && kubectl exec -it ollama-5d8455bbc8-rzx5t -n chainfetch -- nvidia-smi
+   export KUBECONFIG=/Users/olivier/Desktop/kubeconfig && kubectl exec -it ollama-5d8455bbc8-rzx5t -n chainfetch -- watch -n 1 nvidia-smi
+
+   # List PVCs
+   export KUBECONFIG=/Users/olivier/Desktop/kubeconfig && kubectl get pvc -n chainfetch
+   export KUBECONFIG=/Users/olivier/Desktop/kubeconfig && kubectl get pvc --all-namespaces
+
+   # Describe PVC details
+   export KUBECONFIG=/Users/olivier/Desktop/kubeconfig && kubectl describe pvc postgres-data-longhorn -n chainfetch
+
+   # List Persistent Volumes
+   export KUBECONFIG=/Users/olivier/Desktop/kubeconfig && kubectl get pv
+   export KUBECONFIG=/Users/olivier/Desktop/kubeconfig && kubectl describe pv <pv-name>
+
+   # Delete PVC (careful!)
+   export KUBECONFIG=/Users/olivier/Desktop/kubeconfig && kubectl delete pvc <pvc-name> -n chainfetch
+
+   # List Longhorn volumes
+   export KUBECONFIG=/Users/olivier/Desktop/kubeconfig && kubectl get volume -n longhorn-system
+   export KUBECONFIG=/Users/olivier/Desktop/kubeconfig && kubectl get volume <volume-name> -n longhorn-system
+
+   # Describe Longhorn volume
+   export KUBECONFIG=/Users/olivier/Desktop/kubeconfig && kubectl describe volume <volume-name> -n longhorn-system
+
+   # Delete Longhorn volume (nuclear option!)
+   export KUBECONFIG=/Users/olivier/Desktop/kubeconfig && kubectl delete volume <volume-name> -n longhorn-system
+
+   # Check Longhorn nodes and storage
+   export KUBECONFIG=/Users/olivier/Desktop/kubeconfig && kubectl get nodes.longhorn.io -n longhorn-system
+   export KUBECONFIG=/Users/olivier/Desktop/kubeconfig && kubectl describe nodes.longhorn.io ubuntu-2404-noble-amd64-base -n longhorn-system
+
+   # Check Longhorn system pods
+   export KUBECONFIG=/Users/olivier/Desktop/kubeconfig && kubectl get pods -n longhorn-system
+
    ```
 12. 🗂️ **Access Longhorn UI**
 

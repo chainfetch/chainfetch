@@ -27,12 +27,30 @@ class Api::V1::Ethereum::AddressesController < Api::V1::Ethereum::BaseController
     end
   end
 
-  # @summary Search for addresses
+  # @summary Hybrid Search for addresses
   # @parameter query(query) [!String] The query to search for
   # @response success(200) [Hash{response: String}]
   def search
     query = params[:query]
     response = Address.search(query)
+    render json: { response: response }
+  end
+
+  # @summary Semantic Search for addresses
+  # @parameter query(query) [!String] The query to search for
+  # @response success(200) [Hash{response: String}]
+  def semantic_search
+    query = params[:query]
+    response = Address.semantic_search(query)
+    render json: { response: response }
+  end
+
+  # @summary JSON Search for addresses
+  # @parameter query(query) [!String] The query to search for
+  # @response success(200) [Hash{response: String}]
+  def json_search
+    query = params[:query]
+    response = Address.json_search(query)
     render json: { response: response }
   end
 
