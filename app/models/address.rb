@@ -1,12 +1,6 @@
 class Address < ApplicationRecord
   after_create_commit :generate_summary_and_embedding
 
-  def self.search(query)
-    semantic_results = self.semantic_search(query)
-    json_results = self.json_search(query)
-    AddressSearchService.new(query, semantic_results, json_results).call
-  end
-
   def self.semantic_search(query, limit = 10)
     embedding = EmbeddingService.new(query).call
     qdrant_objects = qdrant_query(embedding, limit)

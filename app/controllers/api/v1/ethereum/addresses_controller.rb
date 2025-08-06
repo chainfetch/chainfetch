@@ -27,23 +27,16 @@ class Api::V1::Ethereum::AddressesController < Api::V1::Ethereum::BaseController
     end
   end
 
-  # @summary Hybrid Search for addresses
-  # @parameter query(query) [!String] The query to search for
-  # @response success(200) [Hash{response: String}]
-  def search
-    query = params[:query]
-    response = Address.search(query)
-    render json: { response: response }
-  end
-
   # @summary Semantic Search for addresses
   # @parameter query(query) [!String] The query to search for
+  # @parameter limit(query) [!Integer] The number of results to return (default: 10)
   # @response success(200) [Hash{result: Hash{points: Array<Hash{id: Integer, version: Integer, score: Float, payload: Hash{address_summary: String}}}>}}]
   
   def semantic_search
     query = params[:query]
+    limit = params[:limit] || 10
     embedding = EmbeddingService.new(query).call
-    qdrant_objects = QdrantService.new.query_points(collection: "addresses", query: embedding, limit: 10)
+    qdrant_objects = QdrantService.new.query_points(collection: "addresses", query: embedding, limit: limit)
     render json: qdrant_objects
   end
 
