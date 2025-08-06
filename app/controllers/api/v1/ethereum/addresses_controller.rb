@@ -214,6 +214,8 @@ class Api::V1::Ethereum::AddressesController < Api::V1::Ethereum::BaseController
   # @parameter limit(query) [Integer] Number of results to return (default: 10, max: 50)
   # @parameter offset(query) [Integer] Number of results to skip for pagination (default: 0)
   # @parameter page(query) [Integer] Page number (alternative to offset, starts at 1)
+  # @parameter sort_by(query) [String] Field to sort by (default: "id")
+  # @parameter sort_order(query) [String] Sort direction: "asc" or "desc" (default: "desc")
   # @response success(200) [Hash{results: Array<Hash{id: Integer, address_hash: String, data: Hash}>, pagination: Hash{total: Integer, limit: Integer, offset: Integer, page: Integer, total_pages: Integer}}]
   # This endpoint provides 150+ parameters to search for addresses based on the provided input.
   def json_search
@@ -357,6 +359,170 @@ class Api::V1::Ethereum::AddressesController < Api::V1::Ethereum::BaseController
     addresses = addresses.where("data->'transactions'->'items' @> ?", [{ from: { metadata: { tags: [{ tagType: params[:metadata_tags_tag_type] }] } } }].to_json) if params[:metadata_tags_tag_type].present?
     addresses = addresses.where("data->'transactions'->'items' @> ?", [{ from: { metadata: { tags: [{ meta: { main_entity: params[:metadata_tags_meta_main_entity] } }] } } }].to_json) if params[:metadata_tags_meta_main_entity].present?
     addresses = addresses.where("data->'transactions'->'items' @> ?", [{ from: { metadata: { tags: [{ meta: { tooltipUrl: params[:metadata_tags_meta_tooltip_url] } }] } } }].to_json) if params[:metadata_tags_meta_tooltip_url].present?
+    
+    # Apply sorting
+    sort_by = params[:sort_by] || 'id'
+    sort_order = params[:sort_order]&.downcase == 'asc' ? 'asc' : 'desc'
+    
+    allowed_sort_fields = {
+      # Basic fields
+      'id' => 'addresses.id',
+      'created_at' => 'addresses.created_at',
+      'updated_at' => 'addresses.updated_at',
+      'address_hash' => 'addresses.address_hash',
+      
+      # Balance fields (from JSON data)
+      'eth_balance' => "CAST(data->'info'->>'coin_balance' AS NUMERIC)",
+      'coin_balance' => "CAST(data->'info'->>'coin_balance' AS NUMERIC)",
+      'exchange_rate' => "CAST(data->'info'->>'exchange_rate' AS DECIMAL)",
+      'block_number_balance_updated_at' => "CAST(data->'info'->>'block_number_balance_updated_at' AS INTEGER)",
+      
+      # Boolean fields (convert to numeric for sorting)
+      'has_logs' => "CASE WHEN data->'info'->>'has_logs' = 'true' THEN 1 ELSE 0 END",
+      'is_contract' => "CASE WHEN data->'info'->>'is_contract' = 'true' THEN 1 ELSE 0 END",
+      'has_beacon_chain_withdrawals' => "CASE WHEN data->'info'->>'has_beacon_chain_withdrawals' = 'true' THEN 1 ELSE 0 END",
+      'has_token_transfers' => "CASE WHEN data->'info'->>'has_token_transfers' = 'true' THEN 1 ELSE 0 END",
+      'has_tokens' => "CASE WHEN data->'info'->>'has_tokens' = 'true' THEN 1 ELSE 0 END",
+      'has_validated_blocks' => "CASE WHEN data->'info'->>'has_validated_blocks' = 'true' THEN 1 ELSE 0 END",
+      'is_scam' => "CASE WHEN data->'info'->>'is_scam' = 'true' THEN 1 ELSE 0 END",
+      'is_verified' => "CASE WHEN data->'info'->>'is_verified' = 'true' THEN 1 ELSE 0 END",
+      
+      # String fields
+      'ens_domain_name' => "data->'info'->>'ens_domain_name'",
+      'name' => "data->'info'->>'name'",
+      'hash' => "data->'info'->>'hash'",
+      'creation_transaction_hash' => "data->'info'->>'creation_transaction_hash'",
+      'creator_address_hash' => "data->'info'->>'creator_address_hash'",
+      'proxy_type' => "data->'info'->>'proxy_type'",
+      'watchlist_address_id' => "data->'info'->>'watchlist_address_id'",
+      
+      # Counter fields
+      'transactions_count' => "CAST(data->'counters'->>'transactions_count' AS INTEGER)",
+      'token_transfers_count' => "CAST(data->'counters'->>'token_transfers_count' AS INTEGER)",
+      'gas_usage_count' => "CAST(data->'counters'->>'gas_usage_count' AS INTEGER)",
+      'validations_count' => "CAST(data->'counters'->>'validations_count' AS INTEGER)",
+      
+      # Coin balance history fields
+      'coin_balance_history_block_number' => "CAST(data->'coin_balance_history'->'items'->0->>'block_number' AS INTEGER)",
+      'coin_balance_history_block_timestamp' => "data->'coin_balance_history'->'items'->0->>'block_timestamp'",
+      'coin_balance_history_delta' => "CAST(data->'coin_balance_history'->'items'->0->>'delta' AS NUMERIC)",
+      'coin_balance_history_value' => "CAST(data->'coin_balance_history'->'items'->0->>'value' AS NUMERIC)",
+      'coin_balance_history_by_day_days' => "CAST(data->'coin_balance_history_by_day'->>'days' AS INTEGER)",
+      
+      # Transaction fields (from transactions->items array, using first item)
+      'tx_hash' => "data->'transactions'->'items'->0->>'hash'",
+      'tx_status' => "data->'transactions'->'items'->0->>'status'",
+      'tx_result' => "data->'transactions'->'items'->0->>'result'",
+      'tx_method' => "data->'transactions'->'items'->0->>'method'",
+      'tx_type' => "CAST(data->'transactions'->'items'->0->>'type' AS INTEGER)",
+      'tx_value' => "CAST(data->'transactions'->'items'->0->>'value' AS NUMERIC)",
+      'tx_gas_used' => "CAST(data->'transactions'->'items'->0->>'gas_used' AS NUMERIC)",
+      'tx_gas_limit' => "CAST(data->'transactions'->'items'->0->>'gas_limit' AS NUMERIC)",
+      'tx_gas_price' => "CAST(data->'transactions'->'items'->0->>'gas_price' AS NUMERIC)",
+      'tx_block_number' => "CAST(data->'transactions'->'items'->0->>'block_number' AS INTEGER)",
+      'tx_block_hash' => "data->'transactions'->'items'->0->>'block_hash'",
+      'tx_priority_fee' => "CAST(data->'transactions'->'items'->0->>'priority_fee' AS NUMERIC)",
+      'tx_raw_input' => "data->'transactions'->'items'->0->>'raw_input'",
+      'tx_max_fee_per_gas' => "CAST(data->'transactions'->'items'->0->>'max_fee_per_gas' AS NUMERIC)",
+      'tx_revert_reason' => "data->'transactions'->'items'->0->>'revert_reason'",
+      'tx_transaction_burnt_fee' => "CAST(data->'transactions'->'items'->0->>'transaction_burnt_fee' AS NUMERIC)",
+      'tx_token_transfers_overflow' => "CASE WHEN data->'transactions'->'items'->0->>'token_transfers_overflow' = 'true' THEN 1 ELSE 0 END",
+      'tx_confirmations' => "CAST(data->'transactions'->'items'->0->>'confirmations' AS INTEGER)",
+      'tx_position' => "CAST(data->'transactions'->'items'->0->>'position' AS INTEGER)",
+      'tx_max_priority_fee_per_gas' => "CAST(data->'transactions'->'items'->0->>'max_priority_fee_per_gas' AS NUMERIC)",
+      'tx_transaction_tag' => "data->'transactions'->'items'->0->>'transaction_tag'",
+      'tx_created_contract' => "data->'transactions'->'items'->0->>'created_contract'",
+      'tx_base_fee_per_gas' => "CAST(data->'transactions'->'items'->0->>'base_fee_per_gas' AS NUMERIC)",
+      'tx_timestamp' => "data->'transactions'->'items'->0->>'timestamp'",
+      'tx_nonce' => "CAST(data->'transactions'->'items'->0->>'nonce' AS INTEGER)",
+      'tx_historic_exchange_rate' => "CAST(data->'transactions'->'items'->0->>'historic_exchange_rate' AS DECIMAL)",
+      'tx_exchange_rate' => "CAST(data->'transactions'->'items'->0->>'exchange_rate' AS DECIMAL)",
+      'tx_has_error_in_internal_transactions' => "CASE WHEN data->'transactions'->'items'->0->>'has_error_in_internal_transactions' = 'true' THEN 1 ELSE 0 END",
+      'tx_log_index' => "CAST(data->'transactions'->'items'->0->>'log_index' AS INTEGER)",
+      'tx_decoded_input' => "data->'transactions'->'items'->0->>'decoded_input'",
+      'tx_token_transfers' => "data->'transactions'->'items'->0->>'token_transfers'",
+      'tx_fee_type' => "data->'transactions'->'items'->0->'fee'->>'type'",
+      'tx_fee_value' => "CAST(data->'transactions'->'items'->0->'fee'->>'value' AS NUMERIC)",
+      'tx_total_decimals' => "CAST(data->'transactions'->'items'->0->'total'->>'decimals' AS INTEGER)",
+      'tx_total_value' => "CAST(data->'transactions'->'items'->0->'total'->>'value' AS NUMERIC)",
+      
+      # Transaction from/to address fields
+      'tx_from_hash' => "data->'transactions'->'items'->0->'from'->>'hash'",
+      'tx_from_ens_domain_name' => "data->'transactions'->'items'->0->'from'->>'ens_domain_name'",
+      'tx_from_is_contract' => "CASE WHEN data->'transactions'->'items'->0->'from'->>'is_contract' = 'true' THEN 1 ELSE 0 END",
+      'tx_from_is_scam' => "CASE WHEN data->'transactions'->'items'->0->'from'->>'is_scam' = 'true' THEN 1 ELSE 0 END",
+      'tx_from_is_verified' => "CASE WHEN data->'transactions'->'items'->0->'from'->>'is_verified' = 'true' THEN 1 ELSE 0 END",
+      'tx_from_name' => "data->'transactions'->'items'->0->'from'->>'name'",
+      'tx_from_proxy_type' => "data->'transactions'->'items'->0->'from'->>'proxy_type'",
+      'tx_to_hash' => "data->'transactions'->'items'->0->'to'->>'hash'",
+      'tx_to_ens_domain_name' => "data->'transactions'->'items'->0->'to'->>'ens_domain_name'",
+      'tx_to_is_contract' => "CASE WHEN data->'transactions'->'items'->0->'to'->>'is_contract' = 'true' THEN 1 ELSE 0 END",
+      'tx_to_is_scam' => "CASE WHEN data->'transactions'->'items'->0->'to'->>'is_scam' = 'true' THEN 1 ELSE 0 END",
+      'tx_to_is_verified' => "CASE WHEN data->'transactions'->'items'->0->'to'->>'is_verified' = 'true' THEN 1 ELSE 0 END",
+      'tx_to_name' => "data->'transactions'->'items'->0->'to'->>'name'",
+      'tx_to_proxy_type' => "data->'transactions'->'items'->0->'to'->>'proxy_type'",
+      
+      # Token fields (from token_balances->items array, using first item)
+      'token_address' => "data->'token_balances'->0->'token'->>'address'",
+      'token_name' => "data->'token_balances'->0->'token'->>'name'",
+      'token_symbol' => "data->'token_balances'->0->'token'->>'symbol'",
+      'token_type' => "data->'token_balances'->0->'token'->>'type'",
+      'token_decimals' => "CAST(data->'token_balances'->0->'token'->>'decimals' AS INTEGER)",
+      'token_holders' => "CAST(data->'token_balances'->0->'token'->>'holders' AS INTEGER)",
+      'token_total_supply' => "CAST(data->'token_balances'->0->'token'->>'total_supply' AS NUMERIC)",
+      'token_balance_value' => "CAST(data->'token_balances'->0->>'value' AS NUMERIC)",
+      'token_id' => "data->'token_balances'->0->>'token_id'",
+      'token_circulating_market_cap' => "CAST(data->'token_balances'->0->'token'->>'circulating_market_cap' AS NUMERIC)",
+      'token_icon_url' => "data->'token_balances'->0->'token'->>'icon_url'",
+      'token_volume_24h' => "CAST(data->'token_balances'->0->'token'->>'volume_24h' AS NUMERIC)",
+      
+      # Token instance fields (from tokens->items array, using first item)
+      'token_instance_animation_url' => "data->'tokens'->'items'->0->'token_instance'->>'animation_url'",
+      'token_instance_external_app_url' => "data->'tokens'->'items'->0->'token_instance'->>'external_app_url'",
+      'token_instance_id' => "data->'tokens'->'items'->0->'token_instance'->>'id'",
+      'token_instance_image_url' => "data->'tokens'->'items'->0->'token_instance'->>'image_url'",
+      'token_instance_is_unique' => "CASE WHEN data->'tokens'->'items'->0->'token_instance'->>'is_unique' = 'true' THEN 1 ELSE 0 END",
+      'token_instance_media_type' => "data->'tokens'->'items'->0->'token_instance'->>'media_type'",
+      'token_instance_media_url' => "data->'tokens'->'items'->0->'token_instance'->>'media_url'",
+      'token_instance_owner' => "data->'tokens'->'items'->0->'token_instance'->>'owner'",
+      'token_instance_thumbnails' => "data->'tokens'->'items'->0->'token_instance'->>'thumbnails'",
+      'token_instance_metadata_description' => "data->'tokens'->'items'->0->'token_instance'->'metadata'->>'description'",
+      'token_instance_metadata_image' => "data->'tokens'->'items'->0->'token_instance'->'metadata'->>'image'",
+      'token_instance_metadata_name' => "data->'tokens'->'items'->0->'token_instance'->'metadata'->>'name'",
+      
+      # NFT fields (from nft->items array, using first item)
+      'nft_animation_url' => "data->'nft'->'items'->0->>'animation_url'",
+      'nft_external_app_url' => "data->'nft'->'items'->0->>'external_app_url'",
+      'nft_image_url' => "data->'nft'->'items'->0->>'image_url'",
+      'nft_media_url' => "data->'nft'->'items'->0->>'media_url'",
+      'nft_media_type' => "data->'nft'->'items'->0->>'media_type'",
+      'nft_is_unique' => "CASE WHEN data->'nft'->'items'->0->>'is_unique' = 'true' THEN 1 ELSE 0 END",
+      'nft_token_type' => "data->'nft'->'items'->0->>'token_type'",
+      'nft_metadata_description' => "data->'nft'->'items'->0->'metadata'->>'description'",
+      'nft_metadata_name' => "data->'nft'->'items'->0->'metadata'->>'name'",
+      'nft_collections_amount' => "CAST(data->'nft_collections'->'items'->0->>'amount' AS INTEGER)",
+      
+      # Metadata tags fields (from transactions->items->from->metadata->tags array)
+      'metadata_tags_name' => "data->'transactions'->'items'->0->'from'->'metadata'->'tags'->0->>'name'",
+      'metadata_tags_slug' => "data->'transactions'->'items'->0->'from'->'metadata'->'tags'->0->>'slug'",
+      'metadata_tags_tag_type' => "data->'transactions'->'items'->0->'from'->'metadata'->'tags'->0->>'tagType'",
+      'metadata_tags_ordinal' => "CAST(data->'transactions'->'items'->0->'from'->'metadata'->'tags'->0->>'ordinal' AS INTEGER)",
+      'metadata_tags_meta_main_entity' => "data->'transactions'->'items'->0->'from'->'metadata'->'tags'->0->'meta'->>'main_entity'",
+      'metadata_tags_meta_tooltip_url' => "data->'transactions'->'items'->0->'from'->'metadata'->'tags'->0->'meta'->>'tooltipUrl'"
+    }
+    
+    if allowed_sort_fields.key?(sort_by)
+      sort_column = allowed_sort_fields[sort_by]
+      # Add NULLS LAST for JSON-based fields to ensure addresses with data come first
+      if sort_column.include?("data->")
+        addresses = addresses.order(Arel.sql("#{sort_column} #{sort_order} NULLS LAST"))
+      else
+        addresses = addresses.order(Arel.sql("#{sort_column} #{sort_order}"))
+      end
+    else
+      # Default fallback
+      addresses = addresses.order(id: :desc)
+    end
     
     # Apply pagination with defaults
     limit = params[:limit]&.to_i || 10

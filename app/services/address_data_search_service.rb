@@ -1,3 +1,8 @@
+require 'net/http'
+require 'uri'
+require 'json'
+require 'openssl'
+
 class AddressDataSearchService
   class ApiError < StandardError; end
   class InvalidQueryError < StandardError; end
@@ -34,6 +39,15 @@ class AddressDataSearchService
       - "between X and Y" → use both _min and _max parameters
       - "exactly", "equal to" → use the exact value without min/max suffix
       
+      SORTING: Recognize sorting intentions in natural language:
+      - "top", "highest", "largest", "most" → sort_order: "desc"
+      - "bottom", "lowest", "smallest", "least" → sort_order: "asc"
+      - "newest", "latest", "recent" → sort_by: "created_at", sort_order: "desc"
+      - "oldest", "earliest" → sort_by: "created_at", sort_order: "asc"
+      - "by balance", "richest" → sort_by: "eth_balance", sort_order: "desc"
+      - "by transaction count" → sort_by: "transactions_count"
+      - "by token holders" → sort_by: "token_holders"
+      
       Parameter mapping guide:
       - ETH amounts → eth_balance_min/max (in ETH units like "1.5")
       - WEI amounts → coin_balance_min/max (in WEI like "1500000000000000000")
@@ -44,13 +58,17 @@ class AddressDataSearchService
       - NFT filters → nft_* parameters
       - Activity flags → has_logs, has_token_transfers, has_tokens, etc.
       - Result limits → limit (default: 10, max: 50)
+      - Sorting → sort_by (field name), sort_order ("asc" or "desc", default: "desc")
       
       Examples of correct tool calls:
       - "addresses with more than 1 ETH" → search_addresses({"eth_balance_min": "1"})
       - "verified contracts" → search_addresses({"is_contract": true, "is_verified": true})
       - "addresses holding USDC" → search_addresses({"token_symbol": "USDC"})
       - "100+ transaction addresses" → search_addresses({"transactions_count_min": 100})
-      - "top 50 by balance" → search_addresses({"limit": 50})
+      - "top 50 by balance" → search_addresses({"limit": 50, "sort_by": "eth_balance", "sort_order": "desc"})
+      - "oldest addresses first" → search_addresses({"sort_by": "created_at", "sort_order": "asc"})
+      - "contracts by transaction count" → search_addresses({"is_contract": true, "sort_by": "transactions_count", "sort_order": "desc"})
+      - "tokens sorted by holders" → search_addresses({"has_tokens": true, "sort_by": "token_holders", "sort_order": "desc"})
 
       Set the limit to 10 if not specified.
       
@@ -314,7 +332,9 @@ class AddressDataSearchService
               metadata_tags_ordinal_max: { type: "integer", description: "Maximum metadata tags ordinal" },
               metadata_tags_meta_main_entity: { type: "string", description: "Metadata tags meta main entity" },
               metadata_tags_meta_tooltip_url: { type: "string", description: "Metadata tags meta tooltip URL" },
-              limit: { type: "integer", description: "Number of results to return (default: 10, max: 50)" }
+              limit: { type: "integer", description: "Number of results to return (default: 10, max: 50)" },
+              sort_by: { type: "string", description: "Field to sort by (e.g., eth_balance, transactions_count, created_at, token_holders, etc.)" },
+              sort_order: { type: "string", description: "Sort order: 'asc' for ascending or 'desc' for descending (default: 'desc')" }
             },
             required: [],
             additionalProperties: false
