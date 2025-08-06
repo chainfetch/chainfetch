@@ -43,7 +43,7 @@ class AddressDataSearchService
       - Token filters → token_symbol, token_name, token_address, token_type
       - NFT filters → nft_* parameters
       - Activity flags → has_logs, has_token_transfers, has_tokens, etc.
-      - Result limits → limit (default: 100, max: 1000)
+      - Result limits → limit (default: 10, max: 1000)
       
       Examples of correct tool calls:
       - "addresses with more than 1 ETH" → search_addresses({"eth_balance_min": "1"})
@@ -51,6 +51,8 @@ class AddressDataSearchService
       - "addresses holding USDC" → search_addresses({"token_symbol": "USDC"})
       - "100+ transaction addresses" → search_addresses({"transactions_count_min": 100})
       - "top 50 by balance" → search_addresses({"limit": 50})
+
+      Set the limit to 10 if not specified.
       
       Always call the search_addresses tool with the parameters that best match the user's intent.
     PROMPT
