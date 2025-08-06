@@ -38,11 +38,13 @@ class Api::V1::Ethereum::AddressesController < Api::V1::Ethereum::BaseController
 
   # @summary Semantic Search for addresses
   # @parameter query(query) [!String] The query to search for
-  # @response success(200) [Hash{response: String}]
+  # @response success(200) [Hash{result: Hash{points: Array<Hash{id: Integer, version: Integer, score: Float, payload: Hash{address_summary: String}}}>}}]
+  
   def semantic_search
     query = params[:query]
-    response = Address.semantic_search(query)
-    render json: { response: response }
+    embedding = EmbeddingService.new(query).call
+    qdrant_objects = QdrantService.new.query_points(collection: "addresses", query: embedding, limit: 10)
+    render json: qdrant_objects
   end
 
   # @summary JSON Search for addresses
