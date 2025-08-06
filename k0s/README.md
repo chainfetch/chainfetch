@@ -211,18 +211,18 @@ These manifests spin up the full **FetchSERP stack** (Rails app + workers + auxi
 11. 🚀 **Deploy a New Version**
 
    ```bash
-   ssh root@91.99.173.214
+   ssh root@91.99.154.25
 
    # Build the image for linux/amd64 and push it to GHCR
    docker build --platform=linux/amd64 -t ghcr.io/dm0lz/chainfetch:latest --push .
 
    # Roll out the new image to the running workloads
-   k0s kubectl rollout restart deployment chainfetch-web  -n fetchserp
-   k0s kubectl rollout restart deployment chainfetch-jobs -n fetchserp
+   export KUBECONFIG=/Users/olivier/Desktop/kubeconfig && kubectl rollout restart deployment chainfetch-web  -n fetchserp
+   export KUBECONFIG=/Users/olivier/Desktop/kubeconfig && kubectl rollout restart deployment chainfetch-jobs -n fetchserp
 
    # delete pods
-   k0s kubectl delete pods -n chainfetch -l app=chainfetch-web
-   k0s kubectl delete pods -n chainfetch -l app=chainfetch-jobs
+   export KUBECONFIG=/Users/olivier/Desktop/kubeconfig && kubectl delete pods -n chainfetch -l app=chainfetch-web
+   export KUBECONFIG=/Users/olivier/Desktop/kubeconfig && kubectl delete pods -n chainfetch -l app=chainfetch-jobs
 
    ```
 12. 🗂️ **Access Longhorn UI**
