@@ -27,10 +27,10 @@ class Api::V1::Ethereum::AddressesController < Api::V1::Ethereum::BaseController
     end
   end
 
-  # @summary Search for addresses
+  # @summary LLM Search for addresses
   # @parameter query(query) [!String] The query to search for
   # @response success(200) [Hash{results: String}]
-  def search
+  def llm_search
     query = params[:query]
     response = AddressDataSearchService.new(query).call
     render json: response
