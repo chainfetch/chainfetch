@@ -24,7 +24,7 @@ class AddressDataSearchService
 
   def generate_tool_call(user_query)
     system_prompt = <<~PROMPT
-      Your task is to convert natural language queries into the correct parameters for the "search_addresses" tool.
+      Your task is to call the search_addresses tool with the appropriate parameters to fulfill the user's request.
       
       Analyze the user's query and call the search_addresses tool with the appropriate parameters to fulfill their request.
       
