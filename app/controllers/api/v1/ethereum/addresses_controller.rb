@@ -30,6 +30,7 @@ class Api::V1::Ethereum::AddressesController < Api::V1::Ethereum::BaseController
   # @summary LLM Search for addresses
   # @parameter query(query) [!String] The query to search for
   # @response success(200) [Hash{results: String}]
+  # This endpoint leverages the LLaMA 3.1 8B model to analyze and select the most suitable parameters from over 150 available options
   def llm_search
     query = params[:query]
     response = AddressDataSearchService.new(query).call
@@ -40,7 +41,7 @@ class Api::V1::Ethereum::AddressesController < Api::V1::Ethereum::BaseController
   # @parameter query(query) [!String] The query to search for
   # @parameter limit(query) [!Integer] The number of results to return (default: 10)
   # @response success(200) [Hash{result: Hash{points: Array<Hash{id: Integer, version: Integer, score: Float, payload: Hash{address_summary: String}}}>}}]
-  
+  # This endpoint queries Qdrant to search addresses based on the provided input. Address summaries are embedded using dengcao/Qwen3-Embedding-0.6B:Q8_0 and stored in Qdrant's 'addresses' collection.
   def semantic_search
     query = params[:query]
     limit = params[:limit] || 10
@@ -210,8 +211,11 @@ class Api::V1::Ethereum::AddressesController < Api::V1::Ethereum::BaseController
   # @parameter metadata_tags_ordinal_max(query) [Integer] Maximum metadata tags ordinal
   # @parameter metadata_tags_meta_main_entity(query) [String] Metadata tags meta main entity
   # @parameter metadata_tags_meta_tooltip_url(query) [String] Metadata tags meta tooltip URL
-  # @parameter limit(query) [Integer] Number of results to return (default: 100, max: 1000)
-  # @response success(200) [Hash{results: Array<Hash{id: Integer, address_hash: String, data: Hash}>}}]
+  # @parameter limit(query) [Integer] Number of results to return (default: 10, max: 50)
+  # @parameter offset(query) [Integer] Number of results to skip for pagination (default: 0)
+  # @parameter page(query) [Integer] Page number (alternative to offset, starts at 1)
+  # @response success(200) [Hash{results: Array<Hash{id: Integer, address_hash: String, data: Hash}>, pagination: Hash{total: Integer, limit: Integer, offset: Integer, page: Integer, total_pages: Integer}}]
+  # This endpoint provides 150+ parameters to search for addresses based on the provided input.
   def json_search
     addresses = Address.where(nil)
     
@@ -354,10 +358,38 @@ class Api::V1::Ethereum::AddressesController < Api::V1::Ethereum::BaseController
     addresses = addresses.where("data->'transactions'->'items' @> ?", [{ from: { metadata: { tags: [{ meta: { main_entity: params[:metadata_tags_meta_main_entity] } }] } } }].to_json) if params[:metadata_tags_meta_main_entity].present?
     addresses = addresses.where("data->'transactions'->'items' @> ?", [{ from: { metadata: { tags: [{ meta: { tooltipUrl: params[:metadata_tags_meta_tooltip_url] } }] } } }].to_json) if params[:metadata_tags_meta_tooltip_url].present?
     
-    # Apply limit with default and maximum
+    # Apply pagination with defaults
     limit = params[:limit]&.to_i || 10
+    limit = [limit, 50].min # Ensure limit doesn't exceed maximum
     
-    render json: { results: addresses.limit(limit) }
+    # Calculate offset from either offset param or page param
+    offset = if params[:page].present?
+               page = [params[:page].to_i, 1].max # Ensure page is at least 1
+               (page - 1) * limit
+             else
+               params[:offset]&.to_i || 0
+             end
+    
+    # Get total count before applying limit/offset
+    total_count = addresses.count
+    
+    # Apply pagination
+    paginated_addresses = addresses.limit(limit).offset(offset)
+    
+    # Calculate pagination metadata
+    current_page = (offset / limit) + 1
+    total_pages = (total_count.to_f / limit).ceil
+    
+    render json: {
+      results: paginated_addresses,
+      pagination: {
+        total: total_count,
+        limit: limit,
+        offset: offset,
+        page: current_page,
+        total_pages: total_pages
+      }
+    }
   end
 
   private

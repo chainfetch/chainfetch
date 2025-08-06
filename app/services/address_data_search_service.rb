@@ -43,7 +43,7 @@ class AddressDataSearchService
       - Token filters → token_symbol, token_name, token_address, token_type
       - NFT filters → nft_* parameters
       - Activity flags → has_logs, has_token_transfers, has_tokens, etc.
-      - Result limits → limit (default: 10, max: 1000)
+      - Result limits → limit (default: 10, max: 50)
       
       Examples of correct tool calls:
       - "addresses with more than 1 ETH" → search_addresses({"eth_balance_min": "1"})
@@ -314,7 +314,7 @@ class AddressDataSearchService
               metadata_tags_ordinal_max: { type: "integer", description: "Maximum metadata tags ordinal" },
               metadata_tags_meta_main_entity: { type: "string", description: "Metadata tags meta main entity" },
               metadata_tags_meta_tooltip_url: { type: "string", description: "Metadata tags meta tooltip URL" },
-              limit: { type: "integer", description: "Number of results to return (default: 100, max: 1000)" }
+              limit: { type: "integer", description: "Number of results to return (default: 10, max: 50)" }
             },
             required: [],
             additionalProperties: false
