@@ -14,7 +14,7 @@ spec:
   storageClassName: longhorn-qdrant-distributed
   resources:
     requests:
-      storage: 150Gi
+      storage: 300Gi
 ---
 apiVersion: apps/v1
 kind: Deployment

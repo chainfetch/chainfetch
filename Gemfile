@@ -79,3 +79,4 @@ gem 'async-http'
 
 gem "oas_rails"
 gem "neighbor"
+gem "rack-cors"
