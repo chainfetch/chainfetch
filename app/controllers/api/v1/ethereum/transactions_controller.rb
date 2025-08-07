@@ -255,7 +255,7 @@ class Api::V1::Ethereum::TransactionsController < Api::V1::Ethereum::BaseControl
   # @response success(200) [Hash{results: Array<Hash{id: Integer, transaction_hash: String, data: Hash}>, pagination: Hash{total: Integer, limit: Integer, offset: Integer, page: Integer, total_pages: Integer}}]
   # This endpoint provides 254 carefully curated parameters to search for transactions, optimized for both comprehensive coverage and LLM performance.
   def json_search
-    transactions = Transaction.where(nil)
+    transactions = EthereumTransaction.where(nil)
 
     # Core transaction fields with min/max ranges
     transactions = transactions.where("CAST(data->'info'->>'priority_fee' AS NUMERIC) >= ?", params[:priority_fee_min]) if params[:priority_fee_min].present?

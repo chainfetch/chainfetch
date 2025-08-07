@@ -1,5 +1,7 @@
-class Address < ApplicationRecord
-  after_create_commit :generate_summary_and_embedding
+class EthereumAddress < ApplicationRecord
+  has_many :ethereum_address_transactions, dependent: :destroy
+  has_many :ethereum_transactions, through: :ethereum_address_transactions
+  after_create_commit :fetch_data
 
   def self.semantic_search(query, limit = 10)
     embedding = EmbeddingService.new(query).call
@@ -51,10 +53,6 @@ class Address < ApplicationRecord
     QdrantService.new.query_points(collection: "addresses", query: query, limit: limit)
   end
 
-  def generate_summary_and_embedding
-    SummaryEmbeddingJob.perform_later(self.id, self.address_hash)
-  end
-
   def qdrant_data
     QdrantService.new.retrieve_point(collection: "addresses", id: self.id)
   end
@@ -66,6 +64,10 @@ class Address < ApplicationRecord
 
   def embedding
     EmbeddingService.new(summary).call
+  end
+
+  def fetch_data
+    AddressDataJob.perform_later(self.id)
   end
 
 end

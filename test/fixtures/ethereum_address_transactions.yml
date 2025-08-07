@@ -1,0 +1,9 @@
+# Read about fixtures at https://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
+
+one:
+  ethereum_address: one
+  ethereum_transaction: one
+
+two:
+  ethereum_address: two
+  ethereum_transaction: two

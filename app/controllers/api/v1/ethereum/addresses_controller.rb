@@ -219,7 +219,7 @@ class Api::V1::Ethereum::AddressesController < Api::V1::Ethereum::BaseController
   # @response success(200) [Hash{results: Array<Hash{id: Integer, address_hash: String, data: Hash}>, pagination: Hash{total: Integer, limit: Integer, offset: Integer, page: Integer, total_pages: Integer}}]
   # This endpoint provides 150+ parameters to search for addresses based on the provided input.
   def json_search
-    addresses = Address.where(nil)
+    addresses = EthereumAddress.where(nil)
     
     # ETH Balance search (in ETH units - converted to wei)
     if params[:eth_balance_min].present?

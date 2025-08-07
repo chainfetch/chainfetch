@@ -181,7 +181,7 @@ class Api::V1::Ethereum::BlocksController < Api::V1::Ethereum::BaseController
   # @response success(200) [Hash{results: Array<Hash{id: Integer, block_number: Integer, data: Hash}>, pagination: Hash{total: Integer, limit: Integer, offset: Integer, page: Integer, total_pages: Integer}}]
   # This endpoint provides 120+ parameters to search for blocks based on the provided input.
   def json_search
-    blocks = Block.where(nil)
+    blocks = EthereumBlock.where(nil)
     
     # Block info fields - Numeric with min/max
     blocks = blocks.where("CAST(data->'info'->>'base_fee_per_gas' AS NUMERIC) >= ?", params[:base_fee_per_gas_min]) if params[:base_fee_per_gas_min].present?
@@ -528,7 +528,49 @@ class Api::V1::Ethereum::BlocksController < Api::V1::Ethereum::BaseController
   end
 
   def get_block_transactions(block)
-    blockscout_api_get("/blocks/#{block}/transactions")
+    all_transactions = []
+    next_page_params = nil
+    page_number = 1
+    
+    Sync do
+      loop do
+        Rails.logger.info "Fetching transactions page #{page_number} for block #{block}..."
+        
+        # Build the API path with pagination parameters
+        api_path = if next_page_params
+          query_params = "block_number=#{next_page_params['block_number']}&index=#{next_page_params['index']}&items_count=#{next_page_params['items_count']}"
+          "/blocks/#{block}/transactions?#{query_params}"
+        else
+          "/blocks/#{block}/transactions"
+        end
+        
+        # Fetch page data asynchronously
+        page_data = Async { blockscout_api_get(api_path) }.wait
+        
+        # Break if no data or no transactions
+        break unless page_data && page_data['items']
+        
+        page_transactions = page_data['items']
+        all_transactions.concat(page_transactions)
+        
+        Rails.logger.info "Fetched #{page_transactions.count} transactions from page #{page_number}. Total so far: #{all_transactions.count}"
+        
+        # Check if there are more pages
+        if page_data['next_page_params']
+          next_page_params = page_data['next_page_params']
+          page_number += 1
+        else
+          Rails.logger.info "No more pages. Finished fetching all #{all_transactions.count} transactions for block #{block}"
+          break
+        end
+      end
+    end
+    
+    # Return the data in the same format as the original API response
+    {
+      'items' => all_transactions,
+      'next_page_params' => nil # No pagination needed since we fetched everything
+    }
   end
 
   def get_block_withdrawals(block)
