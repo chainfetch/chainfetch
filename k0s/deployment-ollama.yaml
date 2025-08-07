@@ -30,7 +30,7 @@ metadata:
   labels:
     app: ollama
 spec:
-  replicas: 5  # Scale to 5 pods for optimal load distribution and performance
+  replicas: 2  # Scale to 5 pods for optimal load distribution and performance
   selector:
     matchLabels:
       app: ollama
@@ -218,10 +218,10 @@ spec:
         resources:
           requests:
             memory: "6Gi"         # 6GB for Llama3.2 3B model (more efficient)
-            cpu: "1000m"          # 1 CPU core
+            cpu: "500m"          # 1 CPU core
           limits:
             memory: "8Gi"         # 8GB limit for headroom
-            cpu: "2000m"          # 2 CPU cores limit
+            cpu: "800m"          # 2 CPU cores limit
         readinessProbe:
           httpGet:
             path: /api/tags

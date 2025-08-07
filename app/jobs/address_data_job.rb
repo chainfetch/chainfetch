@@ -1,5 +1,6 @@
 class AddressDataJob < ApplicationJob
   queue_as :default
+  retry_on Net::ReadTimeout, wait: 3.seconds, attempts: 3
 
   def perform(address_id)
     address = EthereumAddress.find(address_id)

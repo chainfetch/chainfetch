@@ -23,13 +23,17 @@ class BlockDataJob < ApplicationJob
   private
 
   def fetch_block(block_number)
-    uri = URI("#{BASE_URL}/api/v1/ethereum/blocks/#{block_number}")
-    http = Net::HTTP.new(uri.host, uri.port)
-    if uri.scheme == 'https'
-      http.use_ssl = true
-      http.verify_mode = OpenSSL::SSL::VERIFY_PEER
+    count = 0
+    loop do
+      uri = URI("#{BASE_URL}/api/v1/ethereum/blocks/#{block_number}")
+      response = Net::HTTP.get_response(uri)
+      if response.is_a?(Net::HTTPSuccess)
+        data = JSON.parse(response.body)
+        return data if data && data.dig('info', 'message') != "Not found"
+      end
+      sleep(1)
+      count += 1
+      break if count > 100
     end
-    response = http.get(uri.request_uri)
-    JSON.parse(response.body)
   end
 end

@@ -53,6 +53,13 @@ spec:
           volumeMounts:
             - name: pgdata
               mountPath: /var/lib/postgresql/data
+          resources:
+            requests:
+              cpu: "1000m"
+              memory: "4Gi"
+            limits:
+              cpu: "2000m"
+              memory: "6Gi"
           securityContext:
             capabilities:
               drop:
@@ -85,7 +92,7 @@ metadata:
   labels:
     app: chainfetch-jobs
 spec:
-  replicas: 1
+  replicas: 2
   selector:
     matchLabels:
       app: chainfetch-jobs
@@ -108,13 +115,13 @@ spec:
                 name: chainfetch-secrets
           resources:
             requests:
-              cpu: "400m"
-              memory: "1Gi"
-              ephemeral-storage: "1Gi"
+              cpu: "1000m"
+              memory: "2Gi"
+              ephemeral-storage: "2Gi"
             limits:
-              cpu: "700m"
-              memory: "1536Mi"
-              ephemeral-storage: "1Gi"
+              cpu: "2000m"
+              memory: "3Gi"
+              ephemeral-storage: "2Gi"
           securityContext:
             capabilities:
               drop:
@@ -164,13 +171,13 @@ spec:
             periodSeconds: 30
           resources:
             requests:
-              cpu: "600m"
+              cpu: "400m"
               memory: "1Gi"
-              ephemeral-storage: "1.5Gi"
+              ephemeral-storage: "1Gi"
             limits:
-              cpu: "700m"
-              memory: "1.5Gi"
-              ephemeral-storage: "1.5Gi"
+              cpu: "800m"
+              memory: "2Gi"
+              ephemeral-storage: "1Gi"
           securityContext:
             capabilities:
               drop:
