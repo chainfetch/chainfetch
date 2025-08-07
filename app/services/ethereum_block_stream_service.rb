@@ -18,7 +18,7 @@ class EthereumBlockStreamService
     return if @running
 
     @running = true
-    puts "🚀 Starting Ethereum Block Stream Service..."
+    log_message "🚀 Starting Ethereum Block Stream Service..."
     
     @task = Async do |task|
       begin
@@ -26,7 +26,7 @@ class EthereumBlockStreamService
        
         Async::WebSocket::Client.connect(endpoint) do |ws|
           @ws = ws
-          puts "✅ Connected to Ethereum WebSocket"
+          log_message "✅ Connected to Ethereum WebSocket"
           
           subscribe_to_new_blocks
           
@@ -36,8 +36,8 @@ class EthereumBlockStreamService
           end
         end
       rescue => e
-        puts "❌ WebSocket error: #{e.message}"
-        puts "🔄 Retrying in 5 seconds..."
+        log_message "❌ WebSocket error: #{e.message}"
+        log_message "🔄 Retrying in 5 seconds..."
         task.sleep(5)
         retry if @running
       end
@@ -48,10 +48,19 @@ class EthereumBlockStreamService
     @running = false
     @ws&.close
     @task&.stop
-    puts "🛑 Ethereum Block Stream Service stopped"
+    log_message "🛑 Ethereum Block Stream Service stopped"
   end
 
   private
+
+  def log_message(message)
+    # Output to both console and Rails logger
+    puts message
+    Rails.logger.info("[EthereumBlockStream] #{message}")
+    
+    # Force flush stdout for better background logging
+    STDOUT.flush
+  end
 
   def subscribe_to_new_blocks
     subscription_request = {
@@ -61,7 +70,7 @@ class EthereumBlockStreamService
     }
     
     @ws.write(subscription_request.to_json)
-    puts "📡 Subscribed to new blocks"
+    log_message "📡 Subscribed to new blocks"
   end
 
   def handle_message(data)
@@ -69,7 +78,7 @@ class EthereumBlockStreamService
 
     # Handle subscription confirmation
     if data['id'] == 1 && data['result']
-      puts "✅ Block subscription confirmed: #{data['result']}"
+      log_message "✅ Block subscription confirmed: #{data['result']}"
       return
     end
 
@@ -93,11 +102,11 @@ class EthereumBlockStreamService
     block_number_int = block_number.to_i(16)
     
     begin
-      puts "🧱 Processing block #{block_number_int}..."
+      log_message "🧱 Processing block #{block_number_int}..."
       EthereumBlock.find_or_create_by(block_number: block_number_int)
-      puts "✅ Created block #{block_number_int}"
+      log_message "✅ Created block #{block_number_int}"
     rescue => e
-      puts "❌ Error processing block #{block_number_int}: #{e.message}"
+      log_message "❌ Error processing block #{block_number_int}: #{e.message}"
     end
   end
 end
