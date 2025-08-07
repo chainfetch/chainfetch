@@ -1,5 +1,5 @@
 class QdrantService < BaseService
-  BASE_URL = Rails.env.production? ? 'http://qdrant-cluster.qdrant.svc.cluster.local:6333' : 'http://localhost:6333'
+  BASE_URL = Rails.env.production? ? 'http://qdrant.qdrant.svc.cluster.local:6333' : 'http://localhost:6333'
 
   def initialize
     @base_uri = URI(BASE_URL)
