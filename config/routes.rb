@@ -58,6 +58,8 @@ Rails.application.routes.draw do
       get 'ethereum/addresses/llm_search', to: 'ethereum/addresses#llm_search'
       get 'ethereum/addresses/:address', to: 'ethereum/addresses#show'
       get 'ethereum/transactions/:transaction', to: 'ethereum/transactions#show'
+      get 'ethereum/blocks/json_search', to: 'ethereum/blocks#json_search'
+      get 'ethereum/blocks/llm_search', to: 'ethereum/blocks#llm_search'
       get 'ethereum/blocks/:block', to: 'ethereum/blocks#show'
       get 'ethereum/tokens/:token', to: 'ethereum/tokens#show'
       get 'ethereum/token-instances/:token/:instance_id', to: 'ethereum/token_instances#show'
