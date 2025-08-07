@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.0].define(version: 2025_08_07_121444) do
+ActiveRecord::Schema[8.0].define(version: 2025_08_07_125548) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_catalog.plpgsql"
   enable_extension "vector"
@@ -31,5 +31,14 @@ ActiveRecord::Schema[8.0].define(version: 2025_08_07_121444) do
     t.datetime "updated_at", null: false
     t.index ["block_number"], name: "index_blocks_on_block_number", unique: true
     t.index ["data"], name: "index_blocks_on_data", using: :gin
+  end
+
+  create_table "transactions", force: :cascade do |t|
+    t.string "transaction_hash", null: false
+    t.jsonb "data"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["data"], name: "index_transactions_on_data", using: :gin
+    t.index ["transaction_hash"], name: "index_transactions_on_transaction_hash", unique: true
   end
 end

@@ -26,10 +26,10 @@ Rails.application.routes.draw do
   namespace :api do
     namespace :v1 do
       # Universal chain address endpoint
-      get ':chain_id/address/:address_hash', to: 'address#show'
+      # get ':chain_id/address/:address_hash', to: 'address#show'
       
       # Universal RPC proxy endpoint - forwards all Ethereum RPC calls
-      post 'ethereum/rpc', to: 'ethereum#rpc_proxy'
+      # post 'ethereum/rpc', to: 'ethereum#rpc_proxy'
       
       # API information and management endpoints
       # get 'ethereum/methods', to: 'ethereum#supported_methods'
@@ -57,6 +57,8 @@ Rails.application.routes.draw do
       get 'ethereum/addresses/json_search', to: 'ethereum/addresses#json_search'
       get 'ethereum/addresses/llm_search', to: 'ethereum/addresses#llm_search'
       get 'ethereum/addresses/:address', to: 'ethereum/addresses#show'
+      get 'ethereum/transactions/json_search', to: 'ethereum/transactions#json_search'
+      get 'ethereum/transactions/llm_search', to: 'ethereum/transactions#llm_search'
       get 'ethereum/transactions/:transaction', to: 'ethereum/transactions#show'
       get 'ethereum/blocks/json_search', to: 'ethereum/blocks#json_search'
       get 'ethereum/blocks/llm_search', to: 'ethereum/blocks#llm_search'

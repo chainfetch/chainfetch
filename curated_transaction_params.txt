@@ -1,0 +1,253 @@
+  # @summary JSON Search for transactions
+  # 
+  # Core transaction parameters:
+  # @parameter hash(query) [String] Transaction hash
+  # @parameter result(query) [String] Transaction result (success, failure)
+  # @parameter value_min(query) [String] Minimum transaction value in WEI
+  # @parameter value_max(query) [String] Maximum transaction value in WEI
+  # @parameter gas_used_min(query) [String] Minimum gas used
+  # @parameter gas_used_max(query) [String] Maximum gas used
+  # @parameter gas_limit_min(query) [String] Minimum gas limit
+  # @parameter gas_limit_max(query) [String] Maximum gas limit
+  # @parameter gas_price_min(query) [String] Minimum gas price
+  # @parameter gas_price_max(query) [String] Maximum gas price
+  # @parameter priority_fee_min(query) [String] Minimum priority fee
+  # @parameter priority_fee_max(query) [String] Maximum priority fee
+  # @parameter max_fee_per_gas_min(query) [String] Minimum max fee per gas
+  # @parameter max_fee_per_gas_max(query) [String] Maximum max fee per gas
+  # @parameter max_priority_fee_per_gas_min(query) [String] Minimum max priority fee per gas
+  # @parameter max_priority_fee_per_gas_max(query) [String] Maximum max priority fee per gas
+  # @parameter base_fee_per_gas_min(query) [String] Minimum base fee per gas
+  # @parameter base_fee_per_gas_max(query) [String] Maximum base fee per gas
+  # @parameter fee_value_min(query) [String] Minimum fee value
+  # @parameter fee_value_max(query) [String] Maximum fee value
+  # @parameter fee_type(query) [String] Fee type
+  # @parameter transaction_burnt_fee_min(query) [String] Minimum transaction burnt fee
+  # @parameter transaction_burnt_fee_max(query) [String] Maximum transaction burnt fee
+  # 
+  # Address parameters:
+  # @parameter from_hash(query) [String] From address hash
+  # @parameter to_hash(query) [String] To address hash
+  # @parameter from_name(query) [String] From address name
+  # @parameter to_name(query) [String] To address name
+  # @parameter from_is_contract(query) [Boolean] Whether from address is contract
+  # @parameter to_is_contract(query) [Boolean] Whether to address is contract
+  # @parameter from_is_verified(query) [Boolean] Whether from address is verified
+  # @parameter to_is_verified(query) [Boolean] Whether to address is verified
+  # @parameter from_is_scam(query) [Boolean] Whether from address is scam
+  # @parameter to_is_scam(query) [Boolean] Whether to address is scam
+  # @parameter from_ens_domain_name(query) [String] From address ENS domain name
+  # @parameter to_ens_domain_name(query) [String] To address ENS domain name
+  # @parameter from_proxy_type(query) [String] From address proxy type
+  # @parameter to_proxy_type(query) [String] To address proxy type
+  # @parameter from_private_tags(query) [String] From address private tags
+  # @parameter to_private_tags(query) [String] To address private tags
+  # @parameter from_public_tags(query) [String] From address public tags
+  # @parameter to_public_tags(query) [String] To address public tags
+  # @parameter from_watchlist_names(query) [String] From address watchlist names
+  # @parameter to_watchlist_names(query) [String] To address watchlist names
+  # @parameter from_metadata_tags_name(query) [String] From address metadata tags name
+  # @parameter to_metadata_tags_name(query) [String] To address metadata tags name
+  # @parameter from_metadata_tags_slug(query) [String] From address metadata tags slug
+  # @parameter to_metadata_tags_slug(query) [String] To address metadata tags slug
+  # @parameter from_metadata_tags_tag_type(query) [String] From address metadata tags tag type
+  # @parameter to_metadata_tags_tag_type(query) [String] To address metadata tags tag type
+  # @parameter from_metadata_tags_ordinal_min(query) [Integer] Minimum from address metadata tags ordinal
+  # @parameter from_metadata_tags_ordinal_max(query) [Integer] Maximum from address metadata tags ordinal
+  # 
+  # Block and timing parameters:
+  # @parameter block_hash(query) [String] Block hash
+  # @parameter block_number_min(query) [Integer] Minimum block number
+  # @parameter block_number_max(query) [Integer] Maximum block number
+  # @parameter timestamp_min(query) [String] Minimum timestamp
+  # @parameter timestamp_max(query) [String] Maximum timestamp
+  # @parameter transaction_index_min(query) [Integer] Minimum transaction index
+  # @parameter transaction_index_max(query) [Integer] Maximum transaction index
+  # 
+  # Transaction metadata:
+  # @parameter transaction_tag(query) [String] Transaction tag (e.g., 'DeFi Interaction')
+  # @parameter type_min(query) [Integer] Minimum transaction type
+  # @parameter type_max(query) [Integer] Maximum transaction type
+  # @parameter position_min(query) [Integer] Minimum position in block
+  # @parameter position_max(query) [Integer] Maximum position in block
+  # @parameter revert_reason(query) [String] Transaction revert reason
+  # @parameter raw_input(query) [String] Transaction raw input data
+  # @parameter created_contract(query) [String] Created contract address
+  # @parameter nonce_min(query) [Integer] Minimum nonce
+  # @parameter nonce_max(query) [Integer] Maximum nonce
+  # @parameter cumulative_gas_used_min(query) [String] Minimum cumulative gas used
+  # @parameter cumulative_gas_used_max(query) [String] Maximum cumulative gas used
+  # @parameter error(query) [String] Transaction error message
+  # @parameter status(query) [String] Transaction status
+  # 
+  # Token transfers:
+  # @parameter token_transfers_token_hash(query) [String] Token contract address
+  # @parameter token_transfers_token_symbol(query) [String] Token symbol (e.g., USDC, ETH)
+  # @parameter token_transfers_token_name(query) [String] Token name
+  # @parameter token_transfers_token_type(query) [String] Token type (ERC-20, ERC-721, etc.)
+  # @parameter token_transfers_token_decimals_min(query) [Integer] Minimum token decimals
+  # @parameter token_transfers_token_decimals_max(query) [Integer] Maximum token decimals
+  # @parameter token_transfers_from_hash(query) [String] Token transfer from address
+  # @parameter token_transfers_to_hash(query) [String] Token transfer to address
+  # @parameter token_transfers_amount_min(query) [String] Minimum token transfer amount
+  # @parameter token_transfers_amount_max(query) [String] Maximum token transfer amount
+  # @parameter token_transfers_log_index_min(query) [Integer] Minimum token transfer log index
+  # @parameter token_transfers_log_index_max(query) [Integer] Maximum token transfer log index
+  # @parameter token_transfers_token_id(query) [String] Token ID for NFTs
+  # @parameter token_transfers_overflow(query) [Boolean] Whether token transfers overflow
+  # @parameter token_transfers_from_ens_domain_name(query) [String] Token transfer from ENS domain name
+  # @parameter token_transfers_from_is_contract(query) [Boolean] Token transfer from is contract
+  # @parameter token_transfers_from_is_verified(query) [Boolean] Token transfer from is verified
+  # @parameter token_transfers_from_is_scam(query) [Boolean] Token transfer from is scam
+  # @parameter token_transfers_from_name(query) [String] Token transfer from name
+  # @parameter token_transfers_from_proxy_type(query) [String] Token transfer from proxy type
+  # @parameter token_transfers_to_ens_domain_name(query) [String] Token transfer to ENS domain name
+  # @parameter token_transfers_to_is_contract(query) [Boolean] Token transfer to is contract
+  # @parameter token_transfers_to_is_verified(query) [Boolean] Token transfer to is verified
+  # @parameter token_transfers_to_is_scam(query) [Boolean] Token transfer to is scam
+  # @parameter token_transfers_to_name(query) [String] Token transfer to name
+  # @parameter token_transfers_to_proxy_type(query) [String] Token transfer to proxy type
+  # @parameter token_transfers_token_address(query) [String] Token transfer token address
+  # @parameter token_transfers_token_address_hash(query) [String] Token transfer token address hash
+  # @parameter token_transfers_block_number_min(query) [Integer] Minimum token transfer block number
+  # @parameter token_transfers_block_number_max(query) [Integer] Maximum token transfer block number
+  # @parameter token_transfers_block_hash(query) [String] Token transfer block hash
+  # @parameter token_transfers_transaction_hash(query) [String] Token transfer transaction hash
+  # @parameter token_transfers_to_metadata_tags_name(query) [String] Token transfer to metadata tags name
+  # @parameter token_transfers_to_metadata_tags_slug(query) [String] Token transfer to metadata tags slug
+  # @parameter token_transfers_to_metadata_tags_tag_type(query) [String] Token transfer to metadata tags tag type
+  # @parameter token_transfers_method(query) [String] Token transfer method
+  # @parameter token_transfers_type(query) [String] Token transfer type
+  # @parameter token_transfers_timestamp_min(query) [String] Minimum token transfer timestamp
+  # @parameter token_transfers_timestamp_max(query) [String] Maximum token transfer timestamp
+  # @parameter token_transfers_token_holders_count_min(query) [Integer] Minimum token holders count
+  # @parameter token_transfers_token_holders_count_max(query) [Integer] Maximum token holders count
+  # @parameter token_transfers_total_value_min(query) [String] Minimum total token transfer value
+  # @parameter token_transfers_total_value_max(query) [String] Maximum total token transfer value
+  # @parameter token_transfers_total_decimals_min(query) [Integer] Minimum total decimals
+  # @parameter token_transfers_total_decimals_max(query) [Integer] Maximum total decimals
+  # @parameter token_transfers_token_icon_url(query) [String] Token icon URL
+  # @parameter token_transfers_token_total_supply_min(query) [String] Minimum token total supply
+  # @parameter token_transfers_token_total_supply_max(query) [String] Maximum token total supply
+  # @parameter token_transfers_token_exchange_rate_min(query) [String] Minimum token exchange rate
+  # @parameter token_transfers_token_exchange_rate_max(query) [String] Maximum token exchange rate
+  # @parameter token_transfers_token_volume_24h_min(query) [String] Minimum token 24h volume
+  # @parameter token_transfers_token_volume_24h_max(query) [String] Maximum token 24h volume
+  # @parameter token_transfers_token_circulating_market_cap_min(query) [String] Minimum token circulating market cap
+  # @parameter token_transfers_token_circulating_market_cap_max(query) [String] Maximum token circulating market cap
+  # @parameter token_transfers_token_holders_min(query) [Integer] Minimum token holders
+  # @parameter token_transfers_token_holders_max(query) [Integer] Maximum token holders
+  # @parameter token_transfers_next_page_params_block_number_min(query) [Integer] Minimum token transfers next page params block number
+  # @parameter token_transfers_next_page_params_block_number_max(query) [Integer] Maximum token transfers next page params block number
+  # @parameter token_transfers_next_page_params_index_min(query) [Integer] Minimum token transfers next page params index
+  # @parameter token_transfers_next_page_params_index_max(query) [Integer] Maximum token transfers next page params index
+  # @parameter token_transfers_next_page_params_items_count_min(query) [Integer] Minimum token transfers next page params items count
+  # @parameter token_transfers_next_page_params_items_count_max(query) [Integer] Maximum token transfers next page params items count
+  # 
+  # Smart contract interactions:
+  # @parameter method_method_id(query) [String] Smart contract method ID
+  # @parameter method_call_type(query) [String] Method call type
+  # @parameter decoded_input_method_call(query) [String] Decoded method call
+  # @parameter decoded_input_method_id(query) [String] Decoded method ID
+  # @parameter decoded_input_parameters_name(query) [String] Decoded parameter name
+  # @parameter decoded_input_parameters_type(query) [String] Decoded parameter type
+  # @parameter decoded_input_parameters_value(query) [String] Decoded parameter value
+  # @parameter method(query) [String] Transaction method
+  # @parameter actions_action_type(query) [String] Action type
+  # @parameter transaction_types(query) [String] Transaction types
+  # 
+  # Actions:
+  # @parameter actions_data_from(query) [String] Action from address
+  # @parameter actions_data_to(query) [String] Action to address
+  # @parameter actions_data_token(query) [String] Action token symbol
+  # @parameter actions_data_amount(query) [String] Action amount
+  # @parameter actions_protocol(query) [String] Protocol involved in action
+  # @parameter actions_type(query) [String] Action type (transfer, swap, etc.)
+  # 
+  # Exchange rates and fees:
+  # @parameter exchange_rate_min(query) [String] Minimum exchange rate
+  # @parameter exchange_rate_max(query) [String] Maximum exchange rate
+  # @parameter historic_exchange_rate_min(query) [String] Minimum historic exchange rate
+  # @parameter historic_exchange_rate_max(query) [String] Maximum historic exchange rate
+  # @parameter confirmation_duration_min(query) [Integer] Minimum confirmation duration in milliseconds
+  # @parameter confirmation_duration_max(query) [Integer] Maximum confirmation duration in milliseconds
+  # @parameter confirmations_min(query) [Integer] Minimum confirmations count
+  # @parameter confirmations_max(query) [Integer] Maximum confirmations count
+  # @parameter has_error_in_internal_transactions(query) [Boolean] Has error in internal transactions
+  # 
+  # Logs and events:
+  # @parameter logs_address_hash(query) [String] Log address hash
+  # @parameter logs_data(query) [String] Log data
+  # @parameter logs_topics(query) [String] Log topics
+  # @parameter logs_decoded_method_call(query) [String] Log decoded method call
+  # @parameter logs_decoded_method_id(query) [String] Log decoded method ID
+  # @parameter logs_decoded_parameters_name(query) [String] Log decoded parameters name
+  # @parameter logs_decoded_parameters_type(query) [String] Log decoded parameters type
+  # @parameter logs_decoded_parameters_value(query) [String] Log decoded parameters value
+  # @parameter logs_index_min(query) [Integer] Minimum log index
+  # @parameter logs_index_max(query) [Integer] Maximum log index
+  # @parameter logs_block_hash(query) [String] Log block hash
+  # @parameter logs_block_number_min(query) [Integer] Minimum log block number
+  # @parameter logs_block_number_max(query) [Integer] Maximum log block number
+  # @parameter logs_transaction_hash(query) [String] Log transaction hash
+  # @parameter logs_smart_contract_hash(query) [String] Log smart contract hash
+  # 
+  # Internal transactions:
+  # @parameter internal_transactions_from_hash(query) [String] Internal transaction from hash
+  # @parameter internal_transactions_to_hash(query) [String] Internal transaction to hash
+  # @parameter internal_transactions_value_min(query) [String] Minimum internal transaction value
+  # @parameter internal_transactions_value_max(query) [String] Maximum internal transaction value
+  # @parameter internal_transactions_gas_limit_min(query) [String] Minimum internal transaction gas limit
+  # @parameter internal_transactions_gas_limit_max(query) [String] Maximum internal transaction gas limit
+  # @parameter internal_transactions_success(query) [Boolean] Internal transaction success
+  # @parameter internal_transactions_error(query) [String] Internal transaction error
+  # @parameter internal_transactions_type(query) [String] Internal transaction type
+  # @parameter internal_transactions_block_number_min(query) [Integer] Minimum internal transaction block number
+  # @parameter internal_transactions_block_number_max(query) [Integer] Maximum internal transaction block number
+  # @parameter internal_transactions_transaction_hash(query) [String] Internal transaction transaction hash
+  # @parameter internal_transactions_index_min(query) [Integer] Minimum internal transaction index
+  # @parameter internal_transactions_index_max(query) [Integer] Maximum internal transaction index
+  # 
+  # Authorization (EIP-7702):
+  # @parameter authorization_list_authority(query) [String] Authorization list authority
+  # @parameter authorization_list_delegated_address(query) [String] Authorization list delegated address
+  # @parameter authorization_list_nonce(query) [String] Authorization list nonce
+  # @parameter authorization_list_validity(query) [String] Authorization list validity
+  # @parameter authorization_list_r(query) [String] Authorization list r value
+  # @parameter authorization_list_s(query) [String] Authorization list s value
+  # @parameter authorization_list_y_parity(query) [String] Authorization list y parity
+  # 
+  # Raw trace data:
+  # @parameter raw_trace_action_call_type(query) [String] Raw trace action call type
+  # @parameter raw_trace_action_from(query) [String] Raw trace action from
+  # @parameter raw_trace_action_to(query) [String] Raw trace action to
+  # @parameter raw_trace_action_value(query) [String] Raw trace action value
+  # @parameter raw_trace_action_gas(query) [String] Raw trace action gas
+  # @parameter raw_trace_action_input(query) [String] Raw trace action input
+  # @parameter raw_trace_result_gas_used(query) [String] Raw trace result gas used
+  # @parameter raw_trace_result_output(query) [String] Raw trace result output
+  # @parameter raw_trace_type(query) [String] Raw trace type
+  # @parameter raw_trace_subtraces_min(query) [Integer] Minimum raw trace subtraces
+  # @parameter raw_trace_subtraces_max(query) [Integer] Maximum raw trace subtraces
+  # @parameter raw_trace_trace_address(query) [String] Raw trace trace address
+  # 
+  # State changes:
+  # @parameter state_changes_address_hash(query) [String] State change address hash
+  # @parameter state_changes_balance_before_min(query) [String] Minimum state change balance before
+  # @parameter state_changes_balance_before_max(query) [String] Maximum state change balance before
+  # @parameter state_changes_balance_after_min(query) [String] Minimum state change balance after
+  # @parameter state_changes_balance_after_max(query) [String] Maximum state change balance after
+  # @parameter state_changes_change_min(query) [String] Minimum state change
+  # @parameter state_changes_change_max(query) [String] Maximum state change
+  # @parameter state_changes_is_miner(query) [Boolean] State change is miner
+  # @parameter state_changes_type(query) [String] State change type
+  # 
+  # Summary and classification:
+  # @parameter summary_success(query) [Boolean] Summary success
+  # 
+  # Pagination and sorting:
+  # @parameter limit(query) [Integer] Number of results to return (default: 10, max: 50)
+  # @parameter offset(query) [Integer] Number of results to skip for pagination (default: 0)
+  # @parameter page(query) [Integer] Page number (alternative to offset, starts at 1)
+  # @parameter sort_by(query) [String] Field to sort by (e.g., value, gas_used, timestamp, priority_fee, etc.)
+  # @parameter sort_order(query) [String] Sort order: 'asc' for ascending or 'desc' for descending (default: 'desc')

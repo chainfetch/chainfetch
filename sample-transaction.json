@@ -1,0 +1,922 @@
+{
+  "info": {
+    "priority_fee": "137710500000000",
+    "raw_input": "0x0d58b1db00000000000000000000000000000000000000000000000000000000000000200000000000000000000000000000000000000000000000000000000000000002",
+    "result": "success",
+    "hash": "0x84b4b3250ee1358905f8811bf2eb973c780a0b00ca686d75eaddc3dca3e2d887",
+    "max_fee_per_gas": "77584121560",
+    "revert_reason": null,
+    "confirmation_duration": [0, 12000.0],
+    "transaction_burnt_fee": "3539468527534908",
+    "type": 2,
+    "token_transfers_overflow": false,
+    "confirmations": 5702305,
+    "position": 92,
+    "max_priority_fee_per_gas": "1500000000",
+    "transaction_tag": "DeFi Interaction",
+    "created_contract": null,
+    "value": "2302322924045933",
+    "from": {
+      "ens_domain_name": "buildernet.eth",
+      "hash": "0xdadB0d80178819F2319190D340ce9A924f783711",
+      "implementations": ["0x1234567890123456789012345678901234567890"],
+      "is_contract": false,
+      "is_scam": false,
+      "is_verified": true,
+      "metadata": {
+        "tags": [
+          {
+            "meta": {
+              "tooltipUrl": "https://buildernet.org/docs/public-identity",
+              "appID": "buildernet",
+              "bgColor": "#FF007A",
+              "textColor": "#FFFFFF",
+              "tagIcon": "https://blockscout-content.s3.amazonaws.com/buildernet.png",
+              "tagUrl": "https://buildernet.org/?utm_source=Blockscout",
+              "tooltipDescription": "BuilderNet is a decentralized protocol for builders",
+              "tooltipTitle": "BuilderNet Protocol",
+              "alertStatus": "warning",
+              "data": "This address has high activity patterns"
+            },
+            "name": "BuilderNet",
+            "ordinal": 10,
+            "slug": "buildernet",
+            "tagType": "name"
+          },
+          {
+            "meta": {},
+            "name": "MEV Builder",
+            "ordinal": 0,
+            "slug": "mev-builder",
+            "tagType": "generic"
+          },
+          {
+            "meta": {
+              "bgColor": "#FED7D7",
+              "textColor": "#822727"
+            },
+            "name": "Phish / Hack",
+            "ordinal": 0,
+            "slug": "phish--hack",
+            "tagType": "generic"
+          },
+          {
+            "meta": {
+              "data": "ok"
+            },
+            "name": "Token Reputation",
+            "ordinal": 0,
+            "slug": "token-reputation",
+            "tagType": "information"
+          },
+          {
+            "meta": {
+              "alertStatus": "info",
+              "data": "This address is reported to be involved with a wallet drainer. Please exercise caution when interacting with this address. Reported by Blockmage Labs."
+            },
+            "name": "note_0",
+            "ordinal": 0,
+            "slug": "note0",
+            "tagType": "note"
+          }
+        ]
+      },
+      "name": "Builder Wallet",
+      "private_tags": ["my-wallet", "trading"],
+      "proxy_type": "eip1967",
+      "public_tags": ["exchange", "defi"],
+      "watchlist_names": ["High Activity Addresses"]
+    },
+    "gas_used": "91807",
+    "status": "ok",
+    "to": {
+      "ens_domain_name": "uniswap-v3.eth",
+      "hash": "0x000000000022D473030F116dDEE9F6B43aC78BA3",
+      "implementations": ["0x000000000022D473030F116dDEE9F6B43aC78BA3"],
+      "is_contract": true,
+      "is_scam": false,
+      "is_verified": true,
+      "metadata": {
+        "tags": [
+          {
+            "meta": {},
+            "name": "DeFi",
+            "ordinal": 0,
+            "slug": "defi",
+            "tagType": "generic"
+          },
+          {
+            "meta": {
+              "appID": "uniswap",
+              "bgColor": "#FF007A",
+              "tagIcon": "https://blockscout-content.s3.amazonaws.com/uniswap.png",
+              "tagUrl": "https://uniswap.org/?utm_source=Blockscout",
+              "textColor": "#FFFFFF",
+              "tooltipDescription": "Trade crypto and NFTs safely on the top DeFi platform. Swapping made simple. Buy and sell crypto on Ethereum, Base, Arbitrum, Polygon, and more.",
+              "tooltipTitle": "Uniswap",
+              "tooltipUrl": "https://uniswap.org/?utm_source=Blockscout"
+            },
+            "name": "Uniswap V3",
+            "ordinal": 0,
+            "slug": "uniswap-v3",
+            "tagType": "protocol"
+          },
+          {
+            "meta": {
+              "tooltipDescription": "Permit2 introduces a low-overhead, next generation token approval/meta-tx system to make token approvals easier, more secure, and more consistent across applications.",
+              "tooltipUrl": "https://uniswap.org/"
+            },
+            "name": "Uniswap Protocol: Permit2",
+            "ordinal": 10,
+            "slug": "uniswap-protocol-permit2",
+            "tagType": "name"
+          }
+        ]
+      },
+      "name": "Permit2",
+      "private_tags": [],
+      "proxy_type": "unknown",
+      "public_tags": ["DEX", "AMM"],
+      "watchlist_names": ["DeFi Protocols"]
+    },
+    "authorization_list": [
+      {
+        "authority": "0x1234567890123456789012345678901234567890",
+        "delegated_address": "0x9876543210987654321098765432109876543210",
+        "nonce": "0x1",
+        "validity": "0x12345678",
+        "yParity": "0x1",
+        "r": "0xabcdef1234567890abcdef1234567890abcdef1234567890abcdef1234567890",
+        "s": "0x1234567890abcdef1234567890abcdef1234567890abcdef1234567890abcdef"
+      }
+    ],
+    "method": "transferFrom",
+    "fee": {
+      "type": "actual",
+      "value": "3677179027534908"
+    },
+    "actions": [
+      {
+        "action_type": "token_transfer",
+        "data": {
+          "from": "0x1235F2CFF557ab15f8C37132e7C1F3956b716577",
+          "to": "0x9fA7bB759641FCd37fe4aE41f725e0f653f2C726",
+          "amount": "354113923821976701260",
+          "token": "0xD33526068D116cE69F19A9ee46F0bd304F21A51f"
+        }
+      }
+    ],
+    "gas_limit": "194494",
+    "gas_price": "40053362244",
+    "decoded_input": {
+      "method_call": "transferFrom((address,address,uint160,address)[] transferDetails)",
+      "method_id": "0d58b1db",
+      "parameters": [
+        {
+          "name": "transferDetails",
+          "type": "(address,address,uint160,address)[]",
+          "value": [
+            [
+              "0x1235F2CFF557ab15f8C37132e7C1F3956b716577",
+              "0x9fA7bB759641FCd37fe4aE41f725e0f653f2C726",
+              "354113923821976701260",
+              "0xD33526068D116cE69F19A9ee46F0bd304F21A51f"
+            ],
+            [
+              "0x1235F2CFF557ab15f8C37132e7C1F3956b716577",
+              "0xd7d1D6692E0612A632A78fAb5a82E9c767d518bF",
+              "826265822251278969608",
+              "0xD33526068D116cE69F19A9ee46F0bd304F21A51f"
+            ]
+          ]
+        }
+      ]
+    },
+    "token_transfers": [
+      {
+        "block_hash": "0xceec0f46e3598a05eaa33f1584a7a54ba7c772a706c78961c324011f902bcc4b",
+        "block_number": 17386968,
+        "from": {
+          "ens_domain_name": null,
+          "hash": "0x1235F2CFF557ab15f8C37132e7C1F3956b716577",
+          "implementations": [],
+          "is_contract": false,
+          "is_scam": false,
+          "is_verified": false,
+          "metadata": null,
+          "name": null,
+          "private_tags": [],
+          "proxy_type": null,
+          "public_tags": [],
+          "watchlist_names": []
+        },
+        "log_index": 282,
+        "method": "transferFrom",
+        "timestamp": "2023-06-01T15:51:59.000000Z",
+        "to": {
+          "ens_domain_name": null,
+          "hash": "0x9fA7bB759641FCd37fe4aE41f725e0f653f2C726",
+          "implementations": [],
+          "is_contract": false,
+          "is_scam": true,
+          "is_verified": false,
+          "metadata": {
+            "tags": [
+              {
+                "meta": {},
+                "name": "PinkDrainer: Wallet 2",
+                "ordinal": 10,
+                "slug": "pinkdrainer-wallet-2",
+                "tagType": "name"
+              }
+            ]
+          },
+          "name": null,
+          "private_tags": [],
+          "proxy_type": "unknown",
+          "public_tags": [],
+          "watchlist_names": []
+        },
+        "token": {
+          "address": "0xD33526068D116cE69F19A9ee46F0bd304F21A51f",
+          "address_hash": "0xD33526068D116cE69F19A9ee46F0bd304F21A51f",
+          "circulating_market_cap": "172035842.52989346",
+          "decimals": "18",
+          "exchange_rate": "7.95",
+          "holders": "11766",
+          "holders_count": "11766",
+          "icon_url": "https://assets.coingecko.com/coins/images/2090/small/rocket_pool_%28RPL%29.png?1696503058",
+          "name": "Rocket Pool",
+          "symbol": "RPL",
+          "total_supply": "21626144541304657966001631",
+          "type": "ERC-20",
+          "volume_24h": "24651625.30898667"
+        },
+        "total": {
+          "decimals": "18",
+          "value": "354113923821976701260"
+        },
+        "transaction_hash": "0x84b4b3250ee1358905f8811bf2eb973c780a0b00ca686d75eaddc3dca3e2d887",
+        "type": "token_transfer"
+      }
+    ],
+    "base_fee_per_gas": "38553362244",
+    "timestamp": "2023-06-01T15:51:59.000000Z",
+    "nonce": 1999,
+    "historic_exchange_rate": "1875.79",
+    "transaction_types": ["contract_call", "token_transfer", "coin_transfer"],
+    "exchange_rate": "3842.23",
+    "block_number": 17386968,
+    "has_error_in_internal_transactions": false,
+    "block_hash": "0xceec0f46e3598a05eaa33f1584a7a54ba7c772a706c78961c324011f902bcc4b",
+    "transaction_index": 92
+  },
+  "token_transfers": {
+    "items": [
+      {
+        "block_hash": "0xceec0f46e3598a05eaa33f1584a7a54ba7c772a706c78961c324011f902bcc4b",
+        "block_number": 17386968,
+        "from": {
+          "ens_domain_name": null,
+          "hash": "0x1235F2CFF557ab15f8C37132e7C1F3956b716577",
+          "implementations": [],
+          "is_contract": false,
+          "is_scam": false,
+          "is_verified": false,
+          "metadata": null,
+          "name": null,
+          "private_tags": [],
+          "proxy_type": null,
+          "public_tags": [],
+          "watchlist_names": []
+        },
+        "log_index": 282,
+        "method": "transferFrom",
+        "timestamp": "2023-06-01T15:51:59.000000Z",
+        "to": {
+          "ens_domain_name": null,
+          "hash": "0x9fA7bB759641FCd37fe4aE41f725e0f653f2C726",
+          "implementations": [],
+          "is_contract": false,
+          "is_scam": true,
+          "is_verified": false,
+          "metadata": {
+            "tags": [
+              {
+                "meta": {
+                  "alertStatus": "info",
+                  "data": "This address is reported to be involved with a wallet drainer. Please exercise caution when interacting with this address. Reported by Blockmage Labs."
+                },
+                "name": "note_0",
+                "ordinal": 0,
+                "slug": "note0",
+                "tagType": "note"
+              },
+              {
+                "meta": {
+                  "bgColor": "#FED7D7",
+                  "textColor": "#822727"
+                },
+                "name": "Phish / Hack",
+                "ordinal": 0,
+                "slug": "phish--hack",
+                "tagType": "generic"
+              },
+              {
+                "meta": {},
+                "name": "PinkDrainer: Wallet 2",
+                "ordinal": 10,
+                "slug": "pinkdrainer-wallet-2",
+                "tagType": "name"
+              }
+            ]
+          },
+          "name": null,
+          "private_tags": [],
+          "proxy_type": "unknown",
+          "public_tags": [],
+          "watchlist_names": []
+        },
+        "token": {
+          "address": "0xD33526068D116cE69F19A9ee46F0bd304F21A51f",
+          "address_hash": "0xD33526068D116cE69F19A9ee46F0bd304F21A51f",
+          "circulating_market_cap": "172035842.52989346",
+          "decimals": "18",
+          "exchange_rate": "7.95",
+          "holders": "11766",
+          "holders_count": "11766",
+          "icon_url": "https://assets.coingecko.com/coins/images/2090/small/rocket_pool_%28RPL%29.png?1696503058",
+          "name": "Rocket Pool",
+          "symbol": "RPL",
+          "total_supply": "21626144541304657966001631",
+          "type": "ERC-20",
+          "volume_24h": "24651625.30898667"
+        },
+        "total": {
+          "decimals": "18",
+          "value": "354113923821976701260"
+        },
+        "transaction_hash": "0x84b4b3250ee1358905f8811bf2eb973c780a0b00ca686d75eaddc3dca3e2d887",
+        "type": "token_transfer"
+      }
+    ],
+    "next_page_params": {
+      "block_number": 17386968,
+      "index": 283,
+      "items_count": 50
+    }
+  },
+  "internal_transactions": {
+    "items": [
+      {
+        "block_index": 471,
+        "block_number": 17386968,
+        "created_contract": {
+          "ens_domain_name": null,
+          "hash": "0x1234567890123456789012345678901234567890",
+          "implementations": [],
+          "is_contract": true,
+          "is_scam": false,
+          "is_verified": true,
+          "metadata": {
+            "tags": [
+              {
+                "meta": {},
+                "name": "Token Contract",
+                "ordinal": 0,
+                "slug": "token-contract",
+                "tagType": "generic"
+              }
+            ]
+          },
+          "name": "NewContract",
+          "private_tags": [],
+          "proxy_type": "unknown",
+          "public_tags": [],
+          "watchlist_names": []
+        },
+        "error": "execution reverted: insufficient balance",
+        "from": {
+          "ens_domain_name": null,
+          "hash": "0x000000000022D473030F116dDEE9F6B43aC78BA3",
+          "implementations": [],
+          "is_contract": true,
+          "is_scam": false,
+          "is_verified": true,
+          "metadata": {
+            "tags": [
+              {
+                "meta": {},
+                "name": "DeFi",
+                "ordinal": 0,
+                "slug": "defi",
+                "tagType": "generic"
+              }
+            ]
+          },
+          "name": "Permit2",
+          "private_tags": [],
+          "proxy_type": "unknown",
+          "public_tags": [],
+          "watchlist_names": []
+        },
+        "gas_limit": "161926",
+        "index": 1,
+        "success": true,
+        "timestamp": "2023-06-01T15:51:59.000000Z",
+        "to": {
+          "ens_domain_name": null,
+          "hash": "0xD33526068D116cE69F19A9ee46F0bd304F21A51f",
+          "implementations": [],
+          "is_contract": true,
+          "is_scam": false,
+          "is_verified": true,
+          "metadata": {
+            "tags": [
+              {
+                "meta": {},
+                "name": "Staking",
+                "ordinal": 0,
+                "slug": "staking",
+                "tagType": "generic"
+              }
+            ]
+          },
+          "name": "RocketTokenRPL",
+          "private_tags": [],
+          "proxy_type": "unknown",
+          "public_tags": [],
+          "watchlist_names": []
+        },
+        "transaction_hash": "0x84b4b3250ee1358905f8811bf2eb973c780a0b00ca686d75eaddc3dca3e2d887",
+        "transaction_index": 92,
+        "type": "call",
+        "value": "1000000000000000000"
+      }
+    ],
+    "next_page_params": {
+      "block_number": 17386968,
+      "index": 472,
+      "items_count": 50
+    }
+  },
+  "logs": {
+    "items": [
+      {
+        "address": {
+          "ens_domain_name": null,
+          "hash": "0xD33526068D116cE69F19A9ee46F0bd304F21A51f",
+          "implementations": [],
+          "is_contract": true,
+          "is_scam": false,
+          "is_verified": true,
+          "metadata": {
+            "tags": [
+              {
+                "meta": {},
+                "name": "Protocol",
+                "ordinal": 0,
+                "slug": "protocol",
+                "tagType": "generic"
+              }
+            ]
+          },
+          "name": "RocketTokenRPL",
+          "private_tags": [],
+          "proxy_type": "unknown",
+          "public_tags": [],
+          "watchlist_names": []
+        },
+        "block_hash": "0xceec0f46e3598a05eaa33f1584a7a54ba7c772a706c78961c324011f902bcc4b",
+        "block_number": 17386968,
+        "data": "0x0000000000000000000000000000000000000000000000133251618a44a8494c",
+        "decoded": {
+          "method_call": "Transfer(address indexed from, address indexed to, uint256 value)",
+          "method_id": "ddf252ad",
+          "parameters": [
+            {
+              "indexed": true,
+              "name": "from",
+              "type": "address",
+              "value": "0x1235F2CFF557ab15f8C37132e7C1F3956b716577"
+            },
+            {
+              "indexed": true,
+              "name": "to",
+              "type": "address",
+              "value": "0x9fA7bB759641FCd37fe4aE41f725e0f653f2C726"
+            },
+            {
+              "indexed": false,
+              "name": "value",
+              "type": "uint256",
+              "value": "354113923821976701260"
+            }
+          ]
+        },
+        "index": 282,
+        "smart_contract": {
+          "ens_domain_name": null,
+          "hash": "0xD33526068D116cE69F19A9ee46F0bd304F21A51f",
+          "implementations": [],
+          "is_contract": true,
+          "is_scam": false,
+          "is_verified": true,
+          "metadata": {
+            "tags": [
+              {
+                "meta": {},
+                "name": "Token Contract",
+                "ordinal": 0,
+                "slug": "token-contract",
+                "tagType": "generic"
+              }
+            ]
+          },
+          "name": "RocketTokenRPL",
+          "private_tags": [],
+          "proxy_type": "unknown",
+          "public_tags": [],
+          "watchlist_names": []
+        },
+        "topics": [
+          "0xddf252ad1be2c89b69c2b068fc378daa952ba7f163c4a11628f55a4df523b3ef",
+          "0x0000000000000000000000001235f2cff557ab15f8c37132e7c1f3956b716577",
+          "0x0000000000000000000000009fa7bb759641fcd37fe4ae41f725e0f653f2c726",
+          null
+        ],
+        "transaction_hash": "0x84b4b3250ee1358905f8811bf2eb973c780a0b00ca686d75eaddc3dca3e2d887"
+      }
+    ],
+    "next_page_params": {
+      "block_number": 17386968,
+      "index": 283,
+      "items_count": 50
+    }
+  },
+  "raw_trace": [
+    {
+      "action": {
+        "callType": "call",
+        "from": "0x63605e53d422c4f1ac0e01390ac59aaf84c44a51",
+        "gas": "0x299e6",
+        "input": "0x0d58b1db00000000000000000000000000000000000000000000000000000000000000200000000000000000000000000000000000000000000000000000000000000002",
+        "to": "0x000000000022d473030f116ddee9f6b43ac78ba3",
+        "value": "0x0"
+      },
+      "result": {
+        "gasUsed": "0x11b87",
+        "output": "0x"
+      },
+      "subtraces": 2,
+      "traceAddress": [],
+      "type": "call"
+    },
+    {
+      "action": {
+        "callType": "delegatecall",
+        "from": "0x000000000022d473030f116ddee9f6b43ac78ba3",
+        "gas": "0x27886",
+        "input": "0x23b872dd0000000000000000000000001235f2cff557ab15f8c37132e7c1f3956b716577",
+        "to": "0xd33526068d116ce69f19a9ee46f0bd304f21a51f",
+        "value": "0x0"
+      },
+      "result": {
+        "gasUsed": "0x922f",
+        "output": "0x0000000000000000000000000000000000000000000000000000000000000001"
+      },
+      "subtraces": 0,
+      "traceAddress": [0],
+      "type": "call"
+    },
+    {
+      "action": {
+        "callType": "staticcall",
+        "from": "0x000000000022d473030f116ddee9f6b43ac78ba3",
+        "gas": "0x1e3d0",
+        "input": "0x23b872dd0000000000000000000000001235f2cff557ab15f8c37132e7c1f3956b716577",
+        "to": "0xd33526068d116ce69f19a9ee46f0bd304f21a51f",
+        "value": "0x0"
+      },
+      "result": {
+        "gasUsed": "0x6caf",
+        "output": "0x0000000000000000000000000000000000000000000000000000000000000001"
+      },
+      "subtraces": 0,
+      "traceAddress": [1],
+      "type": "call"
+    },
+    {
+      "action": {
+        "from": "0x0000000000000000000000000000000000000000",
+        "gas": "0x5208",
+        "init": "0x608060405234801561001057600080fd5b50600080fd5b",
+        "value": "0x0"
+      },
+      "result": {
+        "address": "0x1234567890123456789012345678901234567890",
+        "code": "0x608060405234801561001057600080fd5b50600080fd5b",
+        "gasUsed": "0x3456"
+      },
+      "subtraces": 0,
+      "traceAddress": [2],
+      "type": "create"
+    },
+    {
+      "action": {
+        "address": "0x1234567890123456789012345678901234567890",
+        "refundAddress": "0x63605e53d422c4f1ac0e01390ac59aaf84c44a51",
+        "balance": "0x1bc16d674ec80000"
+      },
+      "result": null,
+      "subtraces": 0,
+      "traceAddress": [3],
+      "type": "suicide"
+    }
+  ],
+  "state_changes": {
+    "items": [
+      {
+        "address": {
+          "ens_domain_name": null,
+          "hash": "0x63605E53D422C4F1ac0e01390AC59aAf84C44A51",
+          "implementations": [],
+          "is_contract": false,
+          "is_scam": false,
+          "is_verified": false,
+          "metadata": null,
+          "name": null,
+          "private_tags": [],
+          "proxy_type": null,
+          "public_tags": [],
+          "watchlist_names": []
+        },
+        "balance_after": "6395763690159057364",
+        "balance_before": "6399440869186592272",
+        "change": "-3677179027534908",
+        "is_miner": false,
+        "token": null,
+        "token_id": null,
+        "type": "coin"
+      },
+      {
+        "address": {
+          "ens_domain_name": null,
+          "hash": "0x1f9090aaE28b8a3dCeaDf281B0F12828e676c326",
+          "implementations": [],
+          "is_contract": false,
+          "is_scam": false,
+          "is_verified": false,
+          "metadata": null,
+          "name": null,
+          "private_tags": [],
+          "proxy_type": "unknown",
+          "public_tags": [],
+          "watchlist_names": []
+        },
+        "balance_after": "3601872537638081605",
+        "balance_before": "3601734827138081605",
+        "change": "137710500000000",
+        "is_miner": true,
+        "token": null,
+        "token_id": null,
+        "type": "coin"
+      },
+      {
+        "address": {
+          "ens_domain_name": null,
+          "hash": "0x1235F2CFF557ab15f8C37132e7C1F3956b716577",
+          "implementations": [],
+          "is_contract": false,
+          "is_scam": false,
+          "is_verified": false,
+          "metadata": null,
+          "name": null,
+          "private_tags": [],
+          "proxy_type": null,
+          "public_tags": [],
+          "watchlist_names": []
+        },
+        "balance_after": "0",
+        "balance_before": "1180379746073255670868",
+        "change": "-1180379746073255670868",
+        "is_miner": false,
+        "token": {
+          "address": "0xD33526068D116cE69F19A9ee46F0bd304F21A51f",
+          "address_hash": "0xD33526068D116cE69F19A9ee46F0bd304F21A51f",
+          "circulating_market_cap": "172035842.52989346",
+          "decimals": "18",
+          "exchange_rate": "7.95",
+          "holders": "11766",
+          "holders_count": "11766",
+          "icon_url": "https://assets.coingecko.com/coins/images/2090/small/rocket_pool_%28RPL%29.png?1696503058",
+          "name": "Rocket Pool",
+          "symbol": "RPL",
+          "total_supply": "21626144541304657966001631",
+          "type": "ERC-20",
+          "volume_24h": "24651625.30898667"
+        },
+        "token_id": "12345",
+        "type": "token"
+      }
+    ],
+    "next_page_params": {
+      "block_number": 17386968,
+      "index": 4,
+      "items_count": 50
+    }
+  },
+  "summary": {
+    "data": {
+      "debug_data": {
+        "is_prompt_truncated": false,
+        "model_classification_type": "transfer",
+        "post_llm_classification_type": "transfer",
+        "summary_template": {
+          "transfer": {
+            "template_name": "Generic-Transfer",
+            "template_vars": {
+              "decodedInput": "Transfer function call with complex parameters",
+              "erc20Amount": "354.113923821976701260",
+              "isErc20Transfer": true,
+              "isNftTransfer": false,
+              "isUserOpsTransfer": false,
+              "nftAmount": null,
+              "strippedInput": "0d58b1db00000000000000000000000000000000000000000000000000000000000000200000000000000000000000000000000000000000000000000000000000000002",
+              "toAddress": {
+                "ens_domain_name": null,
+                "hash": "0x9fA7bB759641FCd37fe4aE41f725e0f653f2C726",
+                "implementations": [],
+                "is_contract": false,
+                "is_scam": true,
+                "is_verified": false,
+                "metadata": {
+                  "tags": [
+                    {
+                      "meta": {},
+                      "name": "PinkDrainer",
+                      "ordinal": 0,
+                      "slug": "pinkdrainer",
+                      "tagType": "protocol"
+                    }
+                  ]
+                },
+                "name": null,
+                "private_tags": [],
+                "proxy_type": "unknown",
+                "public_tags": [],
+                "watchlist_names": []
+              },
+              "token": {
+                "address": "0xD33526068D116cE69F19A9ee46F0bd304F21A51f",
+                "address_hash": "0xD33526068D116cE69F19A9ee46F0bd304F21A51f",
+                "circulating_market_cap": "172035842.52989346",
+                "decimals": "18",
+                "exchange_rate": "7.95",
+                "holders": "11766",
+                "holders_count": "11766",
+                "icon_url": "https://assets.coingecko.com/coins/images/2090/small/rocket_pool_%28RPL%29.png?1696503058",
+                "name": "Rocket Pool",
+                "symbol": "RPL",
+                "total_supply": "21626144541304657966001631",
+                "type": "ERC-20",
+                "volume_24h": "24651625.30898667"
+              },
+              "tokenTransfers": [
+                {
+                  "block_hash": "0xceec0f46e3598a05eaa33f1584a7a54ba7c772a706c78961c324011f902bcc4b",
+                  "block_number": 17386968,
+                  "from": {
+                    "ens_domain_name": null,
+                    "hash": "0x1235F2CFF557ab15f8C37132e7C1F3956b716577",
+                    "implementations": [],
+                    "is_contract": false,
+                    "is_scam": false,
+                    "is_verified": false,
+                    "metadata": null,
+                    "name": null,
+                    "private_tags": [],
+                    "proxy_type": null,
+                    "public_tags": [],
+                    "watchlist_names": []
+                  },
+                  "log_index": 282,
+                  "method": "transferFrom",
+                  "timestamp": null,
+                  "to": {
+                    "ens_domain_name": null,
+                    "hash": "0x9fA7bB759641FCd37fe4aE41f725e0f653f2C726",
+                    "implementations": [],
+                    "is_contract": false,
+                    "is_scam": true,
+                    "is_verified": false,
+                    "metadata": {
+                      "tags": [
+                        {
+                          "meta": {},
+                          "name": "PinkDrainer",
+                          "ordinal": 0,
+                          "slug": "pinkdrainer",
+                          "tagType": "protocol"
+                        }
+                      ]
+                    },
+                    "name": null,
+                    "private_tags": [],
+                    "proxy_type": "unknown",
+                    "public_tags": [],
+                    "watchlist_names": []
+                  },
+                  "token": {
+                    "address": "0xD33526068D116cE69F19A9ee46F0bd304F21A51f",
+                    "address_hash": "0xD33526068D116cE69F19A9ee46F0bd304F21A51f",
+                    "circulating_market_cap": "172035842.52989346",
+                    "decimals": "18",
+                    "exchange_rate": "7.95",
+                    "holders": "11766",
+                    "holders_count": "11766",
+                    "icon_url": "https://assets.coingecko.com/coins/images/2090/small/rocket_pool_%28RPL%29.png?1696503058",
+                    "name": "Rocket Pool",
+                    "symbol": "RPL",
+                    "total_supply": "21626144541304657966001631",
+                    "type": "ERC-20",
+                    "volume_24h": "24651625.30898667"
+                  },
+                  "total": {
+                    "decimals": "18",
+                    "value": "354113923821976701260"
+                  },
+                  "transaction_hash": "0x84b4b3250ee1358905f8811bf2eb973c780a0b00ca686d75eaddc3dca3e2d887",
+                  "type": "token_transfer"
+                }
+              ]
+            }
+          },
+          "basicEthTransfer": {
+            "template_name": "Generic-basicEthTransfer",
+            "template_vars": {
+              "etherValue": "0.002302322924045933",
+              "fromHash": "0xdadB0d80178819F2319190D340ce9A924f783711",
+              "isFromBinance": false,
+              "isToBinance": false,
+              "lastSet": "Transfer",
+              "toAddress": {
+                "ens_domain_name": null,
+                "hash": "0xB423b53D9076b325c0248D62eF74b11adC211020",
+                "implementations": [],
+                "is_contract": false,
+                "is_scam": false,
+                "is_verified": false,
+                "metadata": null,
+                "name": null,
+                "private_tags": [],
+                "proxy_type": null,
+                "public_tags": [],
+                "watchlist_names": []
+              },
+              "toHash": "0xB423b53D9076b325c0248D62eF74b11adC211020"
+            }
+          }
+        },
+        "transaction_hash": "0x84b4b3250ee1358905f8811bf2eb973c780a0b00ca686d75eaddc3dca3e2d887"
+      },
+      "summaries": [
+        {
+          "summary_template": "{action_type} {amount} {native} to {to_address}",
+          "summary_template_variables": {
+            "action_type": {
+              "type": "string",
+              "value": "Transfer"
+            },
+            "amount": {
+              "type": "currency",
+              "value": "0.002302322924045933"
+            },
+            "native": {
+              "type": "string",
+              "value": "ETH"
+            },
+            "to_address": {
+              "type": "address",
+              "value": {
+                "ens_domain_name": null,
+                "hash": "0xB423b53D9076b325c0248D62eF74b11adC211020",
+                "implementations": [],
+                "is_contract": false,
+                "is_scam": false,
+                "is_verified": false,
+                "metadata": null,
+                "name": null,
+                "private_tags": [],
+                "proxy_type": null,
+                "public_tags": [],
+                "watchlist_names": []
+              }
+            }
+          }
+        }
+      ]
+    },
+    "success": true
+  }
+}
