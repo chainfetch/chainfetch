@@ -154,7 +154,7 @@ spec:
                 port:
                   number: 11434
 ---
-# Llama3.1 8B Dedicated Deployment - Single Pod
+# Llama3.2 3B Dedicated Deployment - Single Pod
 apiVersion: apps/v1
 kind: Deployment
 metadata:
@@ -163,7 +163,7 @@ metadata:
   labels:
     app: ollama-llama
 spec:
-  replicas: 1  # Single pod for Llama3.1 8B
+  replicas: 1  # Single pod for Llama3.2 3B
   selector:
     matchLabels:
       app: ollama-llama
@@ -182,7 +182,7 @@ spec:
           - |
             /bin/ollama serve &
             sleep 10
-            /bin/ollama pull llama3.1:8b
+            /bin/ollama pull llama3.2:3b
             sleep 5
             pkill ollama
         volumeMounts:
@@ -217,10 +217,10 @@ spec:
           mountPath: /root/.ollama
         resources:
           requests:
-            memory: "12Gi"        # 12GB for Llama3.1 8B model
+            memory: "6Gi"         # 6GB for Llama3.2 3B model (more efficient)
             cpu: "1000m"          # 1 CPU core
           limits:
-            memory: "16Gi"        # 16GB limit for headroom
+            memory: "8Gi"         # 8GB limit for headroom
             cpu: "2000m"          # 2 CPU cores limit
         readinessProbe:
           httpGet:
@@ -253,7 +253,7 @@ spec:
   storageClassName: longhorn
   resources:
     requests:
-      storage: 25Gi  # 25GB for Llama3.1 8B model
+      storage: 25Gi  # Keep existing 25GB (PVC size cannot be reduced)
 ---
 apiVersion: v1
 kind: Service

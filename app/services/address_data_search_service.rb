@@ -10,7 +10,7 @@ class AddressDataSearchService
   def initialize(query)
     @query = query
     @api_url = "https://llama.chainfetch.app"
-    @model = "llama3.1:8b"
+    @model = "llama3.2:3b"
     @api_key = Rails.application.credentials.auth_bearer_token
     @base_url = Rails.env.production? ? 'https://chainfetch.app' : 'http://localhost:3000'
   end
