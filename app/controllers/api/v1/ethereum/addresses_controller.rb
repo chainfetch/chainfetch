@@ -547,7 +547,7 @@ class Api::V1::Ethereum::AddressesController < Api::V1::Ethereum::BaseController
     total_pages = (total_count.to_f / limit).ceil
     
     render json: {
-      results: paginated_addresses,
+      results: paginated_addresses.pluck(:address_hash),
       pagination: {
         total: total_count,
         limit: limit,

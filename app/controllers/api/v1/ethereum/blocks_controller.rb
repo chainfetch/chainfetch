@@ -510,7 +510,7 @@ class Api::V1::Ethereum::BlocksController < Api::V1::Ethereum::BaseController
     total_pages = (total_count.to_f / limit).ceil
     
     render json: {
-      results: paginated_blocks,
+      results: paginated_blocks.pluck(:block_number),
       pagination: {
         total: total_count,
         limit: limit,

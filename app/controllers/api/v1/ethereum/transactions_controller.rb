@@ -504,7 +504,7 @@ class Api::V1::Ethereum::TransactionsController < Api::V1::Ethereum::BaseControl
     total_pages = (total_count.to_f / limit).ceil
 
     render json: {
-      results: paginated_transactions,
+      results: paginated_transactions.pluck(:transaction_hash),
       pagination: {
         total: total_count,
         limit: limit,

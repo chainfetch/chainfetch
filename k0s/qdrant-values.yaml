@@ -23,10 +23,10 @@ config:
 # Resource configuration
 resources:
   limits:
-    cpu: "2"
-    memory: 4Gi
+    cpu: "800m"
+    memory: 6Gi
   requests:
-    cpu: "1"
+    cpu: "300m"
     memory: 4Gi
 
 # Storage configuration - Use healthy disk only
