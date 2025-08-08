@@ -1,0 +1,62 @@
+<div class="py-16">
+  <div class="max-w-2xl mx-auto md:w-2/3 w-full px-4">
+    <div class="bg-gray-800 px-6 py-8 border border-gray-700 rounded-xl shadow-xl">
+      <h1 class="font-bold text-2xl text-gray-100">Update your password</h1>
+      <p class="text-base text-gray-400 mt-2">
+        Enter your new password and confirm it to update your account.
+      </p>
+
+      <% if flash[:alert] %>
+        <div class="mt-6 p-4 bg-red-900/50 border border-red-600 rounded-lg">
+          <div class="flex items-center">
+            <svg class="w-5 h-5 text-red-400 mr-2" fill="currentColor" viewBox="0 0 20 20">
+              <path fill-rule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7 4a1 1 0 11-2 0 1 1 0 012 0zm-1-9a1 1 0 00-1 1v4a1 1 0 102 0V6a1 1 0 00-1-1z" clip-rule="evenodd"></path>
+            </svg>
+            <p class="text-gray-300"><%= flash[:alert] %></p>
+          </div>
+        </div>
+      <% end %>
+
+      <% if flash[:notice] %>
+        <div class="mt-6 p-4 bg-green-900/50 border border-green-600 rounded-lg">
+          <div class="flex items-center">
+            <svg class="w-5 h-5 text-green-400 mr-2" fill="currentColor" viewBox="0 0 20 20">
+              <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"></path>
+            </svg>
+            <p class="text-gray-300"><%= flash[:notice] %></p>
+          </div>
+        </div>
+      <% end %>
+
+      <%= form_with url: password_path(params[:token]), method: :put, class: "mt-8 space-y-6" do |form| %>
+        <div>
+          <%= form.password_field :password, required: true, autocomplete: "new-password", placeholder: "Enter new password", maxlength: 72, class: "block w-full px-4 py-3 rounded-lg bg-gray-700/50 border border-gray-600 text-gray-100 placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-transparent transition-colors" %>
+        </div>
+
+        <div>
+          <%= form.password_field :password_confirmation, required: true, autocomplete: "new-password", placeholder: "Repeat new password", maxlength: 72, class: "block w-full px-4 py-3 rounded-lg bg-gray-700/50 border border-gray-600 text-gray-100 placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-transparent transition-colors" %>
+        </div>
+
+        <div class="bg-blue-900/30 border border-blue-600/50 rounded-lg p-4 mt-4">
+          <div class="flex items-start">
+            <svg class="w-5 h-5 text-blue-400 mr-2 mt-0.5" fill="currentColor" viewBox="0 0 20 20">
+              <path fill-rule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7-4a1 1 0 11-2 0 1 1 0 012 0zM9 9a1 1 0 000 2v3a1 1 0 001 1h1a1 1 0 100-2v-3a1 1 0 00-1-1H9z" clip-rule="evenodd"></path>
+            </svg>
+            <div class="text-gray-300 text-sm">
+              <p class="font-medium">Password requirements</p>
+              <p class="mt-1">Your password should be strong and unique. After updating, you'll be automatically signed in.</p>
+            </div>
+          </div>
+        </div>
+
+        <div class="flex items-center justify-between pt-4">
+          <%= form.submit "Save password", class: "px-6 py-3 bg-transparent border-2 border-green-500/30 rounded-md font-semibold transition-all duration-200 hover:border-green-500/60 hover:bg-green-500/10 text-white" %>
+
+          <div class="flex items-center space-x-4">
+            <%= link_to "Sign in", new_session_path, class: "text-gray-400 hover:text-gray-300 transition-colors" %>
+          </div>
+        </div>
+      <% end %>
+    </div>
+  </div>
+</div>

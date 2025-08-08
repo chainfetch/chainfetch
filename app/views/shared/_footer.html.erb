@@ -1,0 +1,51 @@
+<!-- Footer -->
+<footer class="bg-[#1E293B] text-gray-400 pt-16 pb-8">
+  <div class="container mx-auto px-4">
+    <div class="grid grid-cols-2 md:grid-cols-4 gap-8 mb-12">
+      
+      <div>
+        <h3 class="text-white font-semibold mb-4">Product</h3>
+        <ul class="space-y-2">
+          <li><%= link_to "Features", "#{public_root_path}#features", class: "hover:text-white transition-colors" %></li>
+          <li><%= link_to "Pricing", "#{public_root_path}#pricing", class: "hover:text-white transition-colors" %></li>
+          <li><%= link_to "Documentation", "https://docs.fetchserp.com", class: "hover:text-white transition-colors" %></li>
+        </ul>
+      </div>
+
+      <div>
+        <h3 class="text-white font-semibold mb-4">Company</h3>
+        <ul class="space-y-2">
+          <li><%= link_to "About", "#{public_root_path}#about", class: "hover:text-white transition-colors" %></li>
+          <li><%= link_to "Blog", "https://blog.chainfetch.app", class: "hover:text-white transition-colors" %></li>
+          <li><%= link_to "Contact", "#{public_root_path}#contact", class: "hover:text-white transition-colors" %></li>
+        </ul>
+      </div>
+
+      <div>
+        <h3 class="text-white font-semibold mb-4">Legal</h3>
+        <ul class="space-y-2">
+          <li><%= link_to "Privacy", "#{public_root_path}#privacy", class: "hover:text-white transition-colors" %></li>
+          <li><%= link_to "Terms", "#{public_root_path}#terms", class: "hover:text-white transition-colors" %></li>
+        </ul>
+      </div>
+
+      <div>
+        <h3 class="text-white font-semibold mb-4">Connect</h3>
+        <div class="flex flex-col gap-2">
+          <a href="https://github.com/dm0lz" class="hover:text-white transition-colors">GitHub</a>
+          <a href="https://twitter.com/chainfetch" class="hover:text-white transition-colors">Twitter</a>
+          <a href="https://linkedin.com/company/chainfetch" class="hover:text-white transition-colors">LinkedIn</a>
+        </div>
+      </div>
+
+    </div>
+
+    <div class="pt-8 border-t border-gray-700 text-sm flex flex-col md:flex-row justify-between items-center">
+      <p>© 2025 fetchSERP API. All rights reserved.</p>
+      <div class="flex space-x-6 mt-4 md:mt-0">
+        <%= link_to "Privacy Policy", "#{public_root_path}#privacy", class: "hover:text-white transition-colors" %>
+        <%= link_to "Terms of Service", "#{public_root_path}#terms", class: "hover:text-white transition-colors" %>
+      </div>
+    </div>
+  </div>
+</footer>

@@ -1,4 +1,9 @@
 Rails.application.routes.draw do
+  resource :session
+  resources :passwords, param: :token
+  resources :registrations, only: [:new, :create]
+  resources :email_confirmations, only: [:new, :create]
+  get "confirm_email/:token", to: "email_confirmations#show", as: :confirm_email
   # Define your application routes per the DSL in https://guides.rubyonrails.org/routing.html
 
   # Reveal health status on /up that returns 200 if the app boots with no exceptions, otherwise 500.
@@ -16,13 +21,21 @@ Rails.application.routes.draw do
   # Mount Action Cable
   mount ActionCable.server => '/cable'
   
-  # Ethereum live data routes
-  resources :ethereum, only: [:index]
-  
-  # =============================================================================
-  # ETHEREUM API PROXY ROUTES
-  # =============================================================================
-  
+  namespace :app do
+    resources :dashboard, only: [:index]
+    post 'regenerate_api_key', to: 'dashboard#regenerate_api_key'
+    resources :token_purchases, only: [:create]
+    get 'sol_price', to: 'token_purchases#sol_price'
+    post 'set_solana_key', to: 'token_purchases#set_solana_key'
+    post 'buy_token', to: 'token_purchases#create'
+    root 'dashboard#index'
+  end
+
+  namespace :public do
+    get 'landing', to: 'landing#index'
+    root 'landing#index'
+  end
+
   namespace :api do
     namespace :v1 do
       get 'ethereum/addresses/semantic_search', to: 'ethereum/addresses#semantic_search'
@@ -43,6 +56,5 @@ Rails.application.routes.draw do
     end
   end
   
-  # Root endpoint - redirect to live Ethereum dashboard
-  root 'ethereum#index'
+  root 'public/landing#index'
 end

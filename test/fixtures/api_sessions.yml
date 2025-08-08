@@ -1,0 +1,17 @@
+# Read about fixtures at https://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
+
+one:
+  user: one
+  ip_address: MyString
+  user_agent: MyString
+  endpoint: MyString
+  request_params: 
+  cost: 1.5
+
+two:
+  user: two
+  ip_address: MyString
+  user_agent: MyString
+  endpoint: MyString
+  request_params: 
+  cost: 1.5

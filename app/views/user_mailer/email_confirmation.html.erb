@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <style>
+      .container {
+        max-width: 600px;
+        margin: 0 auto;
+        font-family: Arial, sans-serif;
+        background-color: #f8f9fa;
+        padding: 20px;
+      }
+      .email-content {
+        background-color: white;
+        padding: 30px;
+        border-radius: 8px;
+        box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+      }
+      .confirm-button {
+        display: inline-block;
+        padding: 12px 24px;
+        background-color: #007bff;
+        color: white !important;
+        text-decoration: none;
+        border-radius: 4px;
+        margin: 20px 0;
+      }
+      .confirm-button:hover {
+        background-color: #0056b3;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="container">
+      <div class="email-content">
+        <h1>Welcome! Please confirm your email address</h1>
+        
+        <p>Hi there,</p>
+        
+        <p>Thanks for signing up! To complete your registration, please confirm your email address by clicking the button below:</p>
+        
+        <a href="<%= @confirmation_url %>" class="confirm-button">Confirm Email Address</a>
+        
+        <p>If the button doesn't work, you can also copy and paste this link into your browser:</p>
+        <p><%= @confirmation_url %></p>
+        
+        <p>This confirmation link will expire in 24 hours.</p>
+        
+        <p>If you didn't create an account, you can safely ignore this email.</p>
+        
+        <p>Thanks!</p>
+      </div>
+    </div>
+  </body>
+</html>

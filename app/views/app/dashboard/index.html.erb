@@ -1,0 +1,266 @@
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap');
+  
+  body {
+    font-family: 'Inter', sans-serif;
+  }
+  
+  .bg-gradient-main {
+    background: linear-gradient(135deg, #0f172a 0%, #1e293b 25%, #334155 50%, #1e293b 75%, #0f172a 100%);
+    background-size: 400% 400%;
+    animation: gradientShift 15s ease infinite;
+  }
+  
+  @keyframes gradientShift {
+    0% { background-position: 0% 50%; }
+    50% { background-position: 100% 50%; }
+    100% { background-position: 0% 50%; }
+  }
+  
+  .card-gradient {
+    background: linear-gradient(145deg, rgba(30, 41, 59, 0.8) 0%, rgba(51, 65, 85, 0.6) 50%, rgba(30, 41, 59, 0.8) 100%);
+    backdrop-filter: blur(20px);
+    border: 1px solid rgba(148, 163, 184, 0.1);
+    box-shadow: 
+      0 25px 50px -12px rgba(0, 0, 0, 0.5),
+      0 0 0 1px rgba(255, 255, 255, 0.05),
+      inset 0 1px 0 rgba(255, 255, 255, 0.1);
+  }
+  
+  .glass-effect {
+    background: rgba(30, 41, 59, 0.6);
+    backdrop-filter: blur(16px);
+    border: 1px solid rgba(148, 163, 184, 0.15);
+  }
+  
+  .hover-lift {
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  }
+  
+  .hover-lift:hover {
+    transform: translateY(-4px);
+    box-shadow: 
+      0 32px 64px -12px rgba(0, 0, 0, 0.6),
+      0 0 0 1px rgba(255, 255, 255, 0.08),
+      inset 0 1px 0 rgba(255, 255, 255, 0.15);
+  }
+  
+  .btn-primary {
+    background: linear-gradient(135deg, #3b82f6 0%, #1d4ed8 100%);
+    border: 1px solid rgba(59, 130, 246, 0.3);
+    box-shadow: 
+      0 10px 25px -5px rgba(59, 130, 246, 0.4),
+      0 0 0 1px rgba(59, 130, 246, 0.1),
+      inset 0 1px 0 rgba(255, 255, 255, 0.2);
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  }
+  
+  .btn-primary:hover {
+    background: linear-gradient(135deg, #2563eb 0%, #1e40af 100%);
+    transform: translateY(-1px);
+    box-shadow: 
+      0 15px 35px -5px rgba(59, 130, 246, 0.5),
+      0 0 0 1px rgba(59, 130, 246, 0.2),
+      inset 0 1px 0 rgba(255, 255, 255, 0.3);
+  }
+  
+  .btn-secondary {
+    background: linear-gradient(135deg, #10b981 0%, #059669 100%);
+    border: 1px solid rgba(16, 185, 129, 0.3);
+    box-shadow: 
+      0 10px 25px -5px rgba(16, 185, 129, 0.4),
+      0 0 0 1px rgba(16, 185, 129, 0.1),
+      inset 0 1px 0 rgba(255, 255, 255, 0.2);
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  }
+  
+  .btn-secondary:hover {
+    background: linear-gradient(135deg, #059669 0%, #047857 100%);
+    transform: translateY(-1px);
+    box-shadow: 
+      0 15px 35px -5px rgba(16, 185, 129, 0.5),
+      0 0 0 1px rgba(16, 185, 129, 0.2),
+      inset 0 1px 0 rgba(255, 255, 255, 0.3);
+  }
+  
+  .btn-outline {
+    background: rgba(30, 41, 59, 0.4);
+    border: 1px solid rgba(148, 163, 184, 0.3);
+    backdrop-filter: blur(8px);
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  }
+  
+  .btn-outline:hover {
+    background: rgba(51, 65, 85, 0.6);
+    border-color: rgba(148, 163, 184, 0.5);
+    transform: translateY(-1px);
+  }
+  
+  .icon-glow {
+    filter: drop-shadow(0 0 8px rgba(59, 130, 246, 0.3));
+  }
+  
+  @media (max-width: 640px) {
+    .card-gradient {
+      margin: 0 -1rem;
+      border-radius: 0;
+      border-left: none;
+      border-right: none;
+    }
+  }
+</style>
+
+<div class="min-h-screen bg-[#0F172A]">
+  <main>
+    <!-- Dashboard Section -->
+    <section class="py-16 sm:py-24 bg-[#0F172A] text-white relative overflow-hidden">
+      <div class="container mx-auto px-4 relative">
+        <!-- Header -->
+        <div class="text-center mb-12">
+          <div class="inline-block mb-6 px-4 py-2 bg-yellow-500/10 rounded-full border border-yellow-500/20">
+            <span class="text-yellow-400 font-semibold">Dashboard</span>
+          </div>
+          <h1 class="text-4xl md:text-5xl lg:text-6xl font-bold mb-6 leading-tight bg-clip-text text-transparent bg-gradient-to-r from-white via-yellow-100 to-white">
+            Welcome Back
+          </h1>
+          <p class="text-xl md:text-2xl mb-8 text-gray-300 max-w-xl mx-auto">
+            Manage your API access, monitor your usage, and explore the possibilities.
+          </p>
+        </div>
+
+        <!-- Main Dashboard Grid -->
+        <div class="max-w-7xl mx-auto">
+          <div class="grid grid-cols-1 lg:grid-cols-2 gap-8 mb-12">
+            <!-- Account Information Card -->
+            <div class="flex flex-col justify-between h-full bg-[#1E293B]/80 backdrop-blur-sm rounded-lg p-6 text-white border border-yellow-500/20 shadow-[0_0_30px_rgba(234,179,8,0.1)]">
+              <div class="flex items-center justify-between mb-4">
+                <div class="flex items-center text-yellow-500">
+                  <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="mr-3">
+                    <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path>
+                    <circle cx="12" cy="7" r="4"></circle>
+                  </svg>
+                  <span class="font-semibold">Account Information</span>
+                </div>
+                <%= link_to new_password_path(email_address: Current.user.email_address), class: "group relative px-4 py-2 bg-gradient-to-r from-yellow-500 to-red-500 text-white rounded-md font-semibold transition-all duration-200 hover:shadow-[0_0_20px_rgba(234,179,8,0.3)] overflow-hidden text-sm" do %>
+                  <span class="relative z-10 flex items-center">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="mr-2">
+                      <rect width="18" height="11" x="3" y="11" rx="2" ry="2"></rect>
+                      <circle cx="12" cy="16" r="1"></circle>
+                      <path d="m7 11V7a5 5 0 0 1 10 0v4"></path>
+                    </svg>
+                    Change Password
+                  </span>
+                  <span class="absolute inset-0 bg-gradient-to-r from-red-500 to-yellow-500 transition-transform duration-200 translate-x-full group-hover:translate-x-0"></span>
+                <% end %>
+              </div>
+              <div class="">
+                <p class="text-sm text-gray-400 mb-2">Email Address</p>
+                <div class="bg-[#0F172A] rounded-md p-6 border border-gray-800 flex items-center space-x-3 min-h-[44px]">
+                  <p class="text-sm font-mono text-yellow-300 break-all flex-1 min-w-0">
+                    <%= Current.user.email_address %>
+                  </p>
+                </div>
+              </div>
+            </div>
+
+            <!-- API Authentication Card -->
+            <div class="bg-[#1E293B]/80 backdrop-blur-sm rounded-lg p-6 text-white border border-yellow-500/20 shadow-[0_0_30px_rgba(234,179,8,0.1)]">
+              <div class="flex items-center justify-between mb-4">
+                <div class="flex items-center text-yellow-500">
+                  <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="mr-3">
+                    <path d="m15.5 7.5 2.3 2.3a1 1 0 0 0 1.4 0l2.1-2.1a1 1 0 0 0 0-1.4L19 4"></path>
+                    <path d="m21 2-9.6 9.6"></path>
+                    <circle cx="7.5" cy="15.5" r="5.5"></circle>
+                  </svg>
+                  <span class="font-semibold">API Authentication</span>
+                </div>
+                <button onclick="regenerateApiKey()" 
+                        class="group relative px-4 py-2 bg-gradient-to-r from-yellow-500 to-red-500 text-white rounded-md font-semibold transition-all duration-200 hover:shadow-[0_0_20px_rgba(234,179,8,0.3)] overflow-hidden text-sm hover:cursor-pointer" 
+                        title="Regenerate API Key" 
+                        id="regenerateButton">
+                  <span class="relative z-10 flex items-center">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="mr-2">
+                      <path d="M3 12a9 9 0 0 1 9-9 9.75 9.75 0 0 1 6.74 2.74L21 8"></path>
+                      <path d="M21 3v5h-5"></path>
+                      <path d="M21 12a9 9 0 0 1-9 9 9.75 9.75 0 0 1-6.74-2.74L3 16"></path>
+                      <path d="M3 21v-5h5"></path>
+                    </svg>
+                    Regenerate API Key
+                  </span>
+                  <span class="absolute inset-0 bg-gradient-to-r from-red-500 to-yellow-500 transition-transform duration-200 translate-x-full group-hover:translate-x-0"></span>
+                </button>
+              </div>
+              <p class="text-sm text-gray-400 mb-4">Your private API key for accessing our services</p>
+              
+              <div class="bg-[#0F172A] rounded-md p-4 border border-gray-800">
+                <div class="flex items-center space-x-3">
+                  <p id="apiToken" class="text-sm font-mono text-yellow-300 break-all flex-1 min-w-0">
+                    <%= Current.user.api_token %>
+                  </p>
+                  <button onclick="copyToClipboard('<%= Current.user.api_token %>')" 
+                          class="flex-shrink-0 p-2 text-gray-400 hover:text-yellow-400 hover:bg-yellow-500/10 rounded transition-colors" 
+                          title="Copy API Key" 
+                          id="copyButton">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="hover:cursor-pointer">
+                      <rect width="14" height="14" x="8" y="8" rx="2" ry="2"></rect>
+                      <path d="M4 16c-1.1 0-2-.9-2-2V4c0-1.1.9-2 2-2h10c1.1 0 2 .9 2 2"></path>
+                    </svg>
+                  </button>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Available Credits Card - Full Width -->
+          <div class="bg-[#1E293B]/80 backdrop-blur-sm rounded-lg p-6 text-white border border-yellow-500/20 shadow-[0_0_30px_rgba(234,179,8,0.1)] mb-12">
+            <div class="flex items-center justify-between mb-4">
+              <div class="flex items-center text-yellow-500">
+                <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="mr-3">
+                  <circle cx="8" cy="8" r="6"></circle>
+                  <path d="M18.09 10.37A6 6 0 1 1 10.34 18"></path>
+                  <path d="M7 6h1v4"></path>
+                  <path d="m16.71 13.88.7.71-2.82 2.82"></path>
+                </svg>
+                <span class="font-semibold">Available API Credits</span>
+              </div>
+              <!-- Desktop buttons -->
+              <div class="hidden sm:flex gap-2">
+                <button id="connectWalletButton" class="group relative px-4 py-2 bg-gradient-to-r from-yellow-500 to-red-500 text-white rounded-md font-semibold transition-all duration-200 hover:shadow-[0_0_20px_rgba(234,179,8,0.3)] overflow-hidden text-sm hover:cursor-pointer" title="Connect Phantom Wallet">
+                  <span class="relative z-10 flex items-center">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 108 108" fill="none" class="mr-2">
+                      <path d="M80.9629 36.4777C73.2524 23.4191 58.1452 17.6191 42.7734 21.966C27.4015 26.3129 16.7734 40.1191 16.7734 55.9777V71.5191C16.7734 75.2691 19.8524 78.3777 23.5734 78.3777H30.9734C34.6943 78.3777 37.7734 75.2691 37.7734 71.5191V62.4777C37.7734 58.7277 40.8524 55.6191 44.5734 55.6191H55.5734C71.3734 55.6191 84.1734 42.6777 80.9629 36.4777Z" fill="white"/>
+                      <path d="M52.1734 32.0191C51.0943 32.0191 50.2734 32.8691 50.2734 33.9777C50.2734 35.0863 51.0943 35.9363 52.1734 35.9363C53.2524 35.9363 54.0734 35.0863 54.0734 33.9777C54.0734 32.8691 53.2524 32.0191 52.1734 32.0191Z" fill="white"/>
+                      <path d="M63.1734 32.0191C62.0943 32.0191 61.2734 32.8691 61.2734 33.9777C61.2734 35.0863 62.0943 35.9363 63.1734 35.9363C64.2524 35.9363 65.0734 35.0863 65.0734 33.9777C65.0734 32.8691 64.2524 32.0191 63.1734 32.0191Z" fill="white"/>
+                    </svg>
+                    Connect Solana Phantom Wallet
+                  </span>
+                  <span class="absolute inset-0 bg-gradient-to-r from-red-500 to-yellow-500 transition-transform duration-200 translate-x-full group-hover:translate-x-0"></span>
+                </button>
+              </div>
+            </div>
+            
+            <!-- Main Content with Credits and Token Purchase -->
+            <div class="flex flex-col lg:flex-row lg:items-center lg:justify-between gap-6">
+              <!-- Left Side - Credits Info -->
+              <div class="p-6">
+                <div id="dashboard_credit" class="text-3xl font-bold text-yellow-400 mb-2">
+                  <%= number_with_delimiter(Current.user.api_credit.to_f.round(2)) %>
+                </div>
+                <p class="text-sm text-gray-400">API credits remaining</p>
+              </div>
+              
+              <!-- Right Side - Token Purchase / Wallet Message -->
+              <%= render 'token_purchase' %>
+              <%= render 'no_wallet_message' %>
+              </div>
+            
+            <!-- Mobile buttons -->
+            <div class="sm:hidden flex flex-col gap-3 mt-6">
+            </div>
+          </div>
+
+        </div>
+      </div>
+    </section>
+  </main>
+</div>

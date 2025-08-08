@@ -10,10 +10,22 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.0].define(version: 2025_08_07_161304) do
+ActiveRecord::Schema[8.0].define(version: 2025_08_08_185200) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_catalog.plpgsql"
   enable_extension "vector"
+
+  create_table "api_sessions", force: :cascade do |t|
+    t.bigint "user_id", null: false
+    t.string "ip_address"
+    t.string "user_agent"
+    t.string "endpoint"
+    t.jsonb "request_params"
+    t.float "cost"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["user_id"], name: "index_api_sessions_on_user_id"
+  end
 
   create_table "ethereum_address_transactions", force: :cascade do |t|
     t.bigint "ethereum_address_id", null: false
@@ -54,7 +66,33 @@ ActiveRecord::Schema[8.0].define(version: 2025_08_07_161304) do
     t.index ["transaction_hash"], name: "index_ethereum_transactions_on_transaction_hash", unique: true
   end
 
+  create_table "sessions", force: :cascade do |t|
+    t.bigint "user_id", null: false
+    t.string "ip_address"
+    t.string "user_agent"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["user_id"], name: "index_sessions_on_user_id"
+  end
+
+  create_table "users", force: :cascade do |t|
+    t.string "email_address", null: false
+    t.string "password_digest", null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.integer "role", default: 0
+    t.string "api_token"
+    t.float "api_credit", default: 0.0
+    t.boolean "email_confirmed", default: false
+    t.string "email_confirmation_token"
+    t.datetime "email_confirmation_sent_at"
+    t.string "solana_public_key"
+    t.index ["email_address"], name: "index_users_on_email_address", unique: true
+  end
+
+  add_foreign_key "api_sessions", "users"
   add_foreign_key "ethereum_address_transactions", "ethereum_addresses"
   add_foreign_key "ethereum_address_transactions", "ethereum_transactions"
   add_foreign_key "ethereum_transactions", "ethereum_blocks"
+  add_foreign_key "sessions", "users"
 end

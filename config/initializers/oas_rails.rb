@@ -1,47 +1,113 @@
 # config/initializers/oas_rails.rb
 OasRails.configure do |config|
   # Basic Information about the API
-  config.info.title = 'OasRails'
+  config.info.title = 'ChainFETCH'
   config.info.version = '1.0.0'
   config.info.summary = 'OasRails: Automatic Interactive API Documentation for Rails'
   config.info.description = <<~HEREDOC
-    # Welcome to OasRails
+    # Welcome to ChainFetch
 
-    OasRails automatically generates interactive documentation for your Rails APIs using the OpenAPI Specification 3.1 (OAS 3.1) and displays it with a nice UI.
+    **AI-powered real-time Ethereum blockchain intelligence API** with advanced semantic search capabilities.
 
-    ## Getting Started
+    ## Real-Time Blockchain Stream Intelligence
 
-    You've successfully mounted the OasRails engine. This default documentation is based on your routes and automatically gathered information.
+    ChainFetch operates at the heart of Ethereum's blockchain activity, creating a continuous stream of enriched blockchain intelligence:
 
-    ## Enhancing Your Documentation
+    **🔥 Live Block Streaming**: WebSocket subscription to Ethereum's public nodes captures new blocks every ~12 seconds, instantly processing each block for comprehensive analysis.
 
-    To customize and enrich your API documentation:
+    **⚡ Intelligent Data Pipeline**: Every new block triggers our asynchronous processing engine that:
+    - Extracts and analyzes all transactions within each block
+    - Discovers and profiles Ethereum addresses involved in transactions  
+    - Builds comprehensive address interaction graphs
+    - Generates AI-powered summaries for blocks, transactions, and addresses
 
-    1. Generate an initializer file:
+    ## AI-Powered Semantic Search
 
-      ```
-      rails generate oas_rails:config
-      ```
-    2. Edit the created `config/initializers/oas_rails.rb` file to override default settings and add project-specific information.
+    **🧠 Advanced Embedding Technology**: Leveraging Qwen3-Embedding-0.6B (Q8_0 quantized) model to transform blockchain data into high-dimensional vector embeddings that capture semantic meaning.
 
-    3. Use Yard tags in your controller methods to provide detailed API endpoint descriptions.
+    **🎯 Qdrant Vector Database**: Ultra-fast vector similarity search across three specialized collections:
+    - **Addresses Collection**: Semantic search across millions of Ethereum addresses
+    - **Transactions Collection**: Find transactions by intent, pattern, or behavior  
+    - **Blocks Collection**: Discover blocks by activity type and characteristics
 
-    Docs: <https://a-chacon.com/oas_rails/>
+    **🤖 LLM-Powered Query Processing**: LLaMA 3.2 3B model intelligently translates natural language queries into precise API parameters, supporting 150+ address parameters and 120+ block parameters.
 
-    ## Features
+    ## Advanced Search Capabilities
 
-    - Automatic OAS 3.1 document generation
-    - [RapiDoc](https://github.com/rapi-doc/RapiDoc) integration for interactive exploration
-    - Minimal setup required for basic documentation
-    - Extensible through configuration and Yard tags
+    **Natural Language Search**: Query blockchain data conversationally - "Find whale addresses that interacted with DeFi protocols" or "Show me high-gas transactions from yesterday"
 
-    Explore your API documentation and enjoy the power of OasRails!
+    **Multi-Modal Search Options**:
+    - **Semantic Search**: Vector similarity matching for conceptual queries
+    - **LLM Search**: AI-assisted parameter selection for complex filtering
+    - **JSON Search**: Direct parameter-based filtering with real-time data enrichment
 
-    For more information and advanced usage, visit the [OasRails GitHub repository](https://github.com/a-chacon/oas_rails).
+    **Concurrent Processing**: Async/await architecture ensures lightning-fast responses even when processing thousands of data points simultaneously.
+
+    ## Core Technologies
+
+    - **Real-time WebSocket streams** for live blockchain monitoring
+    - **Vector embeddings** with cosine similarity search  
+    - **Kubernetes-native deployment** with auto-scaling
+    - **Rate-limited API access** with authentication
+    - **Comprehensive OpenAPI 3.1 documentation**
+
+    Experience the future of blockchain intelligence - where real-time data meets AI-powered insights.
+
+    ## Application Architecture & Data Flow
+
+    ### 🚀 Bootstrap Process
+    - **Service Initialization**: `EthereumBlockStreamService` singleton connects to `wss://ethereum-rpc.publicnode.com`
+    - **Block Subscription**: Subscribes to `eth_subscribe ["newHeads"]` for real-time block notifications
+    - **Continuous Monitoring**: Maintains persistent WebSocket connection for ~12-second block intervals
+
+    ### 🧱 Block Processing Pipeline
+    **New Block Detection** → **Database Record Creation** → **Background Job Trigger**
+    
+    1. **Block Stream**: WebSocket receives new block header → `EthereumBlock.find_or_create_by(block_number)`
+    2. **Block Data Job**: `after_create_commit` callback → `BlockDataJob.perform_later`
+    3. **Data Enrichment**: Fetches full block data → Generates AI summary → Creates vector embedding
+    4. **Vector Storage**: Stores in Qdrant "blocks" collection for semantic search
+    5. **Transaction Discovery**: Extracts all transaction hashes → Creates `EthereumTransaction` records
+
+    ### 💸 Transaction Processing Chain
+    **Transaction Creation** → **Data Fetching** → **Address Discovery** → **Relationship Mapping**
+
+    1. **Transaction Jobs**: `after_create_commit` → `TransactionDataJob.perform_later` 
+    2. **Detail Fetching**: Retrieves complete transaction data via blockchain APIs
+    3. **Address Extraction**: Identifies `from_address` and `to_address` participants
+    4. **Graph Building**: Creates `EthereumAddressTransaction` join records
+    5. **Probabilistic Embedding**: 2% chance (1/50) → AI summary → Vector storage
+
+    ### 🏠 Address Intelligence Network
+    **Address Discovery** → **Profile Building** → **Semantic Indexing**
+
+    1. **Address Jobs**: Each transaction triggers `AddressDataJob.perform_later` for involved addresses
+    2. **Profile Building**: Fetches comprehensive address data (balances, contracts, token holdings)
+    3. **Smart Embedding**: 6.7% chance (1/15) → AI-powered address summary → Qdrant storage
+    4. **Relationship Tracking**: Maps address interactions across the entire transaction network
+
+    ### 🔍 Multi-Modal Search Architecture
+    **Natural Language** → **AI Processing** → **Vector/Parameter Search** → **Enriched Results**
+
+    - **Semantic Search**: Query embedding → Qdrant vector similarity → Ranked semantic results
+    - **LLM Search**: Natural language → LLaMA 3.2 3B → Smart parameter selection (150+ address params, 120+ block params)
+    - **JSON Search**: Direct parameter filtering → Real-time data enrichment → Structured responses
+
+    **Key Performance Features:**
+    - **Asynchronous Job Processing**: Non-blocking pipeline with retry logic
+    - **Probabilistic Optimization**: Cost-efficient embedding generation
+    - **Concurrent API Calls**: Async/await for maximum throughput
+    - **Vector Similarity Search**: Sub-second semantic query responses
+    - **Real-time WebSocket Streams**: Live blockchain monitoring
+    - **Kubernetes Auto-scaling**: Production-ready container orchestration
+
+    This creates an intelligent, self-building blockchain knowledge graph where every new block enriches the system's understanding of Ethereum's transaction ecosystem.
+
+    Experience the future of blockchain intelligence - where real-time data meets AI-powered insights.
   HEREDOC
-  config.info.contact.name = 'a-chacon'
-  config.info.contact.email = 'andres.ch@proton.me'
-  config.info.contact.url = 'https://a-chacon.com'
+  config.info.contact.name = 'ChainFETCH'
+  config.info.contact.email = 'contact@chainfetch.app'
+  config.info.contact.url = 'https://www.chainfetch.app'
 
   # Servers Information. For more details follow: https://spec.openapis.org/oas/latest.html#server-object
   config.servers = Rails.env.production? ? [

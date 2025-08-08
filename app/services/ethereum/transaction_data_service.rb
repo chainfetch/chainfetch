@@ -16,7 +16,11 @@ class Ethereum::TransactionDataService < Ethereum::BaseService
       http.use_ssl = true
       http.verify_mode = OpenSSL::SSL::VERIFY_PEER
     end
-    response = http.get(uri.request_uri)
+    
+    request = Net::HTTP::Get.new(uri.request_uri)
+    request['Authorization'] = "Bearer #{BEARER_TOKEN}"
+    response = http.request(request)
+    
     if response.is_a?(Net::HTTPSuccess)
       data = JSON.parse(response.body)
       return data if data && data.dig('info', 'message') != "Not found"

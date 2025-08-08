@@ -1,0 +1,68 @@
+<!-- Header -->
+<header class="border-b border-yellow-500/20 fixed w-full z-50 transition-all duration-300 py-2 bg-[#0F172A]">
+  <div class="container mx-auto px-4 flex justify-between items-center text-gray-500" id="logo-text">
+    <div class="flex items-center">
+      <div class="flex-shrink-0 flex items-center">
+        <i data-lucide="activity" class="h-8 w-8 text-red-500"></i>
+        <%= link_to root_path, class: "flex items-center space-x-2" do %>
+          <span class="ml-2 text-xl font-bold bg-gradient-to-r from-red-500 to-yellow-500 bg-clip-text text-transparent">
+            chainfetch.app
+          </span>
+        <% end %>
+      </div>
+    </div>
+    
+    <nav class="hidden sm:flex space-x-8 justify-end">
+      <% unless controller_path.include?('app') || controller_path.include?("oas_rails") %>
+        <%= link_to "Dashboard", app_dashboard_index_path, class: "mt-3" %>
+        <%= link_to "Docs", "/docs", class: "mt-3" %>
+      
+        <%= link_to "/app", class: "group relative px-6 py-3 bg-gradient-to-r from-yellow-500 to-red-500 text-white rounded-md font-semibold transition-all duration-200 hover:shadow-[0_0_20px_rgba(234,179,8,0.3)] overflow-hidden inline-block" do %>
+          <span class="relative z-10">Get API Key</span>
+          <span class="absolute inset-0 bg-gradient-to-r from-red-500 to-yellow-500 transition-transform duration-200 translate-x-full group-hover:translate-x-0"></span>
+        <% end %>
+      <% end %>
+    </nav>
+    
+    <% if controller_path.include?('app') || controller_path.include?("oas_rails") %>
+      <div class="flex items-center">
+        <div class="hidden sm:flex items-center space-x-4 mr-4">
+          <%= link_to "Documentation", "/docs", class: "text-gray-400 hover:text-gray-200 transition-colors" %>
+          <%= link_to "Dashboard", app_dashboard_index_path, class: "text-gray-400 hover:text-gray-200 transition-colors" %>
+        </div>
+        <div class="inline-flex items-center px-2 py-2 rounded-md bg-[#1E293B]/80 border border-yellow-500/20 shadow-lg backdrop-blur-sm mr-4" id="user_credit">
+          <%= link_to app_dashboard_index_path, class: "flex items-center space-x-1 hover:cursor-pointer" do %>
+            <svg xmlns="http://www.w3.org/2000/svg" class="w-6 h-6 text-yellow-500" fill="currentColor" viewBox="0 0 20 20">
+              <path d="M4 4h12a2 2 0 012 2v1H2V6a2 2 0 012-2zm14 4v6a2 2 0 01-2 2H4a2 2 0 01-2-2V8h16zm-2 3a1 1 0 10-2 0 1 1 0 002 0z"/>
+            </svg>
+            <span class="ml-2 text-lg font-bold bg-gradient-to-r from-red-500 to-yellow-500 bg-clip-text text-transparent">
+              <% credits = Current.user.api_credit %>
+              <%= credits.present? ? number_with_delimiter(credits.to_f.round(2)) : "–" %> Credits
+            </span>
+          <% end %>
+        </div>
+        <%= button_to session_path, method: :delete, form: {data: {turbo_confirm: 'Are you sure?'}}, class: "flex items-center px-4 py-2 bg-transparent border border-yellow-500/30 font-semibold rounded-md hover:border-yellow-500/60 hover:bg-yellow-500/10 hover:cursor-pointer transition-all duration-200" do %>
+          <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="w-4 h-4 mr-2"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"></path><polyline points="16 17 21 12 16 7"></polyline><line x1="21" x2="9" y1="12" y2="12"></line></svg>  
+          Logout
+        <% end %>
+      </div>
+    <% else %>
+      <%= link_to "Get API Key", "/app", class: "group relative px-6 py-3 bg-gradient-to-r from-yellow-500 to-red-500 text-white rounded-md font-semibold transition-all duration-200 hover:shadow-[0_0_20px_rgba(234,179,8,0.3)] overflow-hidden inline-block sm:hidden" %>
+    <% end %>
+  </div>
+</header>
+<div class="h-12"></div>
+
+<script>
+  // Header scroll effect
+  window.addEventListener('scroll', () => {
+    const header = document.querySelector('header');
+    if (window.scrollY > 10) {
+      header.classList.add('bg-white', 'shadow-md');
+      header.classList.remove('bg-[#0F172A]');
+    } else {
+      header.classList.remove('bg-white', 'shadow-md');
+      header.classList.add('bg-[#0F172A]');
+    }
+  });
+</script>

@@ -1,0 +1,214 @@
+<script>
+function applyTheme() {
+  const theme = "dark";
+  const docEl = document.querySelector('rapi-doc');
+  if (!docEl) return;
+
+  // Reset all theme-related attributes
+  docEl.removeAttribute('theme');
+  docEl.removeAttribute('bg-color');
+  docEl.removeAttribute('text-color');
+  docEl.removeAttribute('nav-bg-color');
+  docEl.removeAttribute('nav-text-color');
+  docEl.removeAttribute('nav-hover-bg-color');
+  docEl.removeAttribute('nav-hover-text-color');
+  docEl.removeAttribute('nav-accent-color');
+  docEl.removeAttribute('primary-color');
+
+  if (theme === 'dark'){
+    docEl.setAttribute('theme','dark');
+    docEl.setAttribute('bg-color','#333');
+    docEl.setAttribute('text-color','#BBB');
+  } else if (theme === 'light'){
+    docEl.setAttribute('theme','light');
+    docEl.setAttribute('bg-color','#FFF');
+    docEl.setAttribute('text-color','#444');
+  } else if (theme === 'night') {
+    docEl.setAttribute('theme','dark');
+    docEl.setAttribute('bg-color','#14191f');
+    docEl.setAttribute('text-color','#aec2e0');
+  } else if (theme === 'mud') {
+    docEl.setAttribute('theme','dark');
+    docEl.setAttribute('bg-color','#403635');
+    docEl.setAttribute('text-color','#c3b8b7');
+  } else if (theme === 'cofee') {
+    docEl.setAttribute('theme','dark');
+    docEl.setAttribute('bg-color','#36312C');
+    docEl.setAttribute('text-color','#ceb8a0');
+  } else if (theme === 'forest') {
+    docEl.setAttribute('theme','dark');
+    docEl.setAttribute('bg-color','#384244');
+    docEl.setAttribute('text-color','#BDD6DB');
+  } else if (theme === 'olive') {
+    docEl.setAttribute('theme','dark');
+    docEl.setAttribute('bg-color','#2a2f31');
+    docEl.setAttribute('text-color','#acc7c8');
+  } else if (theme === 'outerspace') {
+    docEl.setAttribute('theme','dark');
+    docEl.setAttribute('bg-color','#2D3133');
+    docEl.setAttribute('text-color','#CAD9E3');
+  } else if (theme === 'ebony') {
+    docEl.setAttribute('theme','dark');
+    docEl.setAttribute('bg-color','#2B303B');
+    docEl.setAttribute('text-color','#dee3ec');
+  } else if (theme === 'snow') {
+    docEl.setAttribute('theme','light');
+    docEl.setAttribute('bg-color','#FAFAFA');
+    docEl.setAttribute('text-color','#555');
+  } else if (theme === 'green') {
+    docEl.setAttribute('theme','light');
+    docEl.setAttribute('bg-color','#f9fdf7');
+    docEl.setAttribute('text-color','#375F1B');
+  } else if (theme === 'blue') {
+    docEl.setAttribute('theme','light');
+    docEl.setAttribute('bg-color','#ecf1f7');
+    docEl.setAttribute('text-color','#133863');
+  } else if (theme === 'beige') {
+    docEl.setAttribute('show-header','true');
+    docEl.setAttribute('theme','light');
+    docEl.setAttribute('bg-color','#fdf8ed');
+    docEl.setAttribute('text-color','#342809');
+  } else if (theme === 'graynav') {
+    docEl.setAttribute('show-header','false');
+    docEl.setAttribute('theme','light');
+    docEl.setAttribute('nav-bg-color','#3e4b54');
+    docEl.setAttribute('nav-accent-color','#fd6964');
+    docEl.setAttribute('primary-color','#ea526f');
+  }  else if (theme === 'purplenav') {
+    docEl.setAttribute('show-header','false');
+    docEl.setAttribute('theme','light');
+    docEl.setAttribute('nav-accent-color','#ffd8e7');
+    docEl.setAttribute('nav-bg-color','#666699');
+    docEl.setAttribute('primary-color','#ea526f');
+    docEl.setAttribute('bg-color','#fff9fb');
+  } else if (theme === 'lightgraynav') {
+    docEl.setAttribute('show-header','false');
+    docEl.setAttribute('theme','light');
+    docEl.setAttribute('nav-bg-color','#fafafa');
+    docEl.setAttribute('nav-hover-text-color','#9b0700');
+    docEl.setAttribute('nav-hover-bg-color','#ffebea');
+    docEl.setAttribute('primary-color','#F63C41');
+    docEl.setAttribute('bg-color','#ffffff');
+  } else if (theme === 'darkbluenav') {
+    docEl.setAttribute('show-header','false');
+    docEl.setAttribute('theme','light');
+    docEl.setAttribute('bg-color','#f9f9fa');
+    docEl.setAttribute('nav-bg-color','#3f4d67');
+    docEl.setAttribute('nav-text-color','#a9b7d0');
+    docEl.setAttribute('nav-hover-bg-color','#333f54');
+    docEl.setAttribute('nav-hover-text-color','#fff');
+    docEl.setAttribute('nav-accent-color','#f87070');
+    docEl.setAttribute('primary-color','#5c7096');
+  } else if (theme === 'rails') {
+    docEl.setAttribute('theme','light');
+    docEl.setAttribute('bg-color','#FFFFFF');
+    docEl.setAttribute('nav-bg-color','#101828');
+    docEl.setAttribute('nav-text-color','#fff');
+    docEl.setAttribute('nav-hover-bg-color','#261B23');
+    docEl.setAttribute('nav-hover-text-color','#fff');
+    docEl.setAttribute('nav-accent-color','#D30001');
+    docEl.setAttribute('primary-color','#D30001');
+  }
+}
+
+document.addEventListener('turbo:load', applyTheme);
+</script>
+<script type="module" src="https://unpkg.com/rapidoc/dist/rapidoc-min.js"></script>
+<%= render "shared/navbar" %>
+<section class="bg-gray-900 text-white">
+  <div class="container mx-auto px-4 py-8 sm:py-16">
+    <div class="flex justify-between items-center">
+      <div id="toggle-sidebar" class="sm:hidden"></div>
+    </div>
+    <rapi-doc
+      spec-url = "<%= OasRails::Engine.routes.find_script_name({}) %>.json"
+      show-header = "false"
+  font-size="largest"
+  show-method-in-nav-bar="as-colored-text"
+  nav-item-spacing="relaxed"
+  allow-spec-file-download="true"
+  allow-authentication="bearer"
+  api-key-name = "Authorization"
+  api-key-location = "header"
+  api-key-value="Bearer <%= Current.user&.api_token %>"
+  >
+</rapi-doc>
+<%= render "shared/footer" %>
+<script>
+  function hideApiRequestButtons() {
+    const docEl = document.querySelector('rapi-doc');
+    const shadowRoot = docEl?.shadowRoot;
+    const apiRequest = shadowRoot?.querySelector('api-request');
+    const apiRequestShadow = apiRequest?.shadowRoot;
+    if (!apiRequestShadow) return;
+    const btn = apiRequestShadow.querySelector('[part="btn btn-outline btn-fill"]');
+    const btnClear = apiRequestShadow.querySelector('[part="btn btn-outline btn-clear"]');
+    if (btn) btn.style.display = 'none';
+    if (btnClear) btnClear.style.display = 'none';
+  }
+  function startPersistentPollingOnDocsPage() {
+    if (window.pollingInterval) clearInterval(window.pollingInterval);
+    window.pollingInterval = setInterval(() => {
+      if (!location.pathname.startsWith('/docs')) {
+        clearInterval(window.pollingInterval);
+        window.pollingInterval = null;
+        return;
+      }
+      hideApiRequestButtons();
+    }, 50);
+  }
+  document.addEventListener('turbo:render', () => {
+    if (location.pathname.startsWith('/docs')) {
+      startPersistentPollingOnDocsPage();
+    } else if (window.pollingInterval) {
+      clearInterval(window.pollingInterval);
+      window.pollingInterval = null;
+    }
+  });
+  document.addEventListener('turbo:load', () => {
+    if (location.pathname.startsWith('/docs')) {
+      startPersistentPollingOnDocsPage();
+    }
+  });
+</script>
+<script>
+  document.addEventListener('turbo:load', () => {
+    if (!window.location.pathname.includes('docs')) return;
+    if (document.querySelector('[data-toggle-sidebar]')) return;
+    const cta = document.querySelector("#toggle-sidebar");
+    const btn = document.createElement('button');
+    btn.setAttribute('class', 'btn btn-outline p-4');
+    btn.setAttribute('data-toggle-sidebar', 'true');
+    const svgNS = "http://www.w3.org/2000/svg";
+    const svg = document.createElementNS(svgNS, 'svg');
+    svg.setAttribute('width', '32');
+    svg.setAttribute('height', '32');
+    svg.setAttribute('viewBox', '0 0 24 24');
+    const path = document.createElementNS(svgNS, 'path');
+    path.setAttribute('fill', 'currentColor');
+    path.setAttribute('d', 'M3 6h18v2H3V6zm0 5h18v2H3v-2zm0 5h18v2H3v-2z');
+    svg.appendChild(path);
+    btn.appendChild(svg);
+    cta.prepend(btn);
+    btn.addEventListener('click', () => {
+      const docEl = document.querySelector('rapi-doc');
+      const shadowRoot = docEl.shadowRoot;
+      const navbar = shadowRoot?.querySelector('nav[part="section-navbar"]');
+      navbar.style.width = navbar.style.width === '0px' || navbar.style.width === "" ? '100%' : '0px';
+      navbar.style.display = navbar.style.display === 'none' || navbar.style.display === "" ? 'flex' : 'none';
+      if (navbar.style.display === 'flex') {
+        shadowRoot?.querySelectorAll('[data-action="navigate"]').forEach((link) => {
+          link.addEventListener('click', (e) => {
+            e.preventDefault();
+            navbar.style.display = 'none';
+            navbar.style.width = '0px';
+          });
+        });
+      }
+    });
+  });
+</script>
+<style>
+  rapi-doc::part(btn btn-outline){ width: 220px; min-width: 170px; }
+</style>
+</section>

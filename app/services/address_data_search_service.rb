@@ -99,18 +99,22 @@ class AddressDataSearchService
     uri = URI("#{@base_url}/api/v1/ethereum/addresses/json_search")
     uri.query = URI.encode_www_form(parameters) if parameters&.any?
     
-    http = Net::HTTP.new(uri.host, uri.port)
-    http.read_timeout = 30
-    
-    if uri.scheme == 'https'
-      http.use_ssl = true
-      http.verify_mode = OpenSSL::SSL::VERIFY_PEER
-    end
-    
-    request = Net::HTTP::Get.new(uri)
-    request['Content-Type'] = 'application/json'
-    
-    response = http.request(request)
+    # Use a thread to avoid deadlock when making internal requests
+    response = Thread.new do
+      http = Net::HTTP.new(uri.host, uri.port)
+      http.read_timeout = 30
+      
+      if uri.scheme == 'https'
+        http.use_ssl = true
+        http.verify_mode = OpenSSL::SSL::VERIFY_PEER
+      end
+      
+      request = Net::HTTP::Get.new(uri)
+      request['Content-Type'] = 'application/json'
+      request['Authorization'] = "Bearer #{Ethereum::BaseService::BEARER_TOKEN}"
+      
+      http.request(request)
+    end.value
     
     if response.code == '200'
       result = JSON.parse(response.body)

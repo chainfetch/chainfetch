@@ -99,6 +99,7 @@ GEM
       protocol-rack (~> 0.7)
       protocol-websocket (~> 0.17)
     base64 (0.3.0)
+    bcrypt (3.1.20)
     bcrypt_pbkdf (1.1.1)
     benchmark (0.4.1)
     bigdecimal (3.2.2)
@@ -327,6 +328,7 @@ GEM
     rdoc (6.14.2)
       erb
       psych (>= 4.0.0)
+    recaptcha (5.20.1)
     regexp_parser (2.11.0)
     reline (0.6.2)
       io-console (~> 0.5)
@@ -448,6 +450,7 @@ DEPENDENCIES
   async
   async-http
   async-websocket
+  bcrypt (~> 3.1.7)
   bootsnap
   brakeman
   capybara
@@ -464,6 +467,7 @@ DEPENDENCIES
   pry-rails
   puma (>= 5.0)
   rails (~> 8.0.2)
+  recaptcha
   rubocop-rails-omakase
   selenium-webdriver
   solid_cable
