@@ -24,6 +24,10 @@
 
   <body>
     <%#= turbo_stream_from "ethereum_data" %>
-    <%= yield %>
+    <%= render "shared/navbar" %>
+    <div class="bg-[#0F172A] min-h-screen">
+      <%= yield %>
+    </div>
+    <%= render "shared/footer" %>
   </body>
 </html>

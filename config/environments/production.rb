@@ -58,7 +58,24 @@ Rails.application.configure do
   # config.action_mailer.raise_delivery_errors = false
 
   # Set host to be used by links generated in mailer templates.
-  config.action_mailer.default_url_options = { host: "example.com" }
+  config.action_mailer.default_url_options = { host: "www.chainfetch.app" }
+  # config.action_mailer.delivery_method = :mailgun
+  # config.action_mailer.mailgun_settings = {
+  #   api_key: Rails.application.credentials.mailgun_api_key,
+  #   domain: 'fetchserp.com',
+  #   api_host: 'api.eu.mailgun.net'
+  # }
+
+  config.action_mailer.delivery_method = :smtp
+  config.action_mailer.smtp_settings = {
+    address: "smtp.eu.mailgun.org",
+    port: 587,
+    domain: "chainfetch.app",
+    user_name: Rails.application.credentials.mailgun_smtp_username,
+    password: Rails.application.credentials.mailgun_smtp_password,
+    authentication: :plain,
+    enable_starttls_auto: true
+  }
 
   # Specify outgoing SMTP server. Remember to add smtp/* credentials via rails credentials:edit.
   # config.action_mailer.smtp_settings = {
