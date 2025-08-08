@@ -114,7 +114,6 @@ function applyTheme() {
 document.addEventListener('turbo:load', applyTheme);
 </script>
 <script type="module" src="https://unpkg.com/rapidoc/dist/rapidoc-min.js"></script>
-<%= render "shared/navbar" %>
 <section class="bg-gray-900 text-white">
   <div class="container mx-auto px-4 py-8 sm:py-16">
     <div class="flex justify-between items-center">
@@ -133,7 +132,6 @@ document.addEventListener('turbo:load', applyTheme);
   api-key-value="Bearer <%= Current.user&.api_token %>"
   >
 </rapi-doc>
-<%= render "shared/footer" %>
 <script>
   function hideApiRequestButtons() {
     const docEl = document.querySelector('rapi-doc');
