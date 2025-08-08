@@ -12,17 +12,21 @@ class TransactionDataJob < ApplicationJob
     from_address_hash = sanitized_data.dig('info', 'from', 'hash')
     to_address_hash = sanitized_data.dig('info', 'to', 'hash')
     
-    from_address = EthereumAddress.find_or_create_by!(address_hash: from_address_hash)
-    EthereumAddressTransaction.find_or_create_by!(
-      ethereum_address: from_address,
-      ethereum_transaction: transaction
-    )
+    if from_address_hash.present?
+      from_address = EthereumAddress.find_or_create_by!(address_hash: from_address_hash)
+      EthereumAddressTransaction.find_or_create_by!(
+        ethereum_address: from_address,
+        ethereum_transaction: transaction
+      )
+    end
     
-    to_address = EthereumAddress.find_or_create_by!(address_hash: to_address_hash)
-    EthereumAddressTransaction.find_or_create_by!(
-      ethereum_address: to_address,
-      ethereum_transaction: transaction
-    )
+    if to_address_hash.present?
+      to_address = EthereumAddress.find_or_create_by!(address_hash: to_address_hash)
+      EthereumAddressTransaction.find_or_create_by!(
+        ethereum_address: to_address,
+        ethereum_transaction: transaction
+      )
+    end
   end
 
   def fetch_transaction(transaction_hash)
