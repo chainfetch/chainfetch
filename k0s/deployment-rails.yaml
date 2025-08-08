@@ -55,7 +55,7 @@ spec:
               mountPath: /var/lib/postgresql/data
           resources:
             requests:
-              cpu: "1000m"
+              cpu: "500m"
               memory: "4Gi"
             limits:
               cpu: "2000m"
@@ -115,12 +115,12 @@ spec:
                 name: chainfetch-secrets
           resources:
             requests:
-              cpu: "800m"
+              cpu: "400m"
               memory: "2Gi"
               ephemeral-storage: "2Gi"
             limits:
-              cpu: "2000m"
-              memory: "3Gi"
+              cpu: "800m"
+              memory: "4Gi"
               ephemeral-storage: "2Gi"
           securityContext:
             capabilities:
@@ -135,7 +135,7 @@ metadata:
   labels:
     app: chainfetch-web
 spec:
-  replicas: 2
+  replicas: 4
   selector:
     matchLabels:
       app: chainfetch-web
@@ -172,11 +172,11 @@ spec:
           resources:
             requests:
               cpu: "400m"
-              memory: "1Gi"
+              memory: "2Gi"
               ephemeral-storage: "1Gi"
             limits:
               cpu: "800m"
-              memory: "2Gi"
+              memory: "4Gi"
               ephemeral-storage: "1Gi"
           securityContext:
             capabilities:

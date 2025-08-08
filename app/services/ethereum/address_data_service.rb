@@ -38,7 +38,7 @@ class Ethereum::AddressDataService < Ethereum::BaseService
     Rails.logger.error "JSON parsing error for address #{@address_hash}: #{e.message}"
     Rails.logger.error "Response body: #{response&.body&.[](0..500)}" # Log first 500 chars
     raise ApiError, "Failed to parse JSON response: #{e.message}"
-  rescue Net::TimeoutError, Net::ReadTimeout => e
+  rescue Net::ReadTimeout, Net::OpenTimeout => e
     Rails.logger.error "Timeout error for address #{@address_hash}: #{e.message}"
     raise ApiError, "Request timeout: #{e.message}"
   rescue => e
