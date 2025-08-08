@@ -10,6 +10,6 @@ class Ethereum::BaseService
   class NotFoundError < ApiError; end
 
   BASE_URL = Rails.env.production? ? "https://www.chainfetch.app" : "http://localhost:3000"
-  BEARER_TOKEN = Rails.env.production? ? "VDMUNS919mKXJGujkGQWwXZMEVPAWea2Xvqw" : "VDMUNS919mKXJGujkGQWwXZMEVPAWea2Xvqw"
+  BEARER_TOKEN = Rails.env.production? ? Rails.application.credentials.chainfetch_api_token : "VDMUNS919mKXJGujkGQWwXZMEVPAWea2Xvqw"
 
 end
