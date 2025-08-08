@@ -24,6 +24,8 @@
 
   <body>
     <%#= turbo_stream_from "ethereum_data" %>
+    <%= render "shared/navbar" %>
     <%= yield %>
+    <%= render "shared/footer" %>
   </body>
 </html>

@@ -30,7 +30,7 @@ module App
     private
 
     def valid_token_amount?(amount)
-      amount.positive? && amount % 3000 == 0
+      amount.positive? && amount >= 3000
     end
 
     def verify_transaction(purchase_params)

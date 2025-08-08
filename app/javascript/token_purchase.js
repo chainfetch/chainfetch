@@ -160,8 +160,8 @@ class TokenPurchase {
     if (this.processing || !window.solana?.isConnected) return;
     
     const tokenAmount = parseInt(document.getElementById('tokenAmount')?.value);
-    if (!tokenAmount || tokenAmount <= 0 || tokenAmount % 3000 !== 0) {
-      showNotification('Enter valid token amount (multiple of 3000)', 'error');
+    if (!tokenAmount || tokenAmount < 3000) {
+      showNotification('Enter valid token amount (minimum 3000)', 'error');
       return;
     }
 
@@ -261,9 +261,5 @@ class TokenPurchase {
     if (dashCredit) dashCredit.textContent = newCredit.toLocaleString();
   }
 }
-
-document.addEventListener('turbo:load', () => {
-  window.tokenPurchaseInstance = new TokenPurchase();
-});
 
 export default TokenPurchase; 

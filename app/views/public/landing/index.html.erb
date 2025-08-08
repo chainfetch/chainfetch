@@ -1,0 +1,1211 @@
+<%= content_for :title, "ChainFetch - AI-Powered Ethereum Blockchain Intelligence API" %>
+<%= content_for :description, "ChainFetch API: AI-powered real-time Ethereum blockchain intelligence with advanced semantic search capabilities. Real-time WebSocket streams, vector embeddings, LLM-powered query processing, and comprehensive blockchain data analytics. Start with instant access." %>
+<%= content_for :keywords, "ethereum API, blockchain intelligence API, semantic search API, ethereum data API, real-time blockchain API, ethereum address API, ethereum transaction API, blockchain analytics API, ethereum block API, AI blockchain API, vector search API, LLM blockchain API, smart contract API, ethereum explorer API, blockchain streaming API, web3 intelligence API, ethereum semantic search, blockchain vector database" %>
+<div class="min-h-screen bg-[#0F172A]">
+  <main>
+    <!-- Hero Section -->
+    <section class="py-16 sm:py-24 bg-[#0F172A] text-white relative overflow-hidden">
+      <div class="container mx-auto px-4 relative">
+        <div class="flex flex-col md:flex-row items-center">
+          <div class="md:w-1/2 mb-10 md:mb-0">
+            <div class="inline-block mb-6 px-4 py-2 bg-blue-500/10 rounded-full border border-blue-500/20">
+              <span class="text-blue-400 font-semibold">AI-Powered Blockchain Intelligence</span>
+            </div>
+            <h1 class="text-4xl md:text-5xl lg:text-6xl font-bold mb-6 leading-tight animate-fadeIn bg-clip-text text-transparent bg-gradient-to-r from-white via-blue-100 to-white">
+              Real-Time Ethereum Intelligence API with AI-Powered Search
+            </h1>
+            <p class="text-xl md:text-2xl mb-6 text-gray-300 max-w-xl">
+              Access real-time Ethereum blockchain data with advanced semantic search, vector embeddings, and LLM-powered query processing. Built for developers who need intelligent blockchain insights.
+            </p>
+            <div class="mb-8 p-4 bg-gradient-to-r from-green-500/10 to-emerald-500/10 border border-green-500/20 rounded-lg max-w-xl">
+              <div class="flex items-center text-green-400 mb-2">
+                <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="mr-2">
+                  <path d="M20 6L9 17l-5-5"></path>
+                </svg>
+                <span class="font-semibold">50 Free Credits Included</span>
+              </div>
+              <p class="text-sm text-gray-300">Start exploring immediately with 50 complimentary API calls. No credit card required to get started.</p>
+            </div>
+            <div class="flex flex-col sm:flex-row gap-4">
+              <%= link_to "/app", class: "text-center group relative px-6 py-3 bg-gradient-to-r from-yellow-500 to-red-500 text-white rounded-md font-semibold transition-all duration-200 hover:shadow-[0_0_20px_rgba(234,179,8,0.3)] overflow-hidden inline-block" do %>
+                <span class="relative z-10">Get API Key + 50 Free Credits</span>
+                <span class="absolute inset-0 bg-gradient-to-r from-red-500 to-yellow-500 transition-transform duration-200 translate-x-full group-hover:translate-x-0"></span>
+              <% end %>
+              <%= link_to "View Documentation", "https://docs.chainfetch.app", class: "text-center px-6 py-3 bg-transparent border-2 border-blue-500/30 rounded-md font-semibold transition-all duration-200 hover:border-blue-500/60 hover:bg-blue-500/10" %>
+            </div>
+          </div>
+          
+          <div class="md:w-1/2 relative">
+            <div class="relative z-10 bg-[#1E293B]/80 backdrop-blur-sm rounded-lg p-6 text-white border border-blue-500/20 transform transition-transform hover:scale-105 duration-500 max-w-md mx-auto shadow-[0_0_30px_rgba(59,130,246,0.1)] px-8">
+              <div class="flex items-center justify-between mb-4">
+                <div class="flex items-center text-blue-400">
+                  <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="mr-2">
+                    <path d="m18 16 4-4-4-4"></path>
+                    <path d="m6 8-4 4 4 4"></path>
+                    <path d="m14.5 4-5 16"></path>
+                  </svg>
+                  <span class="font-mono text-sm">Semantic Search Example</span>
+                </div>
+                <div class="flex space-x-2">
+                  <div class="w-3 h-3 rounded-full bg-red-500"></div>
+                  <div class="w-3 h-3 rounded-full bg-yellow-500"></div>
+                  <div class="w-3 h-3 rounded-full bg-green-500"></div>
+                </div>
+              </div>
+              <pre class="bg-[#0F172A] p-5 rounded-md text-sm font-mono overflow-x-auto border border-gray-800 shadow-inner"><code><div class="-mt-5">
+<span class="text-blue-400">const</span><span class="text-gray-300"> response = </span><span class="text-yellow-400">await</span><span class="text-blue-400"> fetch</span><span class="text-purple-400">(</span>
+  <span class="text-green-400">'https://api.chainfetch.app/api/v1/ethereum/addresses/semantic_search?'</span><span class="text-gray-300"> + </span>
+  <span class="text-blue-400">new</span><span class="text-yellow-400"> URLSearchParams</span><span class="text-purple-400">({</span>
+    <span class="text-orange-400">query</span><span class="text-gray-300">: </span><span class="text-green-400">'whale addresses with DeFi activity'</span><span class="text-gray-300">,</span>
+    <span class="text-orange-400">limit</span><span class="text-gray-300">: </span><span class="text-green-400">'10'</span>
+  <span class="text-purple-400">})</span><span class="text-gray-300">, {</span>
+    <span class="text-orange-400">method</span><span class="text-gray-300">: </span><span class="text-green-400">'GET'</span><span class="text-gray-300">,</span>
+    <span class="text-orange-400">headers</span><span class="text-gray-300">: {</span>
+      <span class="text-orange-400">'accept'</span><span class="text-gray-300">: </span><span class="text-green-400">'application/json'</span><span class="text-gray-300">,</span>
+      <span class="text-orange-400">'authorization'</span><span class="text-gray-300">: </span><span class="text-green-400">'Bearer TOKEN'</span>
+    <span class="text-gray-300">}</span>
+<span class="text-gray-300">});</span>
+
+<span class="text-blue-400">const</span><span class="text-gray-300"> data = </span><span class="text-yellow-400">await</span><span class="text-gray-300"> response.</span><span class="text-blue-400">json</span><span class="text-purple-400">()</span><span class="text-gray-300">;</span>
+<span class="text-gray-300">console.</span><span class="text-blue-400">log</span><span class="text-purple-400">(</span><span class="text-gray-300">data.result.points</span><span class="text-purple-400">)</span><span class="text-gray-300">;</span>
+</div></code></pre>
+              <div class="mt-4 flex items-center justify-between text-sm border-t border-gray-700/50 pt-4">
+                <div class="flex items-center space-x-3">
+                  <span class="flex items-center px-2 py-1 rounded-md bg-green-500/10 border border-green-500/20">
+                    <span class="w-2 h-2 rounded-full bg-green-500 mr-2"></span>
+                    <span class="text-green-400">Connected</span>
+                  </span>
+                  <span class="text-gray-400">200 OK</span>
+                </div>
+                <div class="flex items-center text-blue-500">
+                  <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="mr-1">
+                    <circle cx="12" cy="12" r="3"></circle>
+                    <path d="M12 1v6m0 6v6m11-7h-6m-6 0H1"></path>
+                  </svg>
+                  <span>AI Search Results</span>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+    </section>
+
+    <!-- Core Features Section -->
+    <section class="py-12 sm:py-16 lg:py-20 bg-[#1E293B]" id="core-features">
+      <div class="container mx-auto px-4">
+        <div class="max-w-7xl mx-auto">
+          <div class="text-center mb-12 lg:mb-16">
+            <div class="inline-block mb-4 lg:mb-6 px-3 py-1.5 lg:px-4 lg:py-2 bg-blue-500/10 rounded-full border border-blue-500/20">
+              <span class="text-blue-400 font-semibold text-sm lg:text-base">🚀 Core Features</span>
+            </div>
+            <h2 class="text-2xl sm:text-3xl md:text-4xl lg:text-5xl font-bold mb-4 lg:mb-6 text-white leading-tight">
+              AI-Powered Blockchain Intelligence
+            </h2>
+            <p class="text-lg sm:text-xl text-gray-300 max-w-3xl mx-auto px-4">
+              ChainFetch combines real-time blockchain streaming with advanced AI to deliver intelligent insights into Ethereum's transaction ecosystem. Experience the future of blockchain data analysis.
+            </p>
+          </div>
+
+          <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 lg:gap-8">
+            <!-- Real-Time Streaming -->
+            <div class="bg-[#0F172A]/80 backdrop-blur-sm rounded-xl p-6 lg:p-8 border border-blue-500/20">
+              <div class="inline-block p-3 bg-blue-500/10 rounded-lg mb-4 lg:mb-6">
+                <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="text-blue-500 lg:w-6 lg:h-6">
+                  <path d="M3 3l18 18"></path>
+                  <path d="M21 12c0 1.66-4 3-9 3s-9-1.34-9-3"></path>
+                  <path d="M3 5c0 1.66 4 3 9 3s9-1.34 9-3"></path>
+                  <path d="M3 12v7c0 1.66 4 3 9 3s9-1.34 9-3v-7"></path>
+                </svg>
+              </div>
+              <h3 class="text-lg lg:text-xl font-semibold mb-3 text-white">Real-Time Block Streaming</h3>
+              <p class="text-gray-400 text-sm lg:text-base">WebSocket subscription to Ethereum's public nodes captures new blocks every ~12 seconds, instantly processing each block for comprehensive analysis.</p>
+            </div>
+
+            <!-- Semantic Search -->
+            <div class="bg-[#0F172A]/80 backdrop-blur-sm rounded-xl p-6 lg:p-8 border border-blue-500/20">
+              <div class="inline-block p-3 bg-blue-500/10 rounded-lg mb-4 lg:mb-6">
+                <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="text-blue-500 lg:w-6 lg:h-6">
+                  <circle cx="11" cy="11" r="8"></circle>
+                  <path d="m21 21-4.35-4.35"></path>
+                </svg>
+              </div>
+              <h3 class="text-lg lg:text-xl font-semibold mb-3 text-white">AI-Powered Semantic Search</h3>
+              <p class="text-gray-400 text-sm lg:text-base">Leveraging Qwen3-Embedding-0.6B model to transform blockchain data into high-dimensional vector embeddings for intelligent semantic similarity search.</p>
+            </div>
+
+            <!-- LLM Query Processing -->
+            <div class="bg-[#0F172A]/80 backdrop-blur-sm rounded-xl p-6 lg:p-8 border border-blue-500/20">
+              <div class="inline-block p-3 bg-blue-500/10 rounded-lg mb-4 lg:mb-6">
+                <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="text-blue-500 lg:w-6 lg:h-6">
+                  <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"></path>
+                </svg>
+              </div>
+              <h3 class="text-lg lg:text-xl font-semibold mb-3 text-white">LLM-Powered Query Processing</h3>
+              <p class="text-gray-400 text-sm lg:text-base">LLaMA 3.2 3B model intelligently translates natural language queries into precise API parameters, supporting 150+ address parameters and 120+ block parameters.</p>
+            </div>
+
+            <!-- Vector Database -->
+            <div class="bg-[#0F172A]/80 backdrop-blur-sm rounded-xl p-6 lg:p-8 border border-blue-500/20">
+              <div class="inline-block p-3 bg-blue-500/10 rounded-lg mb-4 lg:mb-6">
+                <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="text-blue-500 lg:w-6 lg:h-6">
+                  <path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5"></path>
+                </svg>
+              </div>
+              <h3 class="text-lg lg:text-xl font-semibold mb-3 text-white">Qdrant Vector Database</h3>
+              <p class="text-gray-400 text-sm lg:text-base">Ultra-fast vector similarity search across addresses, transactions, and blocks collections with sub-second semantic query responses.</p>
+            </div>
+
+            <!-- Multi-Modal Search -->
+            <div class="bg-[#0F172A]/80 backdrop-blur-sm rounded-xl p-6 lg:p-8 border border-blue-500/20">
+              <div class="inline-block p-3 bg-blue-500/10 rounded-lg mb-4 lg:mb-6">
+                <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="text-blue-500 lg:w-6 lg:h-6">
+                  <path d="M9 11H1v3h8v3l3-3.5L9 11z"></path>
+                  <path d="M22 12h-7"></path>
+                </svg>
+              </div>
+              <h3 class="text-lg lg:text-xl font-semibold mb-3 text-white">Multi-Modal Search Options</h3>
+              <p class="text-gray-400 text-sm lg:text-base">Choose from semantic search (vector similarity), LLM search (AI-assisted parameters), or JSON search (direct parameter filtering) based on your needs.</p>
+            </div>
+
+            <!-- Kubernetes Native -->
+            <div class="bg-[#0F172A]/80 backdrop-blur-sm rounded-xl p-6 lg:p-8 border border-blue-500/20">
+              <div class="inline-block p-3 bg-blue-500/10 rounded-lg mb-4 lg:mb-6">
+                <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="text-blue-500 lg:w-6 lg:h-6">
+                  <path d="M13 2L3 14h9l-1 8 10-12h-9l1-8z"></path>
+                </svg>
+              </div>
+              <h3 class="text-lg lg:text-xl font-semibold mb-3 text-white">Production-Ready Infrastructure</h3>
+              <p class="text-gray-400 text-sm lg:text-base">Kubernetes-native deployment with auto-scaling, rate-limited API access, and comprehensive OpenAPI 3.1 documentation for enterprise reliability.</p>
+            </div>
+          </div>
+
+          <div class="mt-12 lg:mt-16 text-center">
+            <a class="group relative px-6 py-3 lg:px-8 lg:py-4 bg-gradient-to-r from-yellow-500 to-red-500 text-white rounded-lg font-semibold text-base lg:text-lg transition-all duration-200 hover:shadow-[0_0_30px_rgba(234,179,8,0.4)] overflow-hidden inline-block" href="/app">
+              <span class="relative z-10">Start Building with ChainFetch</span>
+              <span class="absolute inset-0 bg-gradient-to-r from-red-500 to-yellow-500 transition-transform duration-200 translate-x-full group-hover:translate-x-0"></span>
+            </a>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- API Endpoints Section -->
+    <div class="border-b bg-[#1E293B] border-gray-500/50"></div>
+    <section class="pt-20 bg-[#1E293B] p-5" id="semantic-search-endpoint">
+      <div class="grid sm:grid-cols-2 gap-8 max-w-2xl sm:max-w-7xl mx-auto overflow-hidden">
+        <div class="container mx-auto h-full endpoint-block" data-endpoint="semantic-search-endpoint">
+          <div class="flex flex-col justify-between h-full">
+            <div class="mb-12">
+              <h2 class="text-3xl md:text-4xl font-bold mb-6 text-white">
+                <a href="#semantic-search-endpoint" class="hover:text-blue-400 transition-colors">Semantic Search Endpoint</a>
+              </h2>
+              <p class="text-gray-400 text-lg">
+                Query blockchain data using natural language. Our AI-powered semantic search understands intent and context to find relevant addresses, transactions, and blocks using vector embeddings and similarity matching.
+              </p>
+            </div>
+
+            <div class="bg-[#0F172A] rounded-xl overflow-hidden border border-blue-500/20 max-w-sm sm:max-w-full h-full">
+              <div class="flex border-b border-gray-700">
+                <button class="code-tab px-6 py-3 font-mono text-sm text-gray-500 hover:text-gray-300 hover:bg-gray-700/50 transition-colors">CURL</button>
+                <button class="code-tab px-6 py-3 font-mono text-sm text-gray-500 hover:text-gray-300 hover:bg-gray-700/50 transition-colors">JAVASCRIPT</button>
+                <button class="code-tab px-6 py-3 font-mono text-sm text-gray-500 hover:text-gray-300 hover:bg-gray-700/50 transition-colors">PYTHON</button>
+                <button class="code-tab px-6 py-3 font-mono text-sm text-gray-500 hover:text-gray-300 hover:bg-gray-700/50 transition-colors">RUBY</button>
+              </div>
+              
+              <div class="relative">
+                <pre class="p-6 overflow-x-auto">
+                  <div class="code-content font-mono text-sm text-gray-300"></div>
+                </pre>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="flex flex-col justify-between h-full relative z-10 max-w-sm sm:max-w-full">
+          <div class="flex flex-col">
+            <div class="mb-8 text-center">
+              <%= link_to "Go to playground", "https://docs.chainfetch.app/api-reference/api/semantic-search", class: "block py-3 bg-transparent border-2 border-blue-500/30 rounded-md font-semibold transition-all duration-200 hover:border-blue-500/60 hover:bg-blue-500/10 text-gray-300 mr-4 sm:mr-0" %>
+            </div>
+            <div class="text-center mb-8 mr-4 sm:mr-0">
+              <%= link_to "/app", class: "w-full group relative px-6 py-3 bg-gradient-to-r from-yellow-500 to-red-500 text-white rounded-md font-semibold transition-all duration-200 hover:shadow-[0_0_20px_rgba(234,179,8,0.3)] overflow-hidden inline-block" do %>
+                <span class="relative z-10">Get Started with Instant Access</span>
+                <span class="absolute inset-0 bg-gradient-to-r from-red-500 to-yellow-500 transition-transform duration-200 translate-x-full group-hover:translate-x-0"></span>
+              <% end %>
+            </div>
+          </div>
+          <div class="bg-[#0F172A] rounded-xl overflow-hidden border border-blue-500/20 max-w-sm sm:max-w-full p-5">
+            <div class="flex items-center justify-between mb-4">
+              <div class="flex items-center text-blue-400">
+                <span class="font-mono text-sm">API Response</span>
+              </div>
+            </div>
+      
+            <pre class="-ml-12 sm:-ml-0 bg-[#0F172A] p-5 rounded-md text-sm font-mono overflow-x-auto border border-gray-800 shadow-inner">
+      <code>
+      <span class="text-yellow-400">{</span>
+      <span class="text-orange-400">  "result"</span><span class="text-gray-300">: {</span>
+      <span class="text-orange-400">    "points"</span><span class="text-gray-300">: [</span>
+      <span class="text-yellow-400">      {</span>
+      <span class="text-orange-400">        "id"</span><span class="text-gray-300">: </span><span class="text-blue-400">1</span><span class="text-gray-300">,</span>
+      <span class="text-orange-400">        "score"</span><span class="text-gray-300">: </span><span class="text-blue-400">0.95</span><span class="text-gray-300">,</span>
+      <span class="text-orange-400">        "payload"</span><span class="text-gray-300">: {</span>
+      <span class="text-orange-400">          "address_summary"</span><span class="text-gray-300">: </span><span class="text-green-400">"High-value DeFi whale..."</span>
+      <span class="text-gray-300">        }</span>
+      <span class="text-yellow-400">      }</span>
+      <span class="text-gray-300">    ]</span>
+      <span class="text-gray-300">  }</span>
+      <span class="text-yellow-400">}</span>
+      </code>
+      </pre>
+      
+            <div class="mt-4 pt-4 border-t border-gray-700/50">
+              <div class="text-xs text-gray-500 flex items-center justify-between">
+                <span>Type: Semantic</span>
+                <span>Query: "whale addresses"</span>
+                <span>Time: 0.8s</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- LLM Search Endpoint -->
+    <div class="border-b bg-[#1E293B] border-gray-500/50 sm:py-8"></div>
+    <section class="sm:pt-20 bg-[#1E293B] p-5" id="llm-search-endpoint">
+      <div class="grid sm:grid-cols-2 gap-8 max-w-7xl mx-auto overflow-hidden">
+        <div class="container mx-auto endpoint-block" data-endpoint="llm-search-endpoint">
+          <div class="flex flex-col justify-between h-full">
+            <div class="mb-12">
+              <h2 class="text-3xl md:text-4xl font-bold mb-6 text-white"><a href="#llm-search-endpoint" class="hover:text-blue-400 transition-colors">LLM Search Endpoint</a></h2>
+              <p class="text-gray-400 text-lg">
+                Let AI select the best parameters for your query. Our LLaMA 3.2 3B model analyzes your natural language request and intelligently chooses from 150+ address parameters, 254 transaction parameters, or 120+ block parameters.
+              </p>
+            </div>
+
+            <div class="bg-[#0F172A] rounded-xl overflow-hidden border border-blue-500/20 max-w-sm sm:max-w-full h-full">
+              <div class="flex border-b border-gray-700">
+                <button class="code-tab px-6 py-3 font-mono text-sm text-gray-500 hover:text-gray-300 hover:bg-gray-700/50 transition-colors">CURL</button>
+                <button class="code-tab px-6 py-3 font-mono text-sm text-gray-500 hover:text-gray-300 hover:bg-gray-700/50 transition-colors">JAVASCRIPT</button>
+                <button class="code-tab px-6 py-3 font-mono text-sm text-gray-500 hover:text-gray-300 hover:bg-gray-700/50 transition-colors">PYTHON</button>
+                <button class="code-tab px-6 py-3 font-mono text-sm text-gray-500 hover:text-gray-300 hover:bg-gray-700/50 transition-colors">RUBY</button>
+              </div>
+              
+              <div class="relative">
+                <pre class="p-6 overflow-x-auto">
+                  <div class="code-content font-mono text-sm text-gray-300"></div>
+                </pre>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="flex flex-col justify-between h-full relative z-10 max-w-sm sm:max-w-full">
+          <div class="flex flex-col">
+            <div class="mb-8 text-center">
+              <%= link_to "Go to playground", "https://docs.chainfetch.app/api-reference/api/llm-search", class: "block py-3 bg-transparent border-2 border-blue-500/30 rounded-md font-semibold transition-all duration-200 hover:border-blue-500/60 hover:bg-blue-500/10 text-gray-300 mr-4 sm:mr-0" %>
+            </div>
+            <div class="text-center mb-8 mr-4 sm:mr-0">
+              <%= link_to "/app", class: "w-full group relative px-6 py-3 bg-gradient-to-r from-yellow-500 to-red-500 text-white rounded-md font-semibold transition-all duration-200 hover:shadow-[0_0_20px_rgba(234,179,8,0.3)] overflow-hidden inline-block" do %>
+                <span class="relative z-10">Get Started with Instant Access</span>
+                <span class="absolute inset-0 bg-gradient-to-r from-red-500 to-yellow-500 transition-transform duration-200 translate-x-full group-hover:translate-x-0"></span>
+              <% end %>
+            </div>
+          </div>
+          <div class="bg-[#0F172A] rounded-xl overflow-hidden border border-blue-500/20 max-w-sm sm:max-w-full p-5">
+            <div class="flex items-center justify-between mb-4">
+              <div class="flex items-center text-blue-400">
+                <span class="font-mono text-sm">AI-Generated Query</span>
+              </div>
+            </div>
+      
+            <pre class="-ml-12 sm:-ml-0 bg-[#0F172A] p-5 rounded-md text-sm font-mono overflow-x-auto border border-gray-800 shadow-inner">
+      <code>
+      <span class="text-gray-300">Input: </span><span class="text-green-400">"addresses ordered by eth balance"</span>
+
+      <span class="text-gray-300">AI Response:</span>
+      <span class="text-yellow-400">{</span>
+      <span class="text-orange-400">  "count"</span><span class="text-gray-300">: </span><span class="text-blue-400">10</span><span class="text-gray-300">,</span>
+      <span class="text-orange-400">  "parameters_used"</span><span class="text-gray-300">: {</span>
+      <span class="text-orange-400">    "limit"</span><span class="text-gray-300">: </span><span class="text-blue-400">10</span><span class="text-gray-300">,</span>
+      <span class="text-orange-400">    "sort_by"</span><span class="text-gray-300">: </span><span class="text-green-400">"eth_balance"</span><span class="text-gray-300">,</span>
+      <span class="text-orange-400">    "sort_order"</span><span class="text-gray-300">: </span><span class="text-green-400">"desc"</span>
+      <span class="text-gray-300">  },</span>
+      <span class="text-orange-400">  "addresses"</span><span class="text-gray-300">: [</span>
+      <span class="text-green-400">    "0x267be1C1D684F78cb4F6a176C4911b741E4Ffdc0"</span><span class="text-gray-300">,</span>
+      <span class="text-green-400">    "0x28C6c06298d514Db089934071355E5743bf21d60"</span><span class="text-gray-300">,</span>
+      <span class="text-green-400">    "0xA9Ac43f5b5e38155A288d1A01D2cbc4478E14573"</span>
+      <span class="text-gray-300">  ]</span>
+      <span class="text-yellow-400">}</span>
+      </code>
+      </pre>
+      
+            <div class="mt-4 pt-4 border-t border-gray-700/50">
+              <div class="text-xs text-gray-500 flex items-center justify-between">
+                <span>Model: LLaMA 3.2 3B</span>
+                <span>Parameters: 3/150</span>
+                <span>Time: 0.9s</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- JSON Search Endpoint -->
+    <div class="border-b bg-[#1E293B] border-gray-500/50 sm:pb-16"></div>
+    <section class="sm:pt-20 bg-[#1E293B] p-5" id="json-search-endpoint">
+      <div class="grid sm:grid-cols-2 gap-8 max-w-2xl sm:max-w-7xl mx-auto overflow-hidden">
+        <div class="container mx-auto h-full endpoint-block" data-endpoint="json-search-endpoint">
+          <div class="flex flex-col justify-between h-full">
+            <div class="mb-12">
+              <h2 class="text-3xl md:text-4xl font-bold mb-6 text-white"><a href="#json-search-endpoint" class="hover:text-blue-400 transition-colors">JSON Search Endpoint</a></h2>
+              <p class="text-gray-400 text-lg">
+                Direct parameter-based filtering with real-time data enrichment. Use precise filters across addresses (150+ params), transactions (254 params), and blocks (120+ params) for exact control over your queries.
+              </p>
+            </div>
+
+            <div class="bg-[#0F172A] rounded-xl overflow-hidden border border-blue-500/20 max-w-sm sm:max-w-full h-full">
+              <div class="flex border-b border-gray-700">
+                <button class="code-tab px-6 py-3 font-mono text-sm text-gray-500 hover:text-gray-300 hover:bg-gray-700/50 transition-colors">CURL</button>
+                <button class="code-tab px-6 py-3 font-mono text-sm text-gray-500 hover:text-gray-300 hover:bg-gray-700/50 transition-colors">JAVASCRIPT</button>
+                <button class="code-tab px-6 py-3 font-mono text-sm text-gray-500 hover:text-gray-300 hover:bg-gray-700/50 transition-colors">PYTHON</button>
+                <button class="code-tab px-6 py-3 font-mono text-sm text-gray-500 hover:text-gray-300 hover:bg-gray-700/50 transition-colors">RUBY</button>
+              </div>
+              
+              <div class="relative">
+                <pre class="p-6 overflow-x-auto">
+                  <div class="code-content font-mono text-sm text-gray-300"></div>
+                </pre>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="flex flex-col justify-between h-full relative z-10 max-w-sm sm:max-w-full">
+          <div class="flex flex-col">
+            <div class="mb-8 text-center">
+              <%= link_to "Go to playground", "https://docs.chainfetch.app/api-reference/api/json-search", class: "block py-3 bg-transparent border-2 border-blue-500/30 rounded-md font-semibold transition-all duration-200 hover:border-blue-500/60 hover:bg-blue-500/10 text-gray-300 mr-4 sm:mr-0" %>
+            </div>
+            <div class="text-center mb-8 mr-4 sm:mr-0">
+              <%= link_to "/app", class: "w-full group relative px-6 py-3 bg-gradient-to-r from-yellow-500 to-red-500 text-white rounded-md font-semibold transition-all duration-200 hover:shadow-[0_0_20px_rgba(234,179,8,0.3)] overflow-hidden inline-block" do %>
+                <span class="relative z-10">Get Started with Instant Access</span>
+                <span class="absolute inset-0 bg-gradient-to-r from-red-500 to-yellow-500 transition-transform duration-200 translate-x-full group-hover:translate-x-0"></span>
+              <% end %>
+            </div>
+          </div>
+          <div class="bg-[#0F172A] rounded-xl overflow-hidden border border-blue-500/20 max-w-sm sm:max-w-full p-5">
+            <div class="flex items-center justify-between mb-4">
+              <div class="flex items-center text-blue-400">
+                <span class="font-mono text-sm">Structured Response</span>
+              </div>
+            </div>
+      
+            <pre class="-ml-12 sm:-ml-0 bg-[#0F172A] p-5 rounded-md text-sm font-mono overflow-x-auto border border-gray-800 shadow-inner">
+      <code>
+      <span class="text-yellow-400">{</span>
+      <span class="text-orange-400">  "results"</span><span class="text-gray-300">: [</span>
+      <span class="text-yellow-400">    {</span>
+      <span class="text-orange-400">      "id"</span><span class="text-gray-300">: </span><span class="text-blue-400">1</span><span class="text-gray-300">,</span>
+      <span class="text-orange-400">      "address_hash"</span><span class="text-gray-300">: </span><span class="text-green-400">"0x742d35..."</span><span class="text-gray-300">,</span>
+      <span class="text-orange-400">      "data"</span><span class="text-gray-300">: {</span>
+      <span class="text-orange-400">        "eth_balance"</span><span class="text-gray-300">: </span><span class="text-green-400">"1500.5"</span><span class="text-gray-300">,</span>
+      <span class="text-orange-400">        "is_contract"</span><span class="text-gray-300">: </span><span class="text-blue-400">false</span>
+      <span class="text-gray-300">      }</span>
+      <span class="text-yellow-400">    }</span>
+      <span class="text-gray-300">  ],</span>
+      <span class="text-orange-400">  "pagination"</span><span class="text-gray-300">: {</span>
+      <span class="text-orange-400">    "total"</span><span class="text-gray-300">: </span><span class="text-blue-400">1247</span>
+      <span class="text-gray-300">  }</span>
+      <span class="text-yellow-400">}</span>
+      </code>
+      </pre>
+      
+            <div class="mt-4 pt-4 border-t border-gray-700/50">
+              <div class="text-xs text-gray-500 flex items-center justify-between">
+                <span>Type: Direct Filter</span>
+                <span>Results: 1,247</span>
+                <span>Time: 0.3s</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Technical Architecture Section -->
+    <div class="border-b bg-[#1E293B] border-gray-500/50"></div>
+    <section class="py-12 sm:py-16 lg:py-20 bg-[#0F172A]" id="architecture">
+      <div class="container mx-auto px-4">
+        <div class="max-w-7xl mx-auto">
+          <div class="text-center mb-12 lg:mb-16">
+            <div class="inline-block mb-4 lg:mb-6 px-3 py-1.5 lg:px-4 lg:py-2 bg-blue-500/10 rounded-full border border-blue-500/20">
+              <span class="text-blue-400 font-semibold text-sm lg:text-base">🏗️ Architecture</span>
+            </div>
+            <h2 class="text-2xl sm:text-3xl md:text-4xl lg:text-5xl font-bold mb-4 lg:mb-6 text-white leading-tight">
+              Intelligent Data Pipeline Architecture
+            </h2>
+            <p class="text-lg sm:text-xl text-gray-300 max-w-3xl mx-auto px-4">
+              ChainFetch operates as a sophisticated blockchain intelligence engine that transforms raw Ethereum data into actionable insights through advanced AI processing.
+            </p>
+          </div>
+
+          <div class="grid grid-cols-1 lg:grid-cols-2 gap-8 lg:gap-12 items-start">
+            <!-- Data Flow Diagram -->
+            <div class="bg-[#1E293B]/80 backdrop-blur-sm rounded-xl p-6 lg:p-8 border border-blue-500/20">
+              <h3 class="text-xl lg:text-2xl font-bold text-white mb-6">Real-Time Processing Pipeline</h3>
+              
+              <div class="space-y-6">
+                <!-- Step 1 -->
+                <div class="flex items-start">
+                  <div class="flex-shrink-0 w-8 h-8 bg-blue-500 rounded-full flex items-center justify-center text-white font-bold text-sm mr-4 mt-1">1</div>
+                  <div>
+                    <h4 class="font-semibold text-white mb-2 text-sm lg:text-base">WebSocket Block Streaming</h4>
+                    <p class="text-gray-400 text-sm lg:text-base">Persistent connection to <code class="bg-gray-800 px-2 py-1 rounded text-xs">wss://ethereum-rpc.publicnode.com</code> captures new blocks every ~12 seconds via <code class="bg-gray-800 px-2 py-1 rounded text-xs">eth_subscribe ["newHeads"]</code></p>
+                  </div>
+                </div>
+                
+                <!-- Step 2 -->
+                <div class="flex items-start">
+                  <div class="flex-shrink-0 w-8 h-8 bg-blue-500 rounded-full flex items-center justify-center text-white font-bold text-sm mr-4 mt-1">2</div>
+                  <div>
+                    <h4 class="font-semibold text-white mb-2 text-sm lg:text-base">Intelligent Data Enrichment</h4>
+                    <p class="text-gray-400 text-sm lg:text-base">Async jobs extract transactions, discover addresses, and build interaction graphs with probabilistic AI summary generation (2% transactions, 6.7% addresses)</p>
+                  </div>
+                </div>
+                
+                <!-- Step 3 -->
+                <div class="flex items-start">
+                  <div class="flex-shrink-0 w-8 h-8 bg-blue-500 rounded-full flex items-center justify-center text-white font-bold text-sm mr-4 mt-1">3</div>
+                  <div>
+                    <h4 class="font-semibold text-white mb-2 text-sm lg:text-base">Vector Embedding Generation</h4>
+                    <p class="text-gray-400 text-sm lg:text-base">Qwen3-Embedding-0.6B (Q8_0 quantized) transforms summaries into high-dimensional vectors stored in specialized Qdrant collections</p>
+                  </div>
+                </div>
+                
+                <!-- Step 4 -->
+                <div class="flex items-start">
+                  <div class="flex-shrink-0 w-8 h-8 bg-blue-500 rounded-full flex items-center justify-center text-white font-bold text-sm mr-4 mt-1">4</div>
+                  <div>
+                    <h4 class="font-semibold text-white mb-2 text-sm lg:text-base">Multi-Modal Query Processing</h4>
+                    <p class="text-gray-400 text-sm lg:text-base">Support for semantic similarity search, LLM-powered parameter selection, and direct JSON filtering with concurrent processing for maximum throughput</p>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <!-- Technical Stack -->
+            <div class="space-y-6 lg:space-y-8">
+              <!-- AI & ML Stack -->
+              <div class="bg-[#1E293B]/80 backdrop-blur-sm rounded-xl p-6 lg:p-8 border border-blue-500/20">
+                <div class="flex items-center mb-4">
+                  <div class="w-10 h-10 lg:w-12 lg:h-12 bg-gradient-to-r from-purple-500 to-blue-500 rounded-lg flex items-center justify-center mr-3 lg:mr-4 flex-shrink-0">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="text-white lg:w-6 lg:h-6">
+                      <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"></path>
+                    </svg>
+                  </div>
+                  <div class="min-w-0">
+                    <h3 class="text-lg lg:text-xl font-bold text-white">AI & ML Stack</h3>
+                    <p class="text-sm lg:text-base text-gray-400">Advanced AI Processing</p>
+                  </div>
+                </div>
+                
+                <div class="space-y-3">
+                  <div class="flex items-center justify-between">
+                    <span class="text-gray-300 text-sm lg:text-base">Embeddings Model</span>
+                    <span class="text-blue-400 text-sm lg:text-base font-mono">Qwen3-0.6B Q8_0</span>
+                  </div>
+                  <div class="flex items-center justify-between">
+                    <span class="text-gray-300 text-sm lg:text-base">LLM Model</span>
+                    <span class="text-blue-400 text-sm lg:text-base font-mono">LLaMA 3.2 3B</span>
+                  </div>
+                  <div class="flex items-center justify-between">
+                    <span class="text-gray-300 text-sm lg:text-base">Vector Database</span>
+                    <span class="text-blue-400 text-sm lg:text-base font-mono">Qdrant</span>
+                  </div>
+                  <div class="flex items-center justify-between">
+                    <span class="text-gray-300 text-sm lg:text-base">Search Algorithm</span>
+                    <span class="text-blue-400 text-sm lg:text-base font-mono">Cosine Similarity</span>
+                  </div>
+                </div>
+              </div>
+
+              <!-- Infrastructure Stack -->
+              <div class="bg-[#1E293B]/80 backdrop-blur-sm rounded-xl p-6 lg:p-8 border border-blue-500/20">
+                <div class="flex items-center mb-4">
+                  <div class="w-10 h-10 lg:w-12 lg:h-12 bg-gradient-to-r from-green-500 to-blue-500 rounded-lg flex items-center justify-center mr-3 lg:mr-4 flex-shrink-0">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="text-white lg:w-6 lg:h-6">
+                      <path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5"></path>
+                    </svg>
+                  </div>
+                  <div class="min-w-0">
+                    <h3 class="text-lg lg:text-xl font-bold text-white">Infrastructure</h3>
+                    <p class="text-sm lg:text-base text-gray-400">Production-Ready Deployment</p>
+                  </div>
+                </div>
+                
+                <div class="space-y-3">
+                  <div class="flex items-center justify-between">
+                    <span class="text-gray-300 text-sm lg:text-base">Orchestration</span>
+                    <span class="text-green-400 text-sm lg:text-base font-mono">Kubernetes</span>
+                  </div>
+                  <div class="flex items-center justify-between">
+                    <span class="text-gray-300 text-sm lg:text-base">Application</span>
+                    <span class="text-green-400 text-sm lg:text-base font-mono">Ruby on Rails</span>
+                  </div>
+                  <div class="flex items-center justify-between">
+                    <span class="text-gray-300 text-sm lg:text-base">Async Processing</span>
+                    <span class="text-green-400 text-sm lg:text-base font-mono">Sidekiq</span>
+                  </div>
+                  <div class="flex items-center justify-between">
+                    <span class="text-gray-300 text-sm lg:text-base">Documentation</span>
+                    <span class="text-green-400 text-sm lg:text-base font-mono">OpenAPI 3.1</span>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="mt-12 lg:mt-16 text-center">
+            <a class="group relative px-6 py-3 lg:px-8 lg:py-4 bg-gradient-to-r from-yellow-500 to-red-500 text-white rounded-lg font-semibold text-base lg:text-lg transition-all duration-200 hover:shadow-[0_0_30px_rgba(234,179,8,0.4)] overflow-hidden inline-block" href="/app">
+              <span class="relative z-10">Experience the Architecture</span>
+              <span class="absolute inset-0 bg-gradient-to-r from-red-500 to-yellow-500 transition-transform duration-200 translate-x-full group-hover:translate-x-0"></span>
+            </a>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Use Cases Section -->
+    <section class="py-20 bg-[#1E293B]" id="use-cases">
+      <div class="container mx-auto px-4">
+        <div class="max-w-7xl mx-auto">
+          <div class="text-center mb-16">
+            <div class="inline-block mb-6 px-4 py-2 bg-blue-500/10 rounded-full border border-blue-500/20">
+              <span class="text-blue-400 font-semibold">💡 Use Cases</span>
+            </div>
+            <h2 class="text-3xl md:text-4xl lg:text-5xl font-bold mb-6 text-white">
+              Built for Modern Blockchain Applications
+            </h2>
+            <p class="text-xl text-gray-300 max-w-3xl mx-auto">
+              From DeFi analytics to compliance monitoring, ChainFetch powers intelligent blockchain applications across industries.
+            </p>
+          </div>
+
+          <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+            <!-- DeFi Analytics -->
+            <div class="bg-[#0F172A]/80 backdrop-blur-sm rounded-xl p-8 border border-blue-500/20 hover:border-blue-500/40 transition-all duration-300">
+              <div class="inline-block p-3 bg-blue-500/10 rounded-lg mb-6">
+                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="text-blue-500">
+                  <path d="M3 3v18h18"></path>
+                  <path d="M13 17V9"></path>
+                  <path d="M18 17V5"></path>
+                  <path d="M8 17v-3"></path>
+                </svg>
+              </div>
+              <h3 class="text-xl font-bold text-white mb-4">DeFi Analytics</h3>
+              <p class="text-gray-400 mb-6">Track liquidity flows, yield farming strategies, and protocol interactions. Identify trending DeFi protocols and analyze user behavior patterns.</p>
+              <div class="space-y-2">
+                <div class="flex items-center text-sm text-gray-300">
+                  <div class="w-2 h-2 bg-blue-400 rounded-full mr-2"></div>
+                  <span>Liquidity pool analysis</span>
+                </div>
+                <div class="flex items-center text-sm text-gray-300">
+                  <div class="w-2 h-2 bg-blue-400 rounded-full mr-2"></div>
+                  <span>Yield farming tracking</span>
+                </div>
+                <div class="flex items-center text-sm text-gray-300">
+                  <div class="w-2 h-2 bg-blue-400 rounded-full mr-2"></div>
+                  <span>MEV detection</span>
+                </div>
+              </div>
+            </div>
+
+            <!-- Compliance & AML -->
+            <div class="bg-[#0F172A]/80 backdrop-blur-sm rounded-xl p-8 border border-blue-500/20 hover:border-blue-500/40 transition-all duration-300">
+              <div class="inline-block p-3 bg-blue-500/10 rounded-lg mb-6">
+                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="text-blue-500">
+                  <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"></path>
+                </svg>
+              </div>
+              <h3 class="text-xl font-bold text-white mb-4">Compliance & AML</h3>
+              <p class="text-gray-400 mb-6">Monitor suspicious activities, track fund flows, and ensure regulatory compliance. Identify risk patterns and flag unusual transaction behaviors.</p>
+              <div class="space-y-2">
+                <div class="flex items-center text-sm text-gray-300">
+                  <div class="w-2 h-2 bg-blue-400 rounded-full mr-2"></div>
+                  <span>Risk scoring</span>
+                </div>
+                <div class="flex items-center text-sm text-gray-300">
+                  <div class="w-2 h-2 bg-blue-400 rounded-full mr-2"></div>
+                  <span>Suspicious pattern detection</span>
+                </div>
+                <div class="flex items-center text-sm text-gray-300">
+                  <div class="w-2 h-2 bg-blue-400 rounded-full mr-2"></div>
+                  <span>Transaction clustering</span>
+                </div>
+              </div>
+            </div>
+
+            <!-- NFT Market Intelligence -->
+            <div class="bg-[#0F172A]/80 backdrop-blur-sm rounded-xl p-8 border border-blue-500/20 hover:border-blue-500/40 transition-all duration-300">
+              <div class="inline-block p-3 bg-blue-500/10 rounded-lg mb-6">
+                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="text-blue-500">
+                  <rect x="3" y="3" width="18" height="18" rx="2" ry="2"></rect>
+                  <circle cx="8.5" cy="8.5" r="1.5"></circle>
+                  <path d="M21 15l-5-5L5 21"></path>
+                </svg>
+              </div>
+              <h3 class="text-xl font-bold text-white mb-4">NFT Market Intelligence</h3>
+              <p class="text-gray-400 mb-6">Analyze NFT trading patterns, collection performance, and market trends. Track holder behavior and identify emerging collections.</p>
+              <div class="space-y-2">
+                <div class="flex items-center text-sm text-gray-300">
+                  <div class="w-2 h-2 bg-blue-400 rounded-full mr-2"></div>
+                  <span>Collection analytics</span>
+                </div>
+                <div class="flex items-center text-sm text-gray-300">
+                  <div class="w-2 h-2 bg-blue-400 rounded-full mr-2"></div>
+                  <span>Holder analysis</span>
+                </div>
+                <div class="flex items-center text-sm text-gray-300">
+                  <div class="w-2 h-2 bg-blue-400 rounded-full mr-2"></div>
+                  <span>Price trend prediction</span>
+                </div>
+              </div>
+            </div>
+
+            <!-- Portfolio Management -->
+            <div class="bg-[#0F172A]/80 backdrop-blur-sm rounded-xl p-8 border border-blue-500/20 hover:border-blue-500/40 transition-all duration-300">
+              <div class="inline-block p-3 bg-blue-500/10 rounded-lg mb-6">
+                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="text-blue-500">
+                  <circle cx="12" cy="12" r="10"></circle>
+                  <path d="M16 12L12 8l-4 4"></path>
+                </svg>
+              </div>
+              <h3 class="text-xl font-bold text-white mb-4">Portfolio Management</h3>
+              <p class="text-gray-400 mb-6">Real-time portfolio tracking, performance analytics, and risk assessment. Monitor holdings across multiple addresses and protocols.</p>
+              <div class="space-y-2">
+                <div class="flex items-center text-sm text-gray-300">
+                  <div class="w-2 h-2 bg-blue-400 rounded-full mr-2"></div>
+                  <span>Multi-address tracking</span>
+                </div>
+                <div class="flex items-center text-sm text-gray-300">
+                  <div class="w-2 h-2 bg-blue-400 rounded-full mr-2"></div>
+                  <span>P&L calculations</span>
+                </div>
+                <div class="flex items-center text-sm text-gray-300">
+                  <div class="w-2 h-2 bg-blue-400 rounded-full mr-2"></div>
+                  <span>Risk metrics</span>
+                </div>
+              </div>
+            </div>
+
+            <!-- Research & Analytics -->
+            <div class="bg-[#0F172A]/80 backdrop-blur-sm rounded-xl p-8 border border-blue-500/20 hover:border-blue-500/40 transition-all duration-300">
+              <div class="inline-block p-3 bg-blue-500/10 rounded-lg mb-6">
+                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="text-blue-500">
+                  <circle cx="11" cy="11" r="8"></circle>
+                  <path d="m21 21-4.35-4.35"></path>
+                </svg>
+              </div>
+              <h3 class="text-xl font-bold text-white mb-4">Research & Analytics</h3>
+              <p class="text-gray-400 mb-6">Deep blockchain research, market analysis, and academic studies. Access comprehensive datasets for quantitative analysis.</p>
+              <div class="space-y-2">
+                <div class="flex items-center text-sm text-gray-300">
+                  <div class="w-2 h-2 bg-blue-400 rounded-full mr-2"></div>
+                  <span>Historical analysis</span>
+                </div>
+                <div class="flex items-center text-sm text-gray-300">
+                  <div class="w-2 h-2 bg-blue-400 rounded-full mr-2"></div>
+                  <span>Network metrics</span>
+                </div>
+                <div class="flex items-center text-sm text-gray-300">
+                  <div class="w-2 h-2 bg-blue-400 rounded-full mr-2"></div>
+                  <span>Behavioral patterns</span>
+                </div>
+              </div>
+            </div>
+
+            <!-- Smart Contract Monitoring -->
+            <div class="bg-[#0F172A]/80 backdrop-blur-sm rounded-xl p-8 border border-blue-500/20 hover:border-blue-500/40 transition-all duration-300">
+              <div class="inline-block p-3 bg-blue-500/10 rounded-lg mb-6">
+                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="text-blue-500">
+                  <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path>
+                  <polyline points="14,2 14,8 20,8"></polyline>
+                  <line x1="16" y1="13" x2="8" y2="13"></line>
+                  <line x1="16" y1="17" x2="8" y2="17"></line>
+                  <polyline points="10,9 9,9 8,9"></polyline>
+                </svg>
+              </div>
+              <h3 class="text-xl font-bold text-white mb-4">Smart Contract Monitoring</h3>
+              <p class="text-gray-400 mb-6">Monitor smart contract interactions, gas optimization, and security events. Track contract upgrades and usage patterns.</p>
+              <div class="space-y-2">
+                <div class="flex items-center text-sm text-gray-300">
+                  <div class="w-2 h-2 bg-blue-400 rounded-full mr-2"></div>
+                  <span>Contract interactions</span>
+                </div>
+                <div class="flex items-center text-sm text-gray-300">
+                  <div class="w-2 h-2 bg-blue-400 rounded-full mr-2"></div>
+                  <span>Gas analysis</span>
+                </div>
+                <div class="flex items-center text-sm text-gray-300">
+                  <div class="w-2 h-2 bg-blue-400 rounded-full mr-2"></div>
+                  <span>Security monitoring</span>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="mt-12 text-center">
+            <%= link_to "/app", class: "group relative px-8 py-4 bg-gradient-to-r from-yellow-500 to-red-500 text-white rounded-lg font-semibold text-lg transition-all duration-200 hover:shadow-[0_0_30px_rgba(234,179,8,0.4)] overflow-hidden inline-block" do %>
+              <span class="relative z-10">Start Building Your Use Case</span>
+              <span class="absolute inset-0 bg-gradient-to-r from-red-500 to-yellow-500 transition-transform duration-200 translate-x-full group-hover:translate-x-0"></span>
+            <% end %>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Pricing Section -->
+    <section class="py-20 bg-[#0F172A]" id="pricing">
+      <div class="container mx-auto px-4">
+        <div class="max-w-7xl mx-auto">
+          <div class="text-center mb-16">
+            <div class="inline-block mb-6 px-4 py-2 bg-blue-500/10 rounded-full border border-blue-500/20">
+              <span class="text-blue-400 font-semibold">💰 Simple Pricing</span>
+            </div>
+            <h2 class="text-3xl md:text-4xl lg:text-5xl font-bold mb-6 text-white">
+              Pay Only for What You Use
+            </h2>
+            <p class="text-xl text-gray-300 max-w-3xl mx-auto">
+              Transparent, credit-based pricing with no hidden fees. Every API endpoint costs exactly 1 credit - whether it's semantic search, LLM processing, or direct queries. <strong class="text-green-400">Start with 50 free credits!</strong>
+            </p>
+          </div>
+
+          <div class="grid grid-cols-1 lg:grid-cols-3 gap-8 max-w-5xl mx-auto">
+
+            <div class="bg-[#1E293B]/80 backdrop-blur-sm rounded-xl p-8 border border-yellow-500/20 relative">
+              <div class="text-center">
+
+                <div class="mb-6">
+                  <span class="text-4xl font-bold text-yellow-400">$3</span>
+                  <span class="text-gray-400 ml-2">= 3,000 credits</span>
+                </div>
+
+                
+                <div class="space-y-4 mb-8">
+                  <div class="flex items-center text-gray-300">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="text-green-400 mr-3 flex-shrink-0">
+                      <path d="M20 6L9 17l-5-5"></path>
+                    </svg>
+                    <span>3,000 API calls</span>
+                  </div>
+                  <div class="flex items-center text-gray-300">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="text-green-400 mr-3 flex-shrink-0">
+                      <path d="M20 6L9 17l-5-5"></path>
+                    </svg>
+                    <span>All API endpoints</span>
+                  </div>
+                  <div class="flex items-center text-gray-300">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="text-green-400 mr-3 flex-shrink-0">
+                      <path d="M20 6L9 17l-5-5"></path>
+                    </svg>
+                    <span>Community support</span>
+                  </div>
+                </div>
+
+                <a href="/app" class="block w-full py-3 bg-transparent border-2 border-yellow-500/30 rounded-lg font-semibold transition-all duration-200 hover:border-yellow-500/60 hover:bg-yellow-500/10 text-gray-300">
+                  Get Started
+                </a>
+              </div>
+            </div>
+
+
+            <div class="bg-[#1E293B]/80 backdrop-blur-sm rounded-xl p-8 border-2 border-yellow-500 relative transform scale-105">
+              <div class="absolute -top-4 left-1/2 transform -translate-x-1/2">
+                <span class="bg-gradient-to-r from-yellow-500 to-red-500 text-white px-4 py-2 rounded-full text-sm font-semibold">
+                  Most Popular
+                </span>
+              </div>
+              
+              <div class="text-center">
+
+                <div class="mb-6">
+                  <span class="text-4xl font-bold text-yellow-400">$5</span>
+                  <span class="text-gray-400 ml-2">= 5,000 credits</span>
+                </div>
+
+                
+                <div class="space-y-4 mb-8">
+                  <div class="flex items-center text-gray-300">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="text-green-400 mr-3 flex-shrink-0">
+                      <path d="M20 6L9 17l-5-5"></path>
+                    </svg>
+                    <span>5,000 API calls</span>
+                  </div>
+                  <div class="flex items-center text-gray-300">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="text-green-400 mr-3 flex-shrink-0">
+                      <path d="M20 6L9 17l-5-5"></path>
+                    </svg>
+                    <span>All API endpoints</span>
+                  </div>
+                  <div class="flex items-center text-gray-300">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="text-green-400 mr-3 flex-shrink-0">
+                      <path d="M20 6L9 17l-5-5"></path>
+                    </svg>
+                    <span>Priority support</span>
+                  </div>
+                </div>
+
+                <a href="/app" class="block w-full py-3 bg-gradient-to-r from-yellow-500 to-red-500 text-white rounded-lg font-semibold transition-all duration-200 hover:shadow-[0_0_20px_rgba(234,179,8,0.3)]">
+                  Start Pro
+                </a>
+              </div>
+            </div>
+
+
+            <div class="bg-[#1E293B]/80 backdrop-blur-sm rounded-xl p-8 border border-yellow-500/20 relative">
+              <div class="text-center">
+
+                <div class="mb-6">
+                  <span class="text-4xl font-bold text-yellow-400">$10</span>
+                  <span class="text-gray-400 ml-2">= 10,000 credits</span>
+                </div>
+
+                
+                <div class="space-y-4 mb-8">
+                  <div class="flex items-center text-gray-300">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="text-green-400 mr-3 flex-shrink-0">
+                      <path d="M20 6L9 17l-5-5"></path>
+                    </svg>
+                    <span>10,000 API calls</span>
+                  </div>
+                  <div class="flex items-center text-gray-300">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="text-green-400 mr-3 flex-shrink-0">
+                      <path d="M20 6L9 17l-5-5"></path>
+                    </svg>
+                    <span>All API endpoints</span>
+                  </div>
+                  <div class="flex items-center text-gray-300">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="text-green-400 mr-3 flex-shrink-0">
+                      <path d="M20 6L9 17l-5-5"></path>
+                    </svg>
+                    <span>Dedicated support</span>
+                  </div>
+                </div>
+
+                <a href="/app" class="block w-full py-3 bg-transparent border-2 border-yellow-500/30 rounded-lg font-semibold transition-all duration-200 hover:border-yellow-500/60 hover:bg-yellow-500/10 text-gray-300">
+                  Contact Sales
+                </a>
+              </div>
+            </div>
+          </div>
+
+          <!-- Pricing Details -->
+          <div class="mt-16 text-center">
+            <div class="bg-[#1E293B]/50 backdrop-blur-sm rounded-xl p-8 border border-yellow-500/20 max-w-4xl mx-auto">
+              <h3 class="text-2xl font-bold text-white mb-6">Simple, Transparent Pricing</h3>
+              <div class="text-center max-w-2xl mx-auto">
+                <h4 class="text-lg font-semibold text-yellow-400 mb-4">How Credits Work</h4>
+                <div class="space-y-3">
+                  <div class="flex items-start justify-center">
+                    <div class="w-2 h-2 bg-yellow-400 rounded-full mr-3 mt-2 flex-shrink-0"></div>
+                    <span class="text-gray-300 text-sm lg:text-base">Every API endpoint costs exactly <strong class="text-white">1 credit</strong></span>
+                  </div>
+                  <div class="flex items-start justify-center">
+                    <div class="w-2 h-2 bg-yellow-400 rounded-full mr-3 mt-2 flex-shrink-0"></div>
+                    <span class="text-gray-300 text-sm lg:text-base">Semantic search, LLM queries, JSON filtering - all 1 credit each</span>
+                  </div>
+                  <div class="flex items-start justify-center">
+                    <div class="w-2 h-2 bg-yellow-400 rounded-full mr-3 mt-2 flex-shrink-0"></div>
+                    <span class="text-gray-300 text-sm lg:text-base">Credits never expire once purchased</span>
+                  </div>
+                  <div class="flex items-start justify-center">
+                    <div class="w-2 h-2 bg-yellow-400 rounded-full mr-3 mt-2 flex-shrink-0"></div>
+                    <span class="text-gray-300 text-sm lg:text-base">No monthly subscriptions or hidden fees</span>
+                  </div>
+                  <div class="flex items-start justify-center">
+                    <div class="w-2 h-2 bg-yellow-400 rounded-full mr-3 mt-2 flex-shrink-0"></div>
+                    <span class="text-gray-300 text-sm lg:text-base">Consistent rate: <strong class="text-white">$1 = 1,000 credits</strong></span>
+                  </div>
+                  <div class="flex items-start justify-center">
+                    <div class="w-2 h-2 bg-green-400 rounded-full mr-3 mt-2 flex-shrink-0"></div>
+                    <span class="text-gray-300 text-sm lg:text-base"><strong class="text-green-400">50 free credits</strong> to get started</span>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="mt-12 text-center">
+            <a class="group relative px-8 py-4 bg-gradient-to-r from-yellow-500 to-red-500 text-white rounded-lg font-semibold text-lg transition-all duration-200 hover:shadow-[0_0_30px_rgba(234,179,8,0.4)] overflow-hidden inline-block" href="/app">
+              <span class="relative z-10">Start with Credits Today</span>
+              <span class="absolute inset-0 bg-gradient-to-r from-red-500 to-yellow-500 transition-transform duration-200 translate-x-full group-hover:translate-x-0"></span>
+            </a>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Footer CTA -->
+    <section class="py-16 bg-[#0F172A] border-t border-gray-800">
+      <div class="container mx-auto px-4 text-center">
+        <h2 class="text-3xl md:text-4xl font-bold text-white mb-4">
+          Ready to Build with ChainFetch?
+        </h2>
+        <p class="text-xl text-gray-300 mb-6 max-w-2xl mx-auto">
+          Experience the power of AI-driven blockchain intelligence. Get instant access to real-time Ethereum data with semantic search capabilities.
+        </p>
+        <div class="mb-8 inline-block p-3 bg-green-500/10 border border-green-500/20 rounded-lg">
+          <span class="text-green-400 font-semibold">🎉 50 Free Credits • No Credit Card Required</span>
+        </div>
+        <div class="flex flex-col sm:flex-row gap-4 justify-center">
+          <%= link_to "/app", class: "group relative px-8 py-4 bg-gradient-to-r from-yellow-500 to-red-500 text-white rounded-lg font-semibold text-lg transition-all duration-200 hover:shadow-[0_0_30px_rgba(234,179,8,0.4)] overflow-hidden inline-block" do %>
+            <span class="relative z-10">Get API Access + 50 Free Credits</span>
+            <span class="absolute inset-0 bg-gradient-to-r from-red-500 to-yellow-500 transition-transform duration-200 translate-x-full group-hover:translate-x-0"></span>
+          <% end %>
+          <%= link_to "Read Documentation", "https://docs.chainfetch.app", class: "px-8 py-4 bg-transparent border-2 border-yellow-500/30 rounded-lg font-semibold transition-all duration-200 hover:border-yellow-500/60 hover:bg-yellow-500/10 text-gray-300" %>
+        </div>
+      </div>
+    </section>
+  </main>
+</div>
+
+<script>
+// Code example content for different endpoints
+const codeExamples = {
+  'semantic-search-endpoint': {
+    'CURL': `<span class="text-blue-400">curl</span> <span class="text-purple-400">-X</span> <span class="text-yellow-400">GET</span> <span class="text-green-400">"https://api.chainfetch.app/api/v1/ethereum/addresses/semantic_search"</span> <span class="text-gray-400">\\</span>
+  <span class="text-purple-400">-H</span> <span class="text-green-400">"accept: application/json"</span> <span class="text-gray-400">\\</span>
+  <span class="text-purple-400">-H</span> <span class="text-green-400">"authorization: Bearer YOUR_API_TOKEN"</span> <span class="text-gray-400">\\</span>
+  <span class="text-purple-400">-d</span> <span class="text-green-400">"query=whale addresses with DeFi activity"</span> <span class="text-gray-400">\\</span>
+  <span class="text-purple-400">-d</span> <span class="text-green-400">"limit=10"</span>`,
+    'JAVASCRIPT': `<span class="text-blue-400">const</span> <span class="text-white">response</span> <span class="text-purple-400">=</span> <span class="text-yellow-400">await</span> <span class="text-blue-400">fetch</span><span class="text-gray-300">(</span>
+  <span class="text-green-400">'https://api.chainfetch.app/api/v1/ethereum/addresses/semantic_search?'</span> <span class="text-purple-400">+</span> 
+  <span class="text-yellow-400">new</span> <span class="text-blue-400">URLSearchParams</span><span class="text-gray-300">({</span>
+    <span class="text-orange-400">query</span><span class="text-gray-300">:</span> <span class="text-green-400">'whale addresses with DeFi activity'</span><span class="text-gray-300">,</span>
+    <span class="text-orange-400">limit</span><span class="text-gray-300">:</span> <span class="text-green-400">'10'</span>
+  <span class="text-gray-300">}), {</span>
+    <span class="text-orange-400">method</span><span class="text-gray-300">:</span> <span class="text-green-400">'GET'</span><span class="text-gray-300">,</span>
+    <span class="text-orange-400">headers</span><span class="text-gray-300">: {</span>
+      <span class="text-green-400">'accept'</span><span class="text-gray-300">:</span> <span class="text-green-400">'application/json'</span><span class="text-gray-300">,</span>
+      <span class="text-green-400">'authorization'</span><span class="text-gray-300">:</span> <span class="text-green-400">'Bearer YOUR_API_TOKEN'</span>
+    <span class="text-gray-300">}</span>
+  <span class="text-gray-300">}</span>
+<span class="text-gray-300">);</span>
+
+<span class="text-blue-400">const</span> <span class="text-white">data</span> <span class="text-purple-400">=</span> <span class="text-yellow-400">await</span> <span class="text-white">response</span><span class="text-gray-300">.</span><span class="text-blue-400">json</span><span class="text-gray-300">();</span>
+<span class="text-white">console</span><span class="text-gray-300">.</span><span class="text-blue-400">log</span><span class="text-gray-300">(</span><span class="text-white">data</span><span class="text-gray-300">.</span><span class="text-white">result</span><span class="text-gray-300">.</span><span class="text-white">points</span><span class="text-gray-300">);</span>`,
+    'PYTHON': `<span class="text-yellow-400">import</span> <span class="text-blue-400">requests</span>
+
+<span class="text-white">response</span> <span class="text-purple-400">=</span> <span class="text-blue-400">requests</span><span class="text-gray-300">.</span><span class="text-blue-400">get</span><span class="text-gray-300">(</span>
+    <span class="text-green-400">'https://api.chainfetch.app/api/v1/ethereum/addresses/semantic_search'</span><span class="text-gray-300">,</span>
+    <span class="text-orange-400">headers</span><span class="text-purple-400">=</span><span class="text-gray-300">{</span>
+        <span class="text-green-400">'accept'</span><span class="text-gray-300">:</span> <span class="text-green-400">'application/json'</span><span class="text-gray-300">,</span>
+        <span class="text-green-400">'authorization'</span><span class="text-gray-300">:</span> <span class="text-green-400">'Bearer YOUR_API_TOKEN'</span>
+    <span class="text-gray-300">},</span>
+    <span class="text-orange-400">params</span><span class="text-purple-400">=</span><span class="text-gray-300">{</span>
+        <span class="text-green-400">'query'</span><span class="text-gray-300">:</span> <span class="text-green-400">'whale addresses with DeFi activity'</span><span class="text-gray-300">,</span>
+        <span class="text-green-400">'limit'</span><span class="text-gray-300">:</span> <span class="text-blue-400">10</span>
+    <span class="text-gray-300">}</span>
+<span class="text-gray-300">)</span>
+
+<span class="text-white">data</span> <span class="text-purple-400">=</span> <span class="text-white">response</span><span class="text-gray-300">.</span><span class="text-blue-400">json</span><span class="text-gray-300">()</span>
+<span class="text-blue-400">print</span><span class="text-gray-300">(</span><span class="text-white">data</span><span class="text-gray-300">[</span><span class="text-green-400">'result'</span><span class="text-gray-300">][</span><span class="text-green-400">'points'</span><span class="text-gray-300">])</span>`,
+    'RUBY': `<span class="text-yellow-400">require</span> <span class="text-green-400">'net/http'</span>
+<span class="text-yellow-400">require</span> <span class="text-green-400">'json'</span>
+
+<span class="text-white">uri</span> <span class="text-purple-400">=</span> <span class="text-blue-400">URI</span><span class="text-gray-300">(</span><span class="text-green-400">'https://api.chainfetch.app/api/v1/ethereum/addresses/semantic_search'</span><span class="text-gray-300">)</span>
+<span class="text-white">uri</span><span class="text-gray-300">.</span><span class="text-white">query</span> <span class="text-purple-400">=</span> <span class="text-blue-400">URI</span><span class="text-gray-300">.</span><span class="text-blue-400">encode_www_form</span><span class="text-gray-300">({</span>
+  <span class="text-orange-400">query:</span> <span class="text-green-400">'whale addresses with DeFi activity'</span><span class="text-gray-300">,</span>
+  <span class="text-orange-400">limit:</span> <span class="text-blue-400">10</span>
+<span class="text-gray-300">})</span>
+
+<span class="text-white">request</span> <span class="text-purple-400">=</span> <span class="text-blue-400">Net::HTTP::Get</span><span class="text-gray-300">.</span><span class="text-blue-400">new</span><span class="text-gray-300">(</span><span class="text-white">uri</span><span class="text-gray-300">)</span>
+<span class="text-white">request</span><span class="text-gray-300">[</span><span class="text-green-400">'accept'</span><span class="text-gray-300">]</span> <span class="text-purple-400">=</span> <span class="text-green-400">'application/json'</span>
+<span class="text-white">request</span><span class="text-gray-300">[</span><span class="text-green-400">'authorization'</span><span class="text-gray-300">]</span> <span class="text-purple-400">=</span> <span class="text-green-400">'Bearer YOUR_API_TOKEN'</span>
+
+<span class="text-white">response</span> <span class="text-purple-400">=</span> <span class="text-blue-400">Net::HTTP</span><span class="text-gray-300">.</span><span class="text-blue-400">start</span><span class="text-gray-300">(</span><span class="text-white">uri</span><span class="text-gray-300">.</span><span class="text-white">hostname</span><span class="text-gray-300">,</span> <span class="text-white">uri</span><span class="text-gray-300">.</span><span class="text-white">port</span><span class="text-gray-300">,</span> <span class="text-orange-400">use_ssl:</span> <span class="text-blue-400">true</span><span class="text-gray-300">)</span> <span class="text-yellow-400">do</span> <span class="text-gray-300">|</span><span class="text-white">http</span><span class="text-gray-300">|</span>
+  <span class="text-white">http</span><span class="text-gray-300">.</span><span class="text-blue-400">request</span><span class="text-gray-300">(</span><span class="text-white">request</span><span class="text-gray-300">)</span>
+<span class="text-yellow-400">end</span>
+
+<span class="text-white">data</span> <span class="text-purple-400">=</span> <span class="text-blue-400">JSON</span><span class="text-gray-300">.</span><span class="text-blue-400">parse</span><span class="text-gray-300">(</span><span class="text-white">response</span><span class="text-gray-300">.</span><span class="text-white">body</span><span class="text-gray-300">)</span>
+<span class="text-blue-400">puts</span> <span class="text-white">data</span><span class="text-gray-300">[</span><span class="text-green-400">'result'</span><span class="text-gray-300">][</span><span class="text-green-400">'points'</span><span class="text-gray-300">]</span>`
+  },
+  'llm-search-endpoint': {
+    'CURL': `<span class="text-blue-400">curl</span> <span class="text-purple-400">-X</span> <span class="text-yellow-400">GET</span> <span class="text-green-400">"https://api.chainfetch.app/api/v1/ethereum/addresses/llm_search"</span> <span class="text-gray-400">\\</span>
+  <span class="text-purple-400">-H</span> <span class="text-green-400">"accept: application/json"</span> <span class="text-gray-400">\\</span>
+  <span class="text-purple-400">-H</span> <span class="text-green-400">"authorization: Bearer YOUR_API_TOKEN"</span> <span class="text-gray-400">\\</span>
+  <span class="text-purple-400">-d</span> <span class="text-green-400">"query=Find high-value Ethereum addresses"</span>`,
+    'JAVASCRIPT': `<span class="text-blue-400">const</span> <span class="text-white">response</span> <span class="text-purple-400">=</span> <span class="text-yellow-400">await</span> <span class="text-blue-400">fetch</span><span class="text-gray-300">(</span>
+  <span class="text-green-400">'https://api.chainfetch.app/api/v1/ethereum/addresses/llm_search?'</span> <span class="text-purple-400">+</span> 
+  <span class="text-yellow-400">new</span> <span class="text-blue-400">URLSearchParams</span><span class="text-gray-300">({</span>
+    <span class="text-orange-400">query</span><span class="text-gray-300">:</span> <span class="text-green-400">'Find high-value Ethereum addresses'</span>
+  <span class="text-gray-300">}), {</span>
+    <span class="text-orange-400">method</span><span class="text-gray-300">:</span> <span class="text-green-400">'GET'</span><span class="text-gray-300">,</span>
+    <span class="text-orange-400">headers</span><span class="text-gray-300">: {</span>
+      <span class="text-green-400">'accept'</span><span class="text-gray-300">:</span> <span class="text-green-400">'application/json'</span><span class="text-gray-300">,</span>
+      <span class="text-green-400">'authorization'</span><span class="text-gray-300">:</span> <span class="text-green-400">'Bearer YOUR_API_TOKEN'</span>
+    <span class="text-gray-300">}</span>
+  <span class="text-gray-300">}</span>
+<span class="text-gray-300">);</span>
+
+<span class="text-blue-400">const</span> <span class="text-white">data</span> <span class="text-purple-400">=</span> <span class="text-yellow-400">await</span> <span class="text-white">response</span><span class="text-gray-300">.</span><span class="text-blue-400">json</span><span class="text-gray-300">();</span>
+<span class="text-white">console</span><span class="text-gray-300">.</span><span class="text-blue-400">log</span><span class="text-gray-300">(</span><span class="text-white">data</span><span class="text-gray-300">.</span><span class="text-white">results</span><span class="text-gray-300">);</span>`,
+    'PYTHON': `<span class="text-yellow-400">import</span> <span class="text-blue-400">requests</span>
+
+<span class="text-white">response</span> <span class="text-purple-400">=</span> <span class="text-blue-400">requests</span><span class="text-gray-300">.</span><span class="text-blue-400">get</span><span class="text-gray-300">(</span>
+    <span class="text-green-400">'https://api.chainfetch.app/api/v1/ethereum/addresses/llm_search'</span><span class="text-gray-300">,</span>
+    <span class="text-orange-400">headers</span><span class="text-purple-400">=</span><span class="text-gray-300">{</span>
+        <span class="text-green-400">'accept'</span><span class="text-gray-300">:</span> <span class="text-green-400">'application/json'</span><span class="text-gray-300">,</span>
+        <span class="text-green-400">'authorization'</span><span class="text-gray-300">:</span> <span class="text-green-400">'Bearer YOUR_API_TOKEN'</span>
+    <span class="text-gray-300">},</span>
+    <span class="text-orange-400">params</span><span class="text-purple-400">=</span><span class="text-gray-300">{</span>
+        <span class="text-green-400">'query'</span><span class="text-gray-300">:</span> <span class="text-green-400">'Find high-value Ethereum addresses'</span>
+    <span class="text-gray-300">}</span>
+<span class="text-gray-300">)</span>
+
+<span class="text-white">data</span> <span class="text-purple-400">=</span> <span class="text-white">response</span><span class="text-gray-300">.</span><span class="text-blue-400">json</span><span class="text-gray-300">()</span>
+<span class="text-blue-400">print</span><span class="text-gray-300">(</span><span class="text-white">data</span><span class="text-gray-300">[</span><span class="text-green-400">'results'</span><span class="text-gray-300">])</span>`,
+    'RUBY': `<span class="text-yellow-400">require</span> <span class="text-green-400">'net/http'</span>
+<span class="text-yellow-400">require</span> <span class="text-green-400">'json'</span>
+
+<span class="text-white">uri</span> <span class="text-purple-400">=</span> <span class="text-blue-400">URI</span><span class="text-gray-300">(</span><span class="text-green-400">'https://api.chainfetch.app/api/v1/ethereum/addresses/llm_search'</span><span class="text-gray-300">)</span>
+<span class="text-white">uri</span><span class="text-gray-300">.</span><span class="text-white">query</span> <span class="text-purple-400">=</span> <span class="text-blue-400">URI</span><span class="text-gray-300">.</span><span class="text-blue-400">encode_www_form</span><span class="text-gray-300">({</span>
+  <span class="text-orange-400">query:</span> <span class="text-green-400">'Find high-value Ethereum addresses'</span>
+<span class="text-gray-300">})</span>
+
+<span class="text-white">request</span> <span class="text-purple-400">=</span> <span class="text-blue-400">Net::HTTP::Get</span><span class="text-gray-300">.</span><span class="text-blue-400">new</span><span class="text-gray-300">(</span><span class="text-white">uri</span><span class="text-gray-300">)</span>
+<span class="text-white">request</span><span class="text-gray-300">[</span><span class="text-green-400">'accept'</span><span class="text-gray-300">]</span> <span class="text-purple-400">=</span> <span class="text-green-400">'application/json'</span>
+<span class="text-white">request</span><span class="text-gray-300">[</span><span class="text-green-400">'authorization'</span><span class="text-gray-300">]</span> <span class="text-purple-400">=</span> <span class="text-green-400">'Bearer YOUR_API_TOKEN'</span>
+
+<span class="text-white">response</span> <span class="text-purple-400">=</span> <span class="text-blue-400">Net::HTTP</span><span class="text-gray-300">.</span><span class="text-blue-400">start</span><span class="text-gray-300">(</span><span class="text-white">uri</span><span class="text-gray-300">.</span><span class="text-white">hostname</span><span class="text-gray-300">,</span> <span class="text-white">uri</span><span class="text-gray-300">.</span><span class="text-white">port</span><span class="text-gray-300">,</span> <span class="text-orange-400">use_ssl:</span> <span class="text-blue-400">true</span><span class="text-gray-300">)</span> <span class="text-yellow-400">do</span> <span class="text-gray-300">|</span><span class="text-white">http</span><span class="text-gray-300">|</span>
+  <span class="text-white">http</span><span class="text-gray-300">.</span><span class="text-blue-400">request</span><span class="text-gray-300">(</span><span class="text-white">request</span><span class="text-gray-300">)</span>
+<span class="text-yellow-400">end</span>
+
+<span class="text-white">data</span> <span class="text-purple-400">=</span> <span class="text-blue-400">JSON</span><span class="text-gray-300">.</span><span class="text-blue-400">parse</span><span class="text-gray-300">(</span><span class="text-white">response</span><span class="text-gray-300">.</span><span class="text-white">body</span><span class="text-gray-300">)</span>
+<span class="text-blue-400">puts</span> <span class="text-white">data</span><span class="text-gray-300">[</span><span class="text-green-400">'results'</span><span class="text-gray-300">]</span>`
+  },
+  'json-search-endpoint': {
+    'CURL': `<span class="text-blue-400">curl</span> <span class="text-purple-400">-X</span> <span class="text-yellow-400">GET</span> <span class="text-green-400">"https://api.chainfetch.app/api/v1/ethereum/addresses/json_search"</span> <span class="text-gray-400">\\</span>
+  <span class="text-purple-400">-H</span> <span class="text-green-400">"accept: application/json"</span> <span class="text-gray-400">\\</span>
+  <span class="text-purple-400">-H</span> <span class="text-green-400">"authorization: Bearer YOUR_API_TOKEN"</span> <span class="text-gray-400">\\</span>
+  <span class="text-purple-400">-d</span> <span class="text-green-400">"eth_balance_min=1000"</span> <span class="text-gray-400">\\</span>
+  <span class="text-purple-400">-d</span> <span class="text-green-400">"is_contract=false"</span> <span class="text-gray-400">\\</span>
+  <span class="text-purple-400">-d</span> <span class="text-green-400">"limit=10"</span>`,
+    'JAVASCRIPT': `<span class="text-blue-400">const</span> <span class="text-white">response</span> <span class="text-purple-400">=</span> <span class="text-yellow-400">await</span> <span class="text-blue-400">fetch</span><span class="text-gray-300">(</span>
+  <span class="text-green-400">'https://api.chainfetch.app/api/v1/ethereum/addresses/json_search?'</span> <span class="text-purple-400">+</span> 
+  <span class="text-yellow-400">new</span> <span class="text-blue-400">URLSearchParams</span><span class="text-gray-300">({</span>
+    <span class="text-orange-400">eth_balance_min</span><span class="text-gray-300">:</span> <span class="text-green-400">'1000'</span><span class="text-gray-300">,</span>
+    <span class="text-orange-400">is_contract</span><span class="text-gray-300">:</span> <span class="text-green-400">'false'</span><span class="text-gray-300">,</span>
+    <span class="text-orange-400">limit</span><span class="text-gray-300">:</span> <span class="text-green-400">'10'</span>
+  <span class="text-gray-300">}), {</span>
+    <span class="text-orange-400">method</span><span class="text-gray-300">:</span> <span class="text-green-400">'GET'</span><span class="text-gray-300">,</span>
+    <span class="text-orange-400">headers</span><span class="text-gray-300">: {</span>
+      <span class="text-green-400">'accept'</span><span class="text-gray-300">:</span> <span class="text-green-400">'application/json'</span><span class="text-gray-300">,</span>
+      <span class="text-green-400">'authorization'</span><span class="text-gray-300">:</span> <span class="text-green-400">'Bearer YOUR_API_TOKEN'</span>
+    <span class="text-gray-300">}</span>
+  <span class="text-gray-300">}</span>
+<span class="text-gray-300">);</span>
+
+<span class="text-blue-400">const</span> <span class="text-white">data</span> <span class="text-purple-400">=</span> <span class="text-yellow-400">await</span> <span class="text-white">response</span><span class="text-gray-300">.</span><span class="text-blue-400">json</span><span class="text-gray-300">();</span>
+<span class="text-white">console</span><span class="text-gray-300">.</span><span class="text-blue-400">log</span><span class="text-gray-300">(</span><span class="text-white">data</span><span class="text-gray-300">.</span><span class="text-white">results</span><span class="text-gray-300">);</span>`,
+    'PYTHON': `<span class="text-yellow-400">import</span> <span class="text-blue-400">requests</span>
+
+<span class="text-white">response</span> <span class="text-purple-400">=</span> <span class="text-blue-400">requests</span><span class="text-gray-300">.</span><span class="text-blue-400">get</span><span class="text-gray-300">(</span>
+    <span class="text-green-400">'https://api.chainfetch.app/api/v1/ethereum/addresses/json_search'</span><span class="text-gray-300">,</span>
+    <span class="text-orange-400">headers</span><span class="text-purple-400">=</span><span class="text-gray-300">{</span>
+        <span class="text-green-400">'accept'</span><span class="text-gray-300">:</span> <span class="text-green-400">'application/json'</span><span class="text-gray-300">,</span>
+        <span class="text-green-400">'authorization'</span><span class="text-gray-300">:</span> <span class="text-green-400">'Bearer YOUR_API_TOKEN'</span>
+    <span class="text-gray-300">},</span>
+    <span class="text-orange-400">params</span><span class="text-purple-400">=</span><span class="text-gray-300">{</span>
+        <span class="text-green-400">'eth_balance_min'</span><span class="text-gray-300">:</span> <span class="text-green-400">'1000'</span><span class="text-gray-300">,</span>
+        <span class="text-green-400">'is_contract'</span><span class="text-gray-300">:</span> <span class="text-blue-400">False</span><span class="text-gray-300">,</span>
+        <span class="text-green-400">'limit'</span><span class="text-gray-300">:</span> <span class="text-blue-400">10</span>
+    <span class="text-gray-300">}</span>
+<span class="text-gray-300">)</span>
+
+<span class="text-white">data</span> <span class="text-purple-400">=</span> <span class="text-white">response</span><span class="text-gray-300">.</span><span class="text-blue-400">json</span><span class="text-gray-300">()</span>
+<span class="text-blue-400">print</span><span class="text-gray-300">(</span><span class="text-white">data</span><span class="text-gray-300">[</span><span class="text-green-400">'results'</span><span class="text-gray-300">])</span>`,
+    'RUBY': `<span class="text-yellow-400">require</span> <span class="text-green-400">'net/http'</span>
+<span class="text-yellow-400">require</span> <span class="text-green-400">'json'</span>
+
+<span class="text-white">uri</span> <span class="text-purple-400">=</span> <span class="text-blue-400">URI</span><span class="text-gray-300">(</span><span class="text-green-400">'https://api.chainfetch.app/api/v1/ethereum/addresses/json_search'</span><span class="text-gray-300">)</span>
+<span class="text-white">uri</span><span class="text-gray-300">.</span><span class="text-white">query</span> <span class="text-purple-400">=</span> <span class="text-blue-400">URI</span><span class="text-gray-300">.</span><span class="text-blue-400">encode_www_form</span><span class="text-gray-300">({</span>
+  <span class="text-orange-400">eth_balance_min:</span> <span class="text-green-400">'1000'</span><span class="text-gray-300">,</span>
+  <span class="text-orange-400">is_contract:</span> <span class="text-blue-400">false</span><span class="text-gray-300">,</span>
+  <span class="text-orange-400">limit:</span> <span class="text-blue-400">10</span>
+<span class="text-gray-300">})</span>
+
+<span class="text-white">request</span> <span class="text-purple-400">=</span> <span class="text-blue-400">Net::HTTP::Get</span><span class="text-gray-300">.</span><span class="text-blue-400">new</span><span class="text-gray-300">(</span><span class="text-white">uri</span><span class="text-gray-300">)</span>
+<span class="text-white">request</span><span class="text-gray-300">[</span><span class="text-green-400">'accept'</span><span class="text-gray-300">]</span> <span class="text-purple-400">=</span> <span class="text-green-400">'application/json'</span>
+<span class="text-white">request</span><span class="text-gray-300">[</span><span class="text-green-400">'authorization'</span><span class="text-gray-300">]</span> <span class="text-purple-400">=</span> <span class="text-green-400">'Bearer YOUR_API_TOKEN'</span>
+
+<span class="text-white">response</span> <span class="text-purple-400">=</span> <span class="text-blue-400">Net::HTTP</span><span class="text-gray-300">.</span><span class="text-blue-400">start</span><span class="text-gray-300">(</span><span class="text-white">uri</span><span class="text-gray-300">.</span><span class="text-white">hostname</span><span class="text-gray-300">,</span> <span class="text-white">uri</span><span class="text-gray-300">.</span><span class="text-white">port</span><span class="text-gray-300">,</span> <span class="text-orange-400">use_ssl:</span> <span class="text-blue-400">true</span><span class="text-gray-300">)</span> <span class="text-yellow-400">do</span> <span class="text-gray-300">|</span><span class="text-white">http</span><span class="text-gray-300">|</span>
+  <span class="text-white">http</span><span class="text-gray-300">.</span><span class="text-blue-400">request</span><span class="text-gray-300">(</span><span class="text-white">request</span><span class="text-gray-300">)</span>
+<span class="text-yellow-400">end</span>
+
+<span class="text-white">data</span> <span class="text-purple-400">=</span> <span class="text-blue-400">JSON</span><span class="text-gray-300">.</span><span class="text-blue-400">parse</span><span class="text-gray-300">(</span><span class="text-white">response</span><span class="text-gray-300">.</span><span class="text-white">body</span><span class="text-gray-300">)</span>
+<span class="text-blue-400">puts</span> <span class="text-white">data</span><span class="text-gray-300">[</span><span class="text-green-400">'results'</span><span class="text-gray-300">]</span>`
+  }
+};
+
+// Initialize code examples
+document.addEventListener('turbo:load', function() {
+  const endpointBlocks = document.querySelectorAll('.endpoint-block');
+  
+  endpointBlocks.forEach(block => {
+    const endpointId = block.getAttribute('data-endpoint');
+    const tabs = block.querySelectorAll('.code-tab');
+    const codeContent = block.querySelector('.code-content');
+    
+    if (tabs.length > 0 && codeContent && codeExamples[endpointId]) {
+      // Set first tab as active
+      tabs[0].classList.add('active', 'bg-yellow-500/20', 'text-yellow-400');
+      codeContent.innerHTML = codeExamples[endpointId][tabs[0].textContent];
+      
+      tabs.forEach(tab => {
+        tab.addEventListener('click', () => {
+          // Remove active class from all tabs
+          tabs.forEach(t => t.classList.remove('active', 'bg-yellow-500/20', 'text-yellow-400'));
+          
+          // Add active class to clicked tab
+          tab.classList.add('active', 'bg-yellow-500/20', 'text-yellow-400');
+          
+          // Update code content
+          const language = tab.textContent;
+          if (codeExamples[endpointId][language]) {
+            codeContent.innerHTML = codeExamples[endpointId][language];
+          }
+        });
+      });
+    }
+  });
+});
+
+// Copy to clipboard functionality
+function copyToClipboard(button, text) {
+  navigator.clipboard.writeText(text).then(() => {
+    const originalHTML = button.innerHTML;
+    button.innerHTML = '<svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6L9 17l-5-5"></path></svg>';
+    setTimeout(() => {
+      button.innerHTML = originalHTML;
+    }, 2000);
+  });
+}
+</script>
+
+<style>
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(20px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+.animate-fadeIn {
+  animation: fadeIn 0.8s ease-out;
+}
+
+.code-tab {
+  @apply text-gray-500 hover:text-gray-300 hover:bg-gray-700/50 transition-colors;
+}
+
+.code-tab.active {
+  @apply bg-yellow-500/20 text-yellow-400 border-yellow-500/30;
+}
+</style>
