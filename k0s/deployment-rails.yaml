@@ -11,10 +11,10 @@ metadata:
 spec:
   accessModes:
     - ReadWriteOnce
-  storageClassName: longhorn-qdrant-distributed
+  storageClassName: longhorn
   resources:
     requests:
-      storage: 300Gi
+      storage: 400Gi
 ---
 apiVersion: apps/v1
 kind: Deployment

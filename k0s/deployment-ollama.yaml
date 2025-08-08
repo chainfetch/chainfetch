@@ -12,7 +12,7 @@ metadata:
 apiVersion: v1
 kind: PersistentVolumeClaim
 metadata:
-  name: ollama-models-pvc
+  name: ollama-qwen-embedding-models-pvc
   namespace: chainfetch
 spec:
   accessModes:
@@ -20,24 +20,24 @@ spec:
   storageClassName: longhorn
   resources:
     requests:
-      storage: 50Gi  # Enough for multiple models
+      storage: 25Gi  # Reduced storage for qwen embedding model
 ---
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: ollama
+  name: ollama-qwen-embedding
   namespace: chainfetch
   labels:
-    app: ollama
+    app: ollama-qwen-embedding
 spec:
   replicas: 2  # Scale to 5 pods for optimal load distribution and performance
   selector:
     matchLabels:
-      app: ollama
+      app: ollama-qwen-embedding
   template:
     metadata:
       labels:
-        app: ollama
+        app: ollama-qwen-embedding
     spec:
       runtimeClassName: nvidia  # Use NVIDIA runtime for GPU access
       initContainers:
@@ -53,7 +53,7 @@ spec:
             sleep 5
             pkill ollama
         volumeMounts:
-        - name: ollama-storage
+        - name: ollama-qwen-embedding-storage
           mountPath: /root/.ollama
         env:
         - name: OLLAMA_HOST
@@ -63,7 +63,7 @@ spec:
         - name: NVIDIA_DRIVER_CAPABILITIES
           value: "compute,utility"
       containers:
-      - name: ollama
+      - name: ollama-qwen-embedding
         image: ollama/ollama:latest
         ports:
         - containerPort: 11434
@@ -80,7 +80,7 @@ spec:
         - name: NVIDIA_DRIVER_CAPABILITIES
           value: "compute,utility"
         volumeMounts:
-        - name: ollama-storage
+        - name: ollama-qwen-embedding-storage
           mountPath: /root/.ollama  # Default Ollama data directory
         resources:
           requests:
@@ -105,17 +105,17 @@ spec:
           periodSeconds: 30
           timeoutSeconds: 10
       volumes:
-      - name: ollama-storage
+      - name: ollama-qwen-embedding-storage
         persistentVolumeClaim:
-          claimName: ollama-models-pvc
+          claimName: ollama-qwen-embedding-models-pvc
 ---
 apiVersion: v1
 kind: Service
 metadata:
-  name: ollama
+  name: ollama-qwen-embedding
   namespace: chainfetch
   labels:
-    app: ollama
+    app: ollama-qwen-embedding
 spec:
   type: ClusterIP
   ports:
@@ -124,12 +124,12 @@ spec:
     protocol: TCP
     name: http
   selector:
-    app: ollama
+    app: ollama-qwen-embedding
 ---
 apiVersion: networking.k8s.io/v1
 kind: Ingress
 metadata:
-  name: ollama-protected-ingress
+  name: ollama-qwen-embedding-protected-ingress
   namespace: chainfetch
   annotations:
     cert-manager.io/cluster-issuer: letsencrypt-prod
@@ -140,17 +140,17 @@ spec:
   ingressClassName: nginx
   tls:
     - hosts:
-        - ollama.chainfetch.app
-      secretName: chainfetch-tls
+        - qwen.chainfetch.app
+      secretName: qwen-tls
   rules:
-    - host: ollama.chainfetch.app
+    - host: qwen.chainfetch.app
       http:
         paths:
           - path: /
             pathType: Prefix
             backend:
               service:
-                name: ollama
+                name: ollama-qwen-embedding
                 port:
                   number: 11434
 ---

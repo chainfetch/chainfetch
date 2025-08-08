@@ -32,7 +32,7 @@ resources:
 # Storage configuration - Use healthy disk only
 persistence:
   accessModes: ["ReadWriteOnce"]
-  size: 150Gi
+  size: 200Gi
   storageClassName: "longhorn"
 
 # Distribution across nodes/disks

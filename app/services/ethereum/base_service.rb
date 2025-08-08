@@ -1,4 +1,9 @@
 class Ethereum::BaseService
+  require 'uri'
+  require 'json'
+  require 'net/http'
+  require 'openssl'
+
   # Error classes
   class InvalidAddressError < StandardError; end
   class ApiError < StandardError; end

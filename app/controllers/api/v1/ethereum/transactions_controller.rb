@@ -19,6 +19,19 @@ class Api::V1::Ethereum::TransactionsController < Api::V1::Ethereum::BaseControl
     end
   end
 
+  # @summary Semantic Search for transactions
+  # @parameter query(query) [!String] The query to search for
+  # @parameter limit(query) [!Integer] The number of results to return (default: 10)
+  # @response success(200) [Hash{result: Hash{points: Array<Hash{id: Integer, version: Integer, score: Float, payload: Hash{transaction_summary: String}}}>}}]
+  # This endpoint queries Qdrant to search transactions based on the provided input. Transaction summaries are embedded using dengcao/Qwen3-Embedding-0.6B:Q8_0 and stored in Qdrant's 'transactions' collection.
+  def semantic_search
+    query = params[:query]
+    limit = params[:limit] || 10
+    embedding = EmbeddingService.new(query).call
+    qdrant_objects = QdrantService.new.query_points(collection: "transactions", query: embedding, limit: limit)
+    render json: qdrant_objects
+  end
+
   # @summary LLM Search for transactions
   # @parameter query(query) [!String] The query to search for
   # @response success(200) [Hash{results: String}]

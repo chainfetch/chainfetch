@@ -10,6 +10,9 @@ class BlockDataJob < ApplicationJob
     block = EthereumBlock.find(block_id)
     block_data = fetch_block(block.block_number)
     block.update(data: block_data)
+    summary = Ethereum::BlockSummaryService.new(block_data).call
+    embedding = EmbeddingService.new(summary).call
+    QdrantService.new.upsert_point(collection: "blocks", id: block_id.to_i, vector: embedding, payload: { block_summary: summary })
     block_data['transactions']['items'].each do |transaction_data|
       block.ethereum_transactions.create!(transaction_hash: transaction_data['hash'])
     rescue => e
@@ -23,17 +26,11 @@ class BlockDataJob < ApplicationJob
   private
 
   def fetch_block(block_number)
-    count = 0
-    loop do
-      uri = URI("#{BASE_URL}/api/v1/ethereum/blocks/#{block_number}")
-      response = Net::HTTP.get_response(uri)
-      if response.is_a?(Net::HTTPSuccess)
-        data = JSON.parse(response.body)
-        return data if data && data.dig('info', 'message') != "Not found"
-      end
+    100.times do
+      block_data = Ethereum::BlockDataService.new(block_number).call
+      return block_data if block_data
       sleep(1)
-      count += 1
-      break if count > 100
     end
+    nil
   end
 end

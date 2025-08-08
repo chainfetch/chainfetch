@@ -3,12 +3,11 @@ class TransactionDataJob < ApplicationJob
 
   def perform(transaction_id)
     transaction = EthereumTransaction.find(transaction_id)
-    transaction_data = fetch_transaction(transaction.transaction_hash)
+    transaction_data = Ethereum::TransactionDataService.new(transaction.transaction_hash).call
     # Sanitize data to remove null characters that PostgreSQL cannot handle
     sanitized_data = sanitize_unicode_data(transaction_data)
     transaction.update!(data: sanitized_data)
     
-    # Find or create addresses first, then associate them with the transaction
     from_address_hash = sanitized_data.dig('info', 'from', 'hash')
     to_address_hash = sanitized_data.dig('info', 'to', 'hash')
     
@@ -29,17 +28,12 @@ class TransactionDataJob < ApplicationJob
       )
       AddressDataJob.perform_later(to_address.id)
     end
-  end
 
-  def fetch_transaction(transaction_hash)
-    uri = URI("#{BASE_URL}/api/v1/ethereum/transactions/#{transaction_hash}")
-    http = Net::HTTP.new(uri.host, uri.port)
-    if uri.scheme == 'https'
-      http.use_ssl = true
-      http.verify_mode = OpenSSL::SSL::VERIFY_PEER
+    if rand(50) == 0
+      summary = Ethereum::TransactionSummaryService.new(transaction_data).call
+      embedding = EmbeddingService.new(summary).call
+      QdrantService.new.upsert_point(collection: "transactions", id: transaction_id.to_i, vector: embedding, payload: { transaction_summary: summary })
     end
-    response = http.get(uri.request_uri)
-    JSON.parse(response.body)
   end
 
   private
