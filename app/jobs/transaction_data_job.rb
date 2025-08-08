@@ -1,9 +1,12 @@
 class TransactionDataJob < ApplicationJob
   queue_as :default
+  retry_on StandardError, wait: 5.seconds, attempts: 3
 
   def perform(transaction_id)
     transaction = EthereumTransaction.find(transaction_id)
     transaction_data = Ethereum::TransactionDataService.new(transaction.transaction_hash).call
+    raise "Transaction data is nil" if transaction_data.nil?
+    
     # Sanitize data to remove null characters that PostgreSQL cannot handle
     sanitized_data = sanitize_unicode_data(transaction_data)
     transaction.update!(data: sanitized_data)
