@@ -1,6 +1,6 @@
 
 class EmbeddingService < BaseService
-  OLLAMA_URL = "https://ollama.chainfetch.app"
+  OLLAMA_URL = "https://qwen.chainfetch.app"
 
   def initialize(text)
     @text = text
