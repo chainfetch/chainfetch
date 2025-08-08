@@ -18,6 +18,7 @@ class TransactionDataJob < ApplicationJob
         ethereum_address: from_address,
         ethereum_transaction: transaction
       )
+      AddressDataJob.perform_later(from_address.id)
     end
     
     if to_address_hash.present?
@@ -26,6 +27,7 @@ class TransactionDataJob < ApplicationJob
         ethereum_address: to_address,
         ethereum_transaction: transaction
       )
+      AddressDataJob.perform_later(to_address.id)
     end
   end
 

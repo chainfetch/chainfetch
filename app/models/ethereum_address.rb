@@ -1,7 +1,6 @@
 class EthereumAddress < ApplicationRecord
   has_many :ethereum_address_transactions, dependent: :destroy
   has_many :ethereum_transactions, through: :ethereum_address_transactions
-  after_create_commit :fetch_data
 
   def self.semantic_search(query, limit = 10)
     embedding = EmbeddingService.new(query).call
