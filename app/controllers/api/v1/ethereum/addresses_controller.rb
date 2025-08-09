@@ -366,10 +366,10 @@ class Api::V1::Ethereum::AddressesController < Api::V1::Ethereum::BaseController
     
     allowed_sort_fields = {
       # Basic fields
-      'id' => 'addresses.id',
-      'created_at' => 'addresses.created_at',
-      'updated_at' => 'addresses.updated_at',
-      'address_hash' => 'addresses.address_hash',
+      'id' => 'ethereum_addresses.id',
+      'created_at' => 'ethereum_addresses.created_at',
+      'updated_at' => 'ethereum_addresses.updated_at',
+      'address_hash' => 'ethereum_addresses.address_hash',
       
       # Balance fields (from JSON data)
       'eth_balance' => "CAST(data->'info'->>'coin_balance' AS NUMERIC)",
@@ -521,7 +521,7 @@ class Api::V1::Ethereum::AddressesController < Api::V1::Ethereum::BaseController
       end
     else
       # Default fallback
-      addresses = addresses.order(id: :desc)
+      addresses = addresses.order(Arel.sql("ethereum_addresses.id DESC"))
     end
     
     # Apply pagination with defaults

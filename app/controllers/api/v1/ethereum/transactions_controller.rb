@@ -469,8 +469,8 @@ class Api::V1::Ethereum::TransactionsController < Api::V1::Ethereum::BaseControl
     sort_order = params[:sort_order]&.downcase == 'asc' ? 'asc' : 'desc'
 
     allowed_sort_fields = {
-      'id' => 'transactions.id',
-      'transaction_hash' => 'transactions.transaction_hash',
+      'id' => 'ethereum_transactions.id',
+      'transaction_hash' => 'ethereum_transactions.transaction_hash',
       'value' => "CAST(data->'info'->>'value' AS NUMERIC)",
       'gas_used' => "CAST(data->'info'->>'gas_used' AS NUMERIC)",
       'gas_price' => "CAST(data->'info'->>'gas_price' AS NUMERIC)",
@@ -497,7 +497,8 @@ class Api::V1::Ethereum::TransactionsController < Api::V1::Ethereum::BaseControl
         transactions = transactions.order(Arel.sql("#{sort_column} #{sort_order}"))
       end
     else
-      transactions = transactions.order(id: :desc)
+      # Default fallback
+      transactions = transactions.order(Arel.sql("ethereum_transactions.id DESC"))
     end
 
     # Apply pagination with defaults

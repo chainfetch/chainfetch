@@ -151,18 +151,21 @@ class AddressDataSearchService
 
   def make_llama_request(system_prompt, user_prompt)
     uri = URI("#{@api_url}/v1/chat/completions")
-    http = Net::HTTP.new(uri.host, uri.port)
-    http.read_timeout = 30
     
-    if uri.scheme == 'https'
-      http.use_ssl = true
-      http.verify_mode = OpenSSL::SSL::VERIFY_PEER
-    end
-    
-    request = Net::HTTP::Post.new(uri)
-    request['Content-Type'] = 'application/json'
-    request['Authorization'] = "Bearer #{@api_key}"
-    request.body = {
+    # Use a thread to avoid deadlock when making external requests
+    response = Thread.new do
+      http = Net::HTTP.new(uri.host, uri.port)
+      http.read_timeout = 30
+      
+      if uri.scheme == 'https'
+        http.use_ssl = true
+        http.verify_mode = OpenSSL::SSL::VERIFY_PEER
+      end
+      
+      request = Net::HTTP::Post.new(uri)
+      request['Content-Type'] = 'application/json'
+      request['Authorization'] = "Bearer #{@api_key}"
+      request.body = {
       messages: [
         { role: "system", content: system_prompt },
         { role: "user", content: user_prompt }
@@ -348,7 +351,9 @@ class AddressDataSearchService
       }]
     }.to_json
 
-    response = http.request(request)
+      http.request(request)
+    end.value
+    
     raise ApiError, "API error: #{response.code}" unless response.code == '200'
     
     parsed_response = JSON.parse(response.body)

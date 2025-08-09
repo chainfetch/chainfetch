@@ -371,10 +371,10 @@ class Api::V1::Ethereum::BlocksController < Api::V1::Ethereum::BaseController
     
     allowed_sort_fields = {
       # Basic fields
-      'id' => 'blocks.id',
-      'created_at' => 'blocks.created_at',
-      'updated_at' => 'blocks.updated_at',
-      'block_number' => 'blocks.block_number',
+      'id' => 'ethereum_blocks.id',
+      'created_at' => 'ethereum_blocks.created_at',
+      'updated_at' => 'ethereum_blocks.updated_at',
+      'block_number' => 'ethereum_blocks.block_number',
       
       # Block info fields
       'base_fee_per_gas' => "CAST(data->'info'->>'base_fee_per_gas' AS NUMERIC)",
@@ -497,7 +497,7 @@ class Api::V1::Ethereum::BlocksController < Api::V1::Ethereum::BaseController
       end
     else
       # Default fallback
-      blocks = blocks.order(id: :desc)
+      blocks = blocks.order(Arel.sql("ethereum_blocks.id DESC"))
     end
     
     # Apply pagination with defaults
