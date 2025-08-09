@@ -221,6 +221,8 @@ These manifests spin up the full **FetchSERP stack** (Rails app + workers + auxi
    export KUBECONFIG=/Users/olivier/Desktop/kubeconfig && kubectl rollout restart deployment chainfetch-jobs -n chainfetch
    export KUBECONFIG=/Users/olivier/Desktop/kubeconfig && kubectl rollout restart deployment/ollama -n chainfetch
 
+   export KUBECONFIG=/Users/olivier/Desktop/kubeconfig && kubectl apply -f k0s/deployment-rails.yaml 
+
    # delete pods
    export KUBECONFIG=/Users/olivier/Desktop/kubeconfig && kubectl delete pods -n chainfetch -l app=chainfetch-web
    export KUBECONFIG=/Users/olivier/Desktop/kubeconfig && kubectl delete pods -n chainfetch -l app=chainfetch-jobs
@@ -228,7 +230,8 @@ These manifests spin up the full **FetchSERP stack** (Rails app + workers + auxi
    export KUBECONFIG=/Users/olivier/Desktop/kubeconfig && kubectl scale deployment chainfetch-web -n chainfetch --replicas=0
 
    export KUBECONFIG=/Users/olivier/Desktop/kubeconfig && kubectl get pods -n chainfetch
-   export KUBECONFIG=/Users/olivier/Desktop/kubeconfig && kubectl exec -it chainfetch-web-75574c7ffd-nc8ds -n chainfetch -- /bin/bash
+   export KUBECONFIG=/Users/olivier/Desktop/kubeconfig && kubectl logs -f  -n chainfetch
+   export KUBECONFIG=/Users/olivier/Desktop/kubeconfig && kubectl exec -it  -n chainfetch -- /bin/bash
 
    export KUBECONFIG=/Users/olivier/Desktop/kubeconfig && kubectl top nodes
    export KUBECONFIG=/Users/olivier/Desktop/kubeconfig && kubectl top pods -n chainfetch
@@ -277,6 +280,16 @@ These manifests spin up the full **FetchSERP stack** (Rails app + workers + auxi
    # Reset db
    export KUBECONFIG=/Users/olivier/Desktop/kubeconfig && kubectl exec postgres-54b58d-tbrd8 -n chainfetch -- psql -U chainfetch-db-instance -d postgres -c "SELECT pg_terminate_backend(pid) FROM pg_stat_activity WHERE datname = 'chainfetch_production' AND pid <> pg_backend_pid();"
    export KUBECONFIG=/Users/olivier/Desktop/kubeconfig && kubectl exec -it postgres-54b58d-tbrd8 -n chainfetch -- psql -U chainfetch-db-instance -d postgres -c "DROP DATABASE IF EXISTS chainfetch_production;"
+
+
+   # Onliner 
+   export KUBECONFIG=/Users/olivier/Desktop/kubeconfig && \
+   kubectl exec postgres-57565f787c-srvbt -n chainfetch -- psql -U chainfetch-db-instance -d postgres -c "SELECT pg_terminate_backend(pid) FROM pg_stat_activity WHERE datname IN ('chainfetch_production', 'chainfetch_production_cache', 'chainfetch_production_queue', 'chainfetch_production_cable') AND pid <> pg_backend_pid();" && \
+   kubectl exec -it postgres-57565f787c-srvbt -n chainfetch -- psql -U chainfetch-db-instance -d postgres -c "DROP DATABASE IF EXISTS chainfetch_production;" && \
+   kubectl exec -it postgres-57565f787c-srvbt -n chainfetch -- psql -U chainfetch-db-instance -d postgres -c "DROP DATABASE IF EXISTS chainfetch_production_cache;" && \
+   kubectl exec -it postgres-57565f787c-srvbt -n chainfetch -- psql -U chainfetch-db-instance -d postgres -c "DROP DATABASE IF EXISTS chainfetch_production_queue;" && \
+   kubectl exec -it postgres-57565f787c-srvbt -n chainfetch -- psql -U chainfetch-db-instance -d postgres -c "DROP DATABASE IF EXISTS chainfetch_production_cable;"
+
 
    ```
 12. 🗂️ **Access Longhorn UI**
