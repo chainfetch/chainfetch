@@ -28,9 +28,9 @@ class BlockDataJob < ApplicationJob
 
   def fetch_block(block_number)
     100.times do
-      sleep(5)
       block_data = Ethereum::BlockDataService.new(block_number).call
       return block_data if block_data
+      sleep(1)
     end
     nil
   end
