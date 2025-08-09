@@ -8,6 +8,6 @@ class EthereumTransaction < ApplicationRecord
   private
 
   def fetch_data
-    TransactionDataJob.perform_later(self.id)
+    TransactionDataJob.perform_later(self.id) if rand(1..2) == 1
   end
 end
