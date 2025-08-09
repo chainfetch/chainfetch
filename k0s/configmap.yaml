@@ -6,5 +6,6 @@ metadata:
 
 data:
   RAILS_MAX_THREADS: "16"
+  RAILS_DB_POOL: "18"
   DB_HOST: "postgres"
   JOB_CONCURRENCY: "4"
