@@ -121,7 +121,7 @@ spec:
               memory: "2Gi"
               ephemeral-storage: "2Gi"
             limits:
-              cpu: "800m"
+              cpu: "900m"
               memory: "4Gi"
               ephemeral-storage: "2Gi"
           securityContext:
