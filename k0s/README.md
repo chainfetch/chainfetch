@@ -231,6 +231,8 @@ These manifests spin up the full **FetchSERP stack** (Rails app + workers + auxi
 
    export KUBECONFIG=/Users/olivier/Desktop/kubeconfig && kubectl get pods -n chainfetch
    export KUBECONFIG=/Users/olivier/Desktop/kubeconfig && kubectl logs -f  -n chainfetch
+   export KUBECONFIG=/Users/olivier/Desktop/kubeconfig && kubectl logs -f -n chainfetch -l app=chainfetch-jobs --prefix=true
+   export KUBECONFIG=/Users/olivier/Desktop/kubeconfig && kubectl logs -f -n chainfetch -l app=chainfetch-web --prefix=true
    export KUBECONFIG=/Users/olivier/Desktop/kubeconfig && kubectl exec -it  -n chainfetch -- /bin/bash
 
    export KUBECONFIG=/Users/olivier/Desktop/kubeconfig && kubectl top nodes
