@@ -212,6 +212,7 @@ spec:
     - hosts:
         - chainfetch.app
         - www.chainfetch.app
+        - api.chainfetch.app
       secretName: chainfetch-web-tls
   rules:
     - host: chainfetch.app
@@ -225,6 +226,16 @@ spec:
                 port:
                   number: 80
     - host: www.chainfetch.app
+      http:
+        paths:
+          - path: /
+            pathType: Prefix
+            backend:
+              service:
+                name: chainfetch-web
+                port:
+                  number: 80 
+    - host: api.chainfetch.app
       http:
         paths:
           - path: /
