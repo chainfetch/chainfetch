@@ -10,17 +10,31 @@ class Api::V1::Ethereum::BaseController < Api::V1::BaseController
       proxy = proxy_config
       
       response = Thread.new do
-        Net::HTTP.start(
+        http = Net::HTTP.new(
           uri.host, 
           uri.port,
           proxy[:server].split(':')[0],
           proxy[:server].split(':')[1].to_i,
           proxy[:username],
-          proxy[:password],
-          use_ssl: uri.scheme == 'https'
-        ) do |http|
+          proxy[:password]
+        )
+        
+        # Add timeout configuration
+        http.open_timeout = 10
+        http.read_timeout = 30
+        http.write_timeout = 10
+        
+        if uri.scheme == 'https'
+          http.use_ssl = true
+          http.verify_mode = OpenSSL::SSL::VERIFY_PEER
+          http.ssl_version = :TLSv1_2
+        end
+        
+        http.start do |connection|
           request = Net::HTTP::Get.new(uri)
-          http.request(request)
+          request['User-Agent'] = 'Chainfetch/1.0'
+          request['Connection'] = 'close'
+          connection.request(request)
         end
       end.value
       
