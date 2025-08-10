@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.0].define(version: 2025_08_10_143748) do
+ActiveRecord::Schema[8.0].define(version: 2025_08_10_203243) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_catalog.plpgsql"
   enable_extension "vector"
@@ -84,6 +84,19 @@ ActiveRecord::Schema[8.0].define(version: 2025_08_10_143748) do
     t.index ["transaction_hash"], name: "index_ethereum_transactions_on_transaction_hash", unique: true
   end
 
+  create_table "payments", force: :cascade do |t|
+    t.bigint "user_id", null: false
+    t.string "payment_intent_id", null: false
+    t.integer "amount_cents", null: false
+    t.integer "credits", null: false
+    t.integer "status", default: 0, null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["payment_intent_id"], name: "index_payments_on_payment_intent_id", unique: true
+    t.index ["user_id", "status"], name: "index_payments_on_user_id_and_status"
+    t.index ["user_id"], name: "index_payments_on_user_id"
+  end
+
   create_table "sessions", force: :cascade do |t|
     t.bigint "user_id", null: false
     t.string "ip_address"
@@ -112,5 +125,6 @@ ActiveRecord::Schema[8.0].define(version: 2025_08_10_143748) do
   add_foreign_key "ethereum_address_transactions", "ethereum_addresses"
   add_foreign_key "ethereum_address_transactions", "ethereum_transactions"
   add_foreign_key "ethereum_transactions", "ethereum_blocks"
+  add_foreign_key "payments", "users"
   add_foreign_key "sessions", "users"
 end

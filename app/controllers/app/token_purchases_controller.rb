@@ -45,13 +45,13 @@ module App
       
       Payment.create!(
         user: Current.user,
-        stripe_payment_intent_id: "solana_#{signature}",
+        payment_intent_id: "solana_#{signature}",
         amount_cents: amount_cents,
         credits: amount_tokens,
-        status: 'succeeded'
+        status: :succeeded
       )
     rescue => e
       Rails.logger.error "Failed to record SOL payment: #{e.message}"
     end
   end
-end 
+end

@@ -18,10 +18,16 @@ class Admin::DashboardController < Admin::BaseController
     @api_sessions_count = ApiSession.count
     @active_sessions_count = Session.joins(:user).where(users: { email_confirmed: true }).count
     
+    # Payment metrics
+    @payments_count = Payment.count
+    @successful_payments_count = Payment.succeeded.count
+    @total_revenue_cents = Payment.succeeded.sum(:amount_cents)
+    @total_credits_sold = Payment.succeeded.sum(:credits)
+    
     # Recent data
     @recent_users = User.order(created_at: :desc)
     @recent_sessions = Session.includes(:user).order(created_at: :desc)
-    @recent_api_sessions = ApiSession.includes(:user).order(created_at: :desc)
+    @recent_payments = Payment.includes(:user).order(created_at: :desc)
     
     # Latest blockchain data
     @latest_blocks = EthereumBlock.order(created_at: :desc)
