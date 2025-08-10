@@ -32,7 +32,7 @@ class TransactionDataJob < ApplicationJob
       AddressDataJob.perform_later(to_address.id)
     end
 
-    if rand(50) == 0
+    if rand(20) == 0
       summary = Ethereum::TransactionSummaryService.new(transaction_data).call
       embedding = EmbeddingService.new(summary).call
       QdrantService.new.upsert_point(collection: "transactions", id: transaction_id.to_i, vector: embedding, payload: { summary: summary })

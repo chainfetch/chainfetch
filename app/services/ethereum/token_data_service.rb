@@ -1,0 +1,51 @@
+require 'net/http'
+require 'uri'
+require 'json'
+
+class Ethereum::TokenDataService < Ethereum::BaseService
+
+  def initialize(token_address)
+    @token_address = token_address.downcase
+    raise InvalidAddressError, "Invalid Ethereum token address format" unless @token_address.match?(/\A0x[a-f0-9]{40}\z/)
+  end
+
+  def call
+    uri = URI("#{BASE_URL}/api/v1/ethereum/tokens/#{@token_address}")
+    http = Net::HTTP.new(uri.host, uri.port)
+    if uri.scheme == 'https'
+      http.use_ssl = true
+      http.verify_mode = OpenSSL::SSL::VERIFY_PEER
+    end
+    
+    request = Net::HTTP::Get.new(uri.request_uri)
+    request['Authorization'] = "Bearer #{BEARER_TOKEN}"
+    response = http.request(request)
+    
+    # Check if response is successful
+    unless response.is_a?(Net::HTTPSuccess)
+      Rails.logger.error "HTTP error for token #{@token_address}: #{response.code} #{response.message}"
+      Rails.logger.error "Response body: #{response.body[0..500]}" # Log first 500 chars
+      raise ApiError, "HTTP #{response.code}: #{response.message}"
+    end
+    
+    # Validate content type
+    content_type = response['content-type']
+    unless content_type&.include?('application/json')
+      Rails.logger.error "Invalid content type for token #{@token_address}: #{content_type}"
+      Rails.logger.error "Response body: #{response.body[0..500]}" # Log first 500 chars
+      raise ApiError, "Expected JSON response, got: #{content_type}"
+    end
+    
+    JSON.parse(response.body)
+  rescue JSON::ParserError => e
+    Rails.logger.error "JSON parsing error for token #{@token_address}: #{e.message}"
+    Rails.logger.error "Response body: #{response&.body&.[](0..500)}" # Log first 500 chars
+    raise ApiError, "Failed to parse JSON response: #{e.message}"
+  rescue Net::ReadTimeout, Net::OpenTimeout => e
+    Rails.logger.error "Timeout error for token #{@token_address}: #{e.message}"
+    raise ApiError, "Request timeout: #{e.message}"
+  rescue => e
+    Rails.logger.error "Unexpected error for token #{@token_address}: #{e.class.name}: #{e.message}"
+    raise ApiError, "Service error: #{e.message}"
+  end
+end

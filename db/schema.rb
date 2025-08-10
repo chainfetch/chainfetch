@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.0].define(version: 2025_08_10_121839) do
+ActiveRecord::Schema[8.0].define(version: 2025_08_10_143748) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_catalog.plpgsql"
   enable_extension "vector"
@@ -62,6 +62,15 @@ ActiveRecord::Schema[8.0].define(version: 2025_08_10_121839) do
     t.datetime "updated_at", null: false
     t.index ["address_hash"], name: "index_ethereum_smart_contracts_on_address_hash", unique: true
     t.index ["data"], name: "index_ethereum_smart_contracts_on_data", using: :gin
+  end
+
+  create_table "ethereum_tokens", force: :cascade do |t|
+    t.string "address_hash", null: false
+    t.jsonb "data"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["address_hash"], name: "index_ethereum_tokens_on_address_hash", unique: true
+    t.index ["data"], name: "index_ethereum_tokens_on_data", using: :gin
   end
 
   create_table "ethereum_transactions", force: :cascade do |t|
