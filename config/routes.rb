@@ -20,6 +20,11 @@ Rails.application.routes.draw do
   
   # Mount Action Cable
   mount ActionCable.server => '/cable'
+
+  namespace :admin do
+    resources :dashboard, only: [:index]
+    root 'dashboard#index'
+  end
   
   namespace :app do
     resources :dashboard, only: [:index]

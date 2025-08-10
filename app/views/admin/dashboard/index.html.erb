@@ -1,0 +1,270 @@
+<div class="p-8 text-white">
+  <h1 class="text-3xl font-bold mb-8 text-blue-400">Admin Dashboard</h1>
+  
+  <!-- Main Metrics Grid -->
+  <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-6 mb-8">
+    <!-- Blockchain Metrics -->
+    <div class="bg-slate-800 rounded-lg p-6 border border-slate-700">
+      <h3 class="text-lg font-semibold text-blue-300 mb-2">Blocks</h3>
+      <p class="text-3xl font-bold text-white"><%= number_with_delimiter(@blocks_count) %></p>
+    </div>
+    
+    <div class="bg-slate-800 rounded-lg p-6 border border-slate-700">
+      <h3 class="text-lg font-semibold text-green-300 mb-2">Transactions</h3>
+      <p class="text-3xl font-bold text-white"><%= number_with_delimiter(@transactions_count) %></p>
+    </div>
+    
+    <div class="bg-slate-800 rounded-lg p-6 border border-slate-700">
+      <h3 class="text-lg font-semibold text-purple-300 mb-2">Addresses</h3>
+      <p class="text-3xl font-bold text-white"><%= number_with_delimiter(@addresses_count) %></p>
+    </div>
+    
+    <div class="bg-slate-800 rounded-lg p-6 border border-slate-700">
+      <h3 class="text-lg font-semibold text-yellow-300 mb-2">Smart Contracts</h3>
+      <p class="text-3xl font-bold text-white"><%= number_with_delimiter(@smart_contracts_count) %></p>
+    </div>
+    
+    <div class="bg-slate-800 rounded-lg p-6 border border-slate-700">
+      <h3 class="text-lg font-semibold text-pink-300 mb-2">Tokens</h3>
+      <p class="text-3xl font-bold text-white"><%= number_with_delimiter(@tokens_count) %></p>
+    </div>
+  </div>
+  
+  <!-- User & Session Metrics -->
+  <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
+    <div class="bg-slate-800 rounded-lg p-6 border border-slate-700">
+      <h3 class="text-lg font-semibold text-cyan-300 mb-2">Total Users</h3>
+      <p class="text-3xl font-bold text-white"><%= number_with_delimiter(@users_count) %></p>
+      <p class="text-sm text-slate-400 mt-1">Admins: <%= @admin_users_count %></p>
+    </div>
+    
+    <div class="bg-slate-800 rounded-lg p-6 border border-slate-700">
+      <h3 class="text-lg font-semibold text-emerald-300 mb-2">Confirmed Users</h3>
+      <p class="text-3xl font-bold text-white"><%= number_with_delimiter(@confirmed_users_count) %></p>
+      <p class="text-sm text-slate-400 mt-1"><%= (@confirmed_users_count.to_f / @users_count * 100).round(1) %>% confirmed</p>
+    </div>
+    
+    <div class="bg-slate-800 rounded-lg p-6 border border-slate-700">
+      <h3 class="text-lg font-semibold text-orange-300 mb-2">Sessions</h3>
+      <p class="text-3xl font-bold text-white"><%= number_with_delimiter(@sessions_count) %></p>
+      <p class="text-sm text-slate-400 mt-1">Active: <%= @active_sessions_count %></p>
+    </div>
+    
+    <div class="bg-slate-800 rounded-lg p-6 border border-slate-700">
+      <h3 class="text-lg font-semibold text-indigo-300 mb-2">API Sessions</h3>
+      <p class="text-3xl font-bold text-white"><%= number_with_delimiter(@api_sessions_count) %></p>
+      <p class="text-sm text-slate-400 mt-1">Total Credits: <%= number_with_delimiter(@total_api_credits) %></p>
+    </div>
+  </div>
+  
+  <!-- Data Tables -->
+  <div class="grid grid-cols-1 lg:grid-cols-2 gap-8">
+    
+    <!-- Recent Users Table -->
+    <div class="bg-slate-800 rounded-lg border border-slate-700">
+      <div class="p-6 border-b border-slate-700">
+        <h2 class="text-xl font-semibold text-blue-300">Recent Users</h2>
+      </div>
+      <div class="overflow-auto max-h-96">
+        <table class="w-full">
+          <thead class="bg-slate-700">
+            <tr>
+              <th class="px-6 py-3 text-left text-xs font-medium text-slate-300 uppercase tracking-wider">Email</th>
+              <th class="px-6 py-3 text-left text-xs font-medium text-slate-300 uppercase tracking-wider">Role</th>
+              <th class="px-6 py-3 text-left text-xs font-medium text-slate-300 uppercase tracking-wider">Status</th>
+              <th class="px-6 py-3 text-left text-xs font-medium text-slate-300 uppercase tracking-wider">Credits</th>
+              <th class="px-6 py-3 text-left text-xs font-medium text-slate-300 uppercase tracking-wider">Created</th>
+            </tr>
+          </thead>
+          <tbody class="divide-y divide-slate-700">
+            <% @recent_users.each do |user| %>
+              <tr class="hover:bg-slate-700">
+                <td class="px-6 py-4 whitespace-nowrap text-sm text-white">
+                  <%= truncate(user.email_address, length: 30) %>
+                </td>
+                <td class="px-6 py-4 whitespace-nowrap text-sm">
+                  <span class="px-2 py-1 text-xs font-medium rounded-full <%= user.role == 'admin' ? 'bg-red-900 text-red-200' : 'bg-slate-600 text-slate-200' %>">
+                    <%= user.role.capitalize %>
+                  </span>
+                </td>
+                <td class="px-6 py-4 whitespace-nowrap text-sm">
+                  <span class="px-2 py-1 text-xs font-medium rounded-full <%= user.email_confirmed? ? 'bg-green-900 text-green-200' : 'bg-yellow-900 text-yellow-200' %>">
+                    <%= user.email_confirmed? ? 'Confirmed' : 'Pending' %>
+                  </span>
+                </td>
+                <td class="px-6 py-4 whitespace-nowrap text-sm text-slate-300">
+                  <%= user.api_credit || 0 %>
+                </td>
+                <td class="px-6 py-4 whitespace-nowrap text-sm text-slate-400">
+                  <%= time_ago_in_words(user.created_at) %> ago
+                </td>
+              </tr>
+            <% end %>
+          </tbody>
+        </table>
+      </div>
+    </div>
+    
+    <!-- Recent Sessions Table -->
+    <div class="bg-slate-800 rounded-lg border border-slate-700">
+      <div class="p-6 border-b border-slate-700">
+        <h2 class="text-xl font-semibold text-green-300">Recent Sessions</h2>
+      </div>
+      <div class="overflow-auto max-h-96">
+        <table class="w-full">
+          <thead class="bg-slate-700">
+            <tr>
+              <th class="px-6 py-3 text-left text-xs font-medium text-slate-300 uppercase tracking-wider">User</th>
+              <th class="px-6 py-3 text-left text-xs font-medium text-slate-300 uppercase tracking-wider">IP Address</th>
+              <th class="px-6 py-3 text-left text-xs font-medium text-slate-300 uppercase tracking-wider">User Agent</th>
+              <th class="px-6 py-3 text-left text-xs font-medium text-slate-300 uppercase tracking-wider">Created</th>
+            </tr>
+          </thead>
+          <tbody class="divide-y divide-slate-700">
+            <% @recent_sessions.each do |session| %>
+              <tr class="hover:bg-slate-700">
+                <td class="px-6 py-4 whitespace-nowrap text-sm text-white">
+                  <%= truncate(session.user.email_address, length: 25) %>
+                </td>
+                <td class="px-6 py-4 whitespace-nowrap text-sm text-slate-300">
+                  <%= session.ip_address || 'N/A' %>
+                </td>
+                <td class="px-6 py-4 text-sm text-slate-400 max-w-xs">
+                  <%= truncate(session.user_agent || 'N/A', length: 40) %>
+                </td>
+                <td class="px-6 py-4 whitespace-nowrap text-sm text-slate-400">
+                  <%= time_ago_in_words(session.created_at) %> ago
+                </td>
+              </tr>
+            <% end %>
+          </tbody>
+        </table>
+      </div>
+    </div>
+    
+    <!-- Recent API Sessions Table -->
+    <div class="bg-slate-800 rounded-lg border border-slate-700">
+      <div class="p-6 border-b border-slate-700">
+        <h2 class="text-xl font-semibold text-purple-300">Recent API Sessions</h2>
+      </div>
+      <div class="overflow-auto max-h-96">
+        <table class="w-full">
+          <thead class="bg-slate-700">
+            <tr>
+              <th class="px-6 py-3 text-left text-xs font-medium text-slate-300 uppercase tracking-wider">User</th>
+              <th class="px-6 py-3 text-left text-xs font-medium text-slate-300 uppercase tracking-wider">Cost</th>
+              <th class="px-6 py-3 text-left text-xs font-medium text-slate-300 uppercase tracking-wider">Request Data</th>
+              <th class="px-6 py-3 text-left text-xs font-medium text-slate-300 uppercase tracking-wider">Created</th>
+            </tr>
+          </thead>
+          <tbody class="divide-y divide-slate-700">
+            <% @recent_api_sessions.each do |api_session| %>
+              <tr class="hover:bg-slate-700">
+                <td class="px-6 py-4 whitespace-nowrap text-sm text-white">
+                  <%= truncate(api_session.user.email_address, length: 25) %>
+                </td>
+                <td class="px-6 py-4 whitespace-nowrap text-sm text-slate-300">
+                  <%= api_session.cost || 0 %>
+                </td>
+                <td class="px-6 py-4 text-sm text-slate-400 max-w-xs">
+                  <%= truncate(api_session.request_params.to_s, length: 50) if api_session.respond_to?(:request_params) %>
+                </td>
+                <td class="px-6 py-4 whitespace-nowrap text-sm text-slate-400">
+                  <%= time_ago_in_words(api_session.created_at) %> ago
+                </td>
+              </tr>
+            <% end %>
+          </tbody>
+        </table>
+      </div>
+    </div>
+    
+    <!-- Latest Blockchain Data Table -->
+    <div class="bg-slate-800 rounded-lg border border-slate-700">
+      <div class="p-6 border-b border-slate-700">
+        <h2 class="text-xl font-semibold text-yellow-300">Latest Blockchain Data</h2>
+      </div>
+      <div class="overflow-auto max-h-96">
+        <table class="w-full">
+          <thead class="bg-slate-700">
+            <tr>
+              <th class="px-6 py-3 text-left text-xs font-medium text-slate-300 uppercase tracking-wider">Type</th>
+              <th class="px-6 py-3 text-left text-xs font-medium text-slate-300 uppercase tracking-wider">Identifier</th>
+              <th class="px-6 py-3 text-left text-xs font-medium text-slate-300 uppercase tracking-wider">Block</th>
+              <th class="px-6 py-3 text-left text-xs font-medium text-slate-300 uppercase tracking-wider">Created</th>
+            </tr>
+          </thead>
+          <tbody class="divide-y divide-slate-700">
+            <% @latest_blocks.each do |block| %>
+              <tr class="hover:bg-slate-700">
+                <td class="px-6 py-4 whitespace-nowrap text-sm">
+                  <span class="px-2 py-1 text-xs font-medium rounded-full bg-blue-900 text-blue-200">Block</span>
+                </td>
+                <td class="px-6 py-4 whitespace-nowrap text-sm text-white font-mono">
+                  <%= block.block_number %>
+                </td>
+                <td class="px-6 py-4 whitespace-nowrap text-sm text-slate-300">
+                  #<%= block.block_number %>
+                </td>
+                <td class="px-6 py-4 whitespace-nowrap text-sm text-slate-400">
+                  <%= time_ago_in_words(block.created_at) %> ago
+                </td>
+              </tr>
+            <% end %>
+            <% @latest_transactions.each do |transaction| %>
+              <tr class="hover:bg-slate-700">
+                <td class="px-6 py-4 whitespace-nowrap text-sm">
+                  <span class="px-2 py-1 text-xs font-medium rounded-full bg-green-900 text-green-200">Transaction</span>
+                </td>
+                <td class="px-6 py-4 text-sm text-white font-mono max-w-xs">
+                  <%= truncate(transaction.transaction_hash, length: 20) if transaction.transaction_hash %>
+                </td>
+                <td class="px-6 py-4 whitespace-nowrap text-sm text-slate-300">
+                  #<%= transaction.ethereum_block&.block_number || 'N/A' %>
+                </td>
+                <td class="px-6 py-4 whitespace-nowrap text-sm text-slate-400">
+                  <%= time_ago_in_words(transaction.created_at) %> ago
+                </td>
+              </tr>
+            <% end %>
+            <% @latest_addresses.each do |address| %>
+              <tr class="hover:bg-slate-700">
+                <td class="px-6 py-4 whitespace-nowrap text-sm">
+                  <span class="px-2 py-1 text-xs font-medium rounded-full bg-purple-900 text-purple-200">Address</span>
+                </td>
+                <td class="px-6 py-4 text-sm text-white font-mono max-w-xs">
+                  <%= truncate(address.address_hash, length: 20) if address.address_hash %>
+                </td>
+                <td class="px-6 py-4 whitespace-nowrap text-sm text-slate-300">
+                  -
+                </td>
+                <td class="px-6 py-4 whitespace-nowrap text-sm text-slate-400">
+                  <%= time_ago_in_words(address.created_at) %> ago
+                </td>
+              </tr>
+            <% end %>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+  
+  <!-- System Info -->
+  <div class="mt-8 bg-slate-800 rounded-lg p-6 border border-slate-700">
+    <h2 class="text-xl font-semibold text-slate-300 mb-4">System Information</h2>
+    <div class="grid grid-cols-1 md:grid-cols-3 gap-4 text-sm">
+      <div>
+        <span class="text-slate-400">Rails Environment:</span>
+        <span class="text-white ml-2 font-mono"><%= Rails.env %></span>
+      </div>
+      <div>
+        <span class="text-slate-400">Database:</span>
+        <span class="text-white ml-2"><%= ActiveRecord::Base.connection.adapter_name %></span>
+      </div>
+      <div>
+        <span class="text-slate-400">Current Time:</span>
+        <span class="text-white ml-2"><%= Time.current.strftime("%Y-%m-%d %H:%M:%S %Z") %></span>
+      </div>
+    </div>
+  </div>
+</div>
