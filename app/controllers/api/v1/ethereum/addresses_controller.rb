@@ -16,8 +16,6 @@ class Api::V1::Ethereum::AddressesController < Api::V1::Ethereum::BaseController
         blocks_validated: Async { get_address_blocks_validated(address) },
         token_balances: Async { get_address_token_balances(address) },
         tokens: Async { get_address_tokens(address) },
-        coin_balance_history: Async { get_address_coin_balance_history(address) },
-        coin_balance_history_by_day: Async { get_address_coin_balance_history_by_day(address) },
         withdrawals: Async { get_address_withdrawals(address) },
         nft: Async { get_address_nft(address) },
         nft_collections: Async { get_address_nft_collections(address) }
@@ -606,13 +604,13 @@ class Api::V1::Ethereum::AddressesController < Api::V1::Ethereum::BaseController
     blockscout_api_get("/addresses/#{address}/tokens")
   end
 
-  def get_address_coin_balance_history(address)
-    blockscout_api_get("/addresses/#{address}/coin-balance-history")
-  end
+  # def get_address_coin_balance_history(address)
+  #   blockscout_api_get("/addresses/#{address}/coin-balance-history")
+  # end
 
-  def get_address_coin_balance_history_by_day(address)
-    blockscout_api_get("/addresses/#{address}/coin-balance-history-by-day")
-  end
+  # def get_address_coin_balance_history_by_day(address)
+  #   blockscout_api_get("/addresses/#{address}/coin-balance-history-by-day")
+  # end
 
   def get_address_withdrawals(address)
     blockscout_api_get("/addresses/#{address}/withdrawals")
