@@ -191,6 +191,31 @@
 
     <!-- API Endpoints Section -->
     <div class="border-b bg-[#1E293B] border-gray-500/50"></div>
+    
+    <!-- API Endpoints Introduction -->
+    <section class="py-12 bg-[#1E293B]" id="api-endpoints">
+      <div class="container mx-auto px-4">
+        <div class="max-w-4xl mx-auto text-center">
+          <div class="inline-block mb-6 px-4 py-2 bg-blue-500/10 rounded-full border border-blue-500/20">
+            <span class="text-blue-400 font-semibold">🔧 API Endpoints</span>
+          </div>
+          <h2 class="text-3xl md:text-4xl lg:text-5xl font-bold mb-6 text-white">
+            Comprehensive Blockchain Data Access
+          </h2>
+          <p class="text-lg sm:text-xl text-gray-300 mb-8 max-w-3xl mx-auto">
+            Our API provides powerful search capabilities on the Ethereum blockchain. Perform intelligent queries on <strong class="text-blue-400">Blocks</strong>, <strong class="text-yellow-400">Transactions</strong>, <strong class="text-green-400">Addresses</strong>, <strong class="text-purple-400">Smart Contracts</strong>, and <strong class="text-red-400">Tokens</strong> using semantic search, LLM-powered queries, AI summaries, or direct JSON filtering.
+          </p>
+          <div class="flex flex-wrap justify-center gap-3 text-sm">
+            <span class="px-3 py-1 bg-blue-500/20 text-blue-300 rounded-full border border-blue-500/30">📦 Blocks</span>
+            <span class="px-3 py-1 bg-yellow-500/20 text-yellow-300 rounded-full border border-yellow-500/30">💸 Transactions</span>
+            <span class="px-3 py-1 bg-green-500/20 text-green-300 rounded-full border border-green-500/30">🏠 Addresses</span>
+            <span class="px-3 py-1 bg-purple-500/20 text-purple-300 rounded-full border border-purple-500/30">📜 Smart Contracts</span>
+            <span class="px-3 py-1 bg-red-500/20 text-red-300 rounded-full border border-red-500/30">🪙 Tokens</span>
+          </div>
+        </div>
+      </div>
+    </section>
+
     <section class="pt-20 bg-[#1E293B] p-5" id="semantic-search-endpoint">
       <div class="grid sm:grid-cols-2 gap-8 max-w-2xl sm:max-w-7xl mx-auto overflow-hidden">
         <div class="container mx-auto h-full endpoint-block" data-endpoint="semantic-search-endpoint">
@@ -262,6 +287,79 @@
                 <span>Type: Semantic</span>
                 <span>Query: "whale addresses"</span>
                 <span>Time: 0.8s</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Summary Endpoint -->
+    <div class="border-b bg-[#1E293B] border-gray-500/50 sm:py-8"></div>
+    <section class="sm:pt-20 bg-[#1E293B] p-5" id="summary-endpoint">
+      <div class="grid sm:grid-cols-2 gap-8 max-w-7xl mx-auto overflow-hidden">
+        <div class="container mx-auto endpoint-block" data-endpoint="summary-endpoint">
+          <div class="flex flex-col justify-between h-full">
+            <div class="mb-12">
+              <h2 class="text-3xl md:text-4xl font-bold mb-6 text-white"><a href="#summary-endpoint" class="hover:text-blue-400 transition-colors">AI Summary Endpoint</a></h2>
+              <p class="text-gray-400 text-lg">
+                Generate intelligent AI-powered summaries of blockchain entities. Our advanced models analyze addresses, transactions, tokens, and blocks to create comprehensive human-readable descriptions with contextual insights and behavioral analysis.
+              </p>
+            </div>
+
+            <div class="bg-[#0F172A] rounded-xl overflow-hidden border border-blue-500/20 max-w-sm sm:max-w-full h-full">
+              <div class="flex border-b border-gray-700">
+                <button class="code-tab px-6 py-3 font-mono text-sm text-gray-500 hover:text-gray-300 hover:bg-gray-700/50 transition-colors">CURL</button>
+                <button class="code-tab px-6 py-3 font-mono text-sm text-gray-500 hover:text-gray-300 hover:bg-gray-700/50 transition-colors">JAVASCRIPT</button>
+                <button class="code-tab px-6 py-3 font-mono text-sm text-gray-500 hover:text-gray-300 hover:bg-gray-700/50 transition-colors">PYTHON</button>
+                <button class="code-tab px-6 py-3 font-mono text-sm text-gray-500 hover:text-gray-300 hover:bg-gray-700/50 transition-colors">RUBY</button>
+              </div>
+              
+              <div class="relative">
+                <pre class="p-6 overflow-x-auto">
+                  <div class="code-content font-mono text-sm text-gray-300"></div>
+                </pre>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="flex flex-col justify-between h-full relative z-10 max-w-sm sm:max-w-full">
+          <div class="flex flex-col">
+            <div class="mb-8 text-center">
+              <%= link_to "Go to playground", "https://docs.chainfetch.app/api-reference/api/summary", class: "block py-3 bg-transparent border-2 border-blue-500/30 rounded-md font-semibold transition-all duration-200 hover:border-blue-500/60 hover:bg-blue-500/10 text-gray-300 mr-4 sm:mr-0" %>
+            </div>
+            <div class="text-center mb-8 mr-4 sm:mr-0">
+              <%= link_to "/app", class: "w-full group relative px-6 py-3 bg-gradient-to-r from-yellow-500 to-red-500 text-white rounded-md font-semibold transition-all duration-200 hover:shadow-[0_0_20px_rgba(234,179,8,0.3)] overflow-hidden inline-block" do %>
+                <span class="relative z-10">Get Started with Instant Access</span>
+                <span class="absolute inset-0 bg-gradient-to-r from-red-500 to-yellow-500 transition-transform duration-200 translate-x-full group-hover:translate-x-0"></span>
+              <% end %>
+            </div>
+          </div>
+          <div class="bg-[#0F172A] rounded-xl overflow-hidden border border-blue-500/20 max-w-sm sm:max-w-full p-5">
+            <div class="flex items-center justify-between mb-4">
+              <div class="flex items-center text-blue-400">
+                <span class="font-mono text-sm">AI Summary Response</span>
+              </div>
+            </div>
+      
+            <pre class="-ml-12 sm:-ml-0 bg-[#0F172A] p-5 rounded-md text-sm font-mono overflow-x-auto border border-gray-800 shadow-inner">
+      <code>
+      <span class="text-yellow-400">{</span>
+      <span class="text-orange-400">  "summary"</span><span class="text-gray-300">: </span><span class="text-green-400">"Address 0x742d... is a standard EOA with</span>
+      <span class="text-green-400">  1,247.3 ETH, classifying it as a 'Whale'.</span>
+      <span class="text-green-400">  The address has executed 892 transactions</span>
+      <span class="text-green-400">  and interacted with protocols like Uniswap,</span>
+      <span class="text-green-400">  Aave, and Compound. It demonstrates high</span>
+      <span class="text-green-400">  DeFi activity with diversified holdings..."</span>
+      <span class="text-yellow-400">}</span>
+      </code>
+      </pre>
+      
+            <div class="mt-4 pt-4 border-t border-gray-700/50">
+              <div class="text-xs text-gray-500 flex items-center justify-between">
+                <span>Type: AI Summary</span>
+                <span>Entity: Address</span>
+                <span>Time: 1.2s</span>
               </div>
             </div>
           </div>
@@ -970,6 +1068,60 @@
 <script>
 // Code example content for different endpoints
 const codeExamples = {
+  'summary-endpoint': {
+    'CURL': `<span class="text-blue-400">curl</span> <span class="text-purple-400">-X</span> <span class="text-yellow-400">GET</span> <span class="text-green-400">"https://api.chainfetch.app/api/v1/ethereum/addresses/summary"</span> <span class="text-gray-400">\\</span>
+  <span class="text-purple-400">-H</span> <span class="text-green-400">"accept: application/json"</span> <span class="text-gray-400">\\</span>
+  <span class="text-purple-400">-H</span> <span class="text-green-400">"authorization: Bearer YOUR_API_TOKEN"</span> <span class="text-gray-400">\\</span>
+  <span class="text-purple-400">-d</span> <span class="text-green-400">"address_hash=0x742d35Cc6C4C4532332443243224523452345234"</span>`,
+    'JAVASCRIPT': `<span class="text-blue-400">const</span> <span class="text-white">response</span> <span class="text-purple-400">=</span> <span class="text-yellow-400">await</span> <span class="text-blue-400">fetch</span><span class="text-gray-300">(</span>
+  <span class="text-green-400">'https://api.chainfetch.app/api/v1/ethereum/addresses/summary?'</span> <span class="text-purple-400">+</span> 
+  <span class="text-yellow-400">new</span> <span class="text-blue-400">URLSearchParams</span><span class="text-gray-300">({</span>
+    <span class="text-orange-400">address_hash</span><span class="text-gray-300">:</span> <span class="text-green-400">'0x742d35Cc6C4C4532332443243224523452345234'</span>
+  <span class="text-gray-300">}), {</span>
+    <span class="text-orange-400">method</span><span class="text-gray-300">:</span> <span class="text-green-400">'GET'</span><span class="text-gray-300">,</span>
+    <span class="text-orange-400">headers</span><span class="text-gray-300">: {</span>
+      <span class="text-green-400">'accept'</span><span class="text-gray-300">:</span> <span class="text-green-400">'application/json'</span><span class="text-gray-300">,</span>
+      <span class="text-green-400">'authorization'</span><span class="text-gray-300">:</span> <span class="text-green-400">'Bearer YOUR_API_TOKEN'</span>
+    <span class="text-gray-300">}</span>
+  <span class="text-gray-300">}</span>
+<span class="text-gray-300">);</span>
+
+<span class="text-blue-400">const</span> <span class="text-white">data</span> <span class="text-purple-400">=</span> <span class="text-yellow-400">await</span> <span class="text-white">response</span><span class="text-gray-300">.</span><span class="text-blue-400">json</span><span class="text-gray-300">();</span>
+<span class="text-white">console</span><span class="text-gray-300">.</span><span class="text-blue-400">log</span><span class="text-gray-300">(</span><span class="text-white">data</span><span class="text-gray-300">.</span><span class="text-white">summary</span><span class="text-gray-300">);</span>`,
+    'PYTHON': `<span class="text-yellow-400">import</span> <span class="text-blue-400">requests</span>
+
+<span class="text-white">response</span> <span class="text-purple-400">=</span> <span class="text-blue-400">requests</span><span class="text-gray-300">.</span><span class="text-blue-400">get</span><span class="text-gray-300">(</span>
+    <span class="text-green-400">'https://api.chainfetch.app/api/v1/ethereum/addresses/summary'</span><span class="text-gray-300">,</span>
+    <span class="text-orange-400">headers</span><span class="text-purple-400">=</span><span class="text-gray-300">{</span>
+        <span class="text-green-400">'accept'</span><span class="text-gray-300">:</span> <span class="text-green-400">'application/json'</span><span class="text-gray-300">,</span>
+        <span class="text-green-400">'authorization'</span><span class="text-gray-300">:</span> <span class="text-green-400">'Bearer YOUR_API_TOKEN'</span>
+    <span class="text-gray-300">},</span>
+    <span class="text-orange-400">params</span><span class="text-purple-400">=</span><span class="text-gray-300">{</span>
+        <span class="text-green-400">'address_hash'</span><span class="text-gray-300">:</span> <span class="text-green-400">'0x742d35Cc6C4C4532332443243224523452345234'</span>
+    <span class="text-gray-300">}</span>
+<span class="text-gray-300">)</span>
+
+<span class="text-white">data</span> <span class="text-purple-400">=</span> <span class="text-white">response</span><span class="text-gray-300">.</span><span class="text-blue-400">json</span><span class="text-gray-300">()</span>
+<span class="text-blue-400">print</span><span class="text-gray-300">(</span><span class="text-white">data</span><span class="text-gray-300">[</span><span class="text-green-400">'summary'</span><span class="text-gray-300">])</span>`,
+    'RUBY': `<span class="text-yellow-400">require</span> <span class="text-green-400">'net/http'</span>
+<span class="text-yellow-400">require</span> <span class="text-green-400">'json'</span>
+
+<span class="text-white">uri</span> <span class="text-purple-400">=</span> <span class="text-blue-400">URI</span><span class="text-gray-300">(</span><span class="text-green-400">'https://api.chainfetch.app/api/v1/ethereum/addresses/summary'</span><span class="text-gray-300">)</span>
+<span class="text-white">uri</span><span class="text-gray-300">.</span><span class="text-white">query</span> <span class="text-purple-400">=</span> <span class="text-blue-400">URI</span><span class="text-gray-300">.</span><span class="text-blue-400">encode_www_form</span><span class="text-gray-300">({</span>
+  <span class="text-orange-400">address_hash:</span> <span class="text-green-400">'0x742d35Cc6C4C4532332443243224523452345234'</span>
+<span class="text-gray-300">})</span>
+
+<span class="text-white">request</span> <span class="text-purple-400">=</span> <span class="text-blue-400">Net::HTTP::Get</span><span class="text-gray-300">.</span><span class="text-blue-400">new</span><span class="text-gray-300">(</span><span class="text-white">uri</span><span class="text-gray-300">)</span>
+<span class="text-white">request</span><span class="text-gray-300">[</span><span class="text-green-400">'accept'</span><span class="text-gray-300">]</span> <span class="text-purple-400">=</span> <span class="text-green-400">'application/json'</span>
+<span class="text-white">request</span><span class="text-gray-300">[</span><span class="text-green-400">'authorization'</span><span class="text-gray-300">]</span> <span class="text-purple-400">=</span> <span class="text-green-400">'Bearer YOUR_API_TOKEN'</span>
+
+<span class="text-white">response</span> <span class="text-purple-400">=</span> <span class="text-blue-400">Net::HTTP</span><span class="text-gray-300">.</span><span class="text-blue-400">start</span><span class="text-gray-300">(</span><span class="text-white">uri</span><span class="text-gray-300">.</span><span class="text-white">hostname</span><span class="text-gray-300">,</span> <span class="text-white">uri</span><span class="text-gray-300">.</span><span class="text-white">port</span><span class="text-gray-300">,</span> <span class="text-orange-400">use_ssl:</span> <span class="text-blue-400">true</span><span class="text-gray-300">)</span> <span class="text-yellow-400">do</span> <span class="text-gray-300">|</span><span class="text-white">http</span><span class="text-gray-300">|</span>
+  <span class="text-white">http</span><span class="text-gray-300">.</span><span class="text-blue-400">request</span><span class="text-gray-300">(</span><span class="text-white">request</span><span class="text-gray-300">)</span>
+<span class="text-yellow-400">end</span>
+
+<span class="text-white">data</span> <span class="text-purple-400">=</span> <span class="text-blue-400">JSON</span><span class="text-gray-300">.</span><span class="text-blue-400">parse</span><span class="text-gray-300">(</span><span class="text-white">response</span><span class="text-gray-300">.</span><span class="text-white">body</span><span class="text-gray-300">)</span>
+<span class="text-blue-400">puts</span> <span class="text-white">data</span><span class="text-gray-300">[</span><span class="text-green-400">'summary'</span><span class="text-gray-300">]</span>`
+  },
   'semantic-search-endpoint': {
     'CURL': `<span class="text-blue-400">curl</span> <span class="text-purple-400">-X</span> <span class="text-yellow-400">GET</span> <span class="text-green-400">"https://api.chainfetch.app/api/v1/ethereum/addresses/semantic_search"</span> <span class="text-gray-400">\\</span>
   <span class="text-purple-400">-H</span> <span class="text-green-400">"accept: application/json"</span> <span class="text-gray-400">\\</span>
