@@ -32,6 +32,16 @@ class Api::V1::Ethereum::TransactionsController < Api::V1::Ethereum::BaseControl
     render json: qdrant_objects
   end
 
+  # @summary Transaction Summary
+  # @parameter transaction_hash(query) [!String] The transaction hash to search for
+  # @response success(200) [Hash{summary: String}]
+  def transaction_summary
+    transaction_hash = params[:transaction_hash]
+    transaction_data = Ethereum::TransactionDataService.new(transaction_hash).call
+    summary = Ethereum::TransactionSummaryService.new(transaction_data).call
+    render json: { summary: summary }
+  end
+
   # @summary LLM Search for transactions
   # @parameter query(query) [!String] The query to search for
   # @response success(200) [Hash{results: String}]

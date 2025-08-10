@@ -28,6 +28,16 @@ class Api::V1::Ethereum::BlocksController < Api::V1::Ethereum::BaseController
     render json: qdrant_objects
   end
 
+  # @summary Block Summary
+  # @parameter block_number(query) [!String] The block number to search for
+  # @response success(200) [Hash{summary: String}]
+  def block_summary
+    block_number = params[:block_number]
+    block_data = Ethereum::BlockDataService.new(block_number).call
+    summary = Ethereum::BlockSummaryService.new(block_data).call
+    render json: { summary: summary }
+  end
+
   # @summary LLM Search for blocks
   # @parameter query(query) [!String] The query to search for
   # @response success(200) [Hash{results: String}]

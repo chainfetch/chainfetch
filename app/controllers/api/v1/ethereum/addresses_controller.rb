@@ -37,6 +37,16 @@ class Api::V1::Ethereum::AddressesController < Api::V1::Ethereum::BaseController
     render json: response
   end
 
+  # @summary Address Summary
+  # @parameter address_hash(query) [!String] The address hash to search for
+  # @response success(200) [Hash{summary: String}]
+  def address_summary
+    address_hash = params[:address_hash]
+    address_data = Ethereum::AddressDataService.new(address_hash).call
+    summary = Ethereum::AddressSummaryService.new(address_data).call
+    render json: { summary: summary }
+  end
+
   # @summary Semantic Search for addresses
   # @parameter query(query) [!String] The query to search for
   # @parameter limit(query) [!Integer] The number of results to return (default: 10)
