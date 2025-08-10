@@ -1,0 +1,2 @@
+class EthereumSmartContract < ApplicationRecord
+end

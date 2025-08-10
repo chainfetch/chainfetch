@@ -13,7 +13,7 @@ class BlockDataJob < ApplicationJob
     block.update(data: block_data)
     summary = Ethereum::BlockSummaryService.new(block_data).call
     embedding = EmbeddingService.new(summary).call
-    QdrantService.new.upsert_point(collection: "blocks", id: block_id.to_i, vector: embedding, payload: { block_summary: summary })
+    QdrantService.new.upsert_point(collection: "blocks", id: block_id.to_i, vector: embedding, payload: { summary: summary })
     block_data.dig('transactions', 'items').each do |transaction_data|
       block.ethereum_transactions.create!(transaction_hash: transaction_data['hash'])
     rescue => e

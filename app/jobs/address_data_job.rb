@@ -9,10 +9,15 @@ class AddressDataJob < ApplicationJob
     address_data = Ethereum::AddressDataService.new(address.address_hash).call
     address.update!(data: address_data)
 
+    if address_data['info']['is_contract']
+      smart_contract = EthereumSmartContract.find_or_create_by!(address_hash: address.address_hash)
+      SmartContractDataJob.perform_later(smart_contract.id)
+    end
+
     if rand(15) == 0
       summary = Ethereum::AddressSummaryService.new(address_data).call
       embedding = EmbeddingService.new(summary).call
-      QdrantService.new.upsert_point(collection: "addresses", id: address_id.to_i, vector: embedding, payload: { address_summary: summary })
+      QdrantService.new.upsert_point(collection: "addresses", id: address_id.to_i, vector: embedding, payload: { summary: summary })
     end
   rescue Ethereum::BaseService::ApiError => e
     Rails.logger.error "API error for address #{address&.address_hash}: #{e.message}"

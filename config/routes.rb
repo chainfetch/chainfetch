@@ -55,6 +55,10 @@ Rails.application.routes.draw do
       get 'ethereum/blocks/:block', to: 'ethereum/blocks#show'
       get 'ethereum/tokens/:token', to: 'ethereum/tokens#show'
       get 'ethereum/token-instances/:token/:instance_id', to: 'ethereum/token_instances#show'
+      get 'ethereum/smart-contracts/semantic_search', to: 'ethereum/smart_contracts#semantic_search'
+      get 'ethereum/smart-contracts/json_search', to: 'ethereum/smart_contracts#json_search'
+      get 'ethereum/smart-contracts/llm_search', to: 'ethereum/smart_contracts#llm_search'
+      get 'ethereum/smart-contracts/smart_contract_summary', to: 'ethereum/smart_contracts#smart_contract_summary'
       get 'ethereum/smart-contracts/:address', to: 'ethereum/smart_contracts#show'
     end
   end
