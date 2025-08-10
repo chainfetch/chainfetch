@@ -1,7 +1,7 @@
 class Api::V1::Ethereum::AddressesController < Api::V1::Ethereum::BaseController
   # @summary Get address info
   # @parameter address(path) [!String] The address hash to get info for
-  # @response success(200) [Hash{info: Hash, counters: Hash, transactions: Hash, token_transfers: Hash, internal_transactions: Hash, logs: Hash, blocks_validated: Hash, token_balances: Hash, tokens: Hash, coin_balance_history: Hash, coin_balance_history_by_day: Hash, withdrawals: Hash, nft: Hash, nft_collections: Hash}]
+  # @response success(200) [Hash{info: Hash, counters: Hash, transactions: Hash, token_transfers: Hash, internal_transactions: Hash, logs: Hash, blocks_validated: Hash, token_balances: Hash, tokens: Hash, withdrawals: Hash, nft: Hash, nft_collections: Hash}]
   def show
     address = params[:address]
     
@@ -130,15 +130,7 @@ class Api::V1::Ethereum::AddressesController < Api::V1::Ethereum::BaseController
   # @parameter nft_token_type(query) [String] NFT token type
   # @parameter nft_metadata_description(query) [String] NFT metadata description
   # @parameter nft_metadata_name(query) [String] NFT metadata name
-  # @parameter coin_balance_history_block_number_min(query) [Integer] Minimum coin balance history block number
-  # @parameter coin_balance_history_block_number_max(query) [Integer] Maximum coin balance history block number
-  # @parameter coin_balance_history_delta_min(query) [String] Minimum coin balance history delta
-  # @parameter coin_balance_history_delta_max(query) [String] Maximum coin balance history delta
-  # @parameter coin_balance_history_value_min(query) [String] Minimum coin balance history value
-  # @parameter coin_balance_history_value_max(query) [String] Maximum coin balance history value
-  # @parameter coin_balance_history_tx_hash(query) [String] Coin balance history transaction hash
-  # @parameter coin_balance_history_by_day_days_min(query) [Integer] Minimum days in coin balance history by day
-  # @parameter coin_balance_history_by_day_days_max(query) [Integer] Maximum days in coin balance history by day
+
   # @parameter tx_priority_fee_min(query) [String] Minimum transaction priority fee
   # @parameter tx_priority_fee_max(query) [String] Maximum transaction priority fee
   # @parameter tx_raw_input(query) [String] Transaction raw input
@@ -208,8 +200,7 @@ class Api::V1::Ethereum::AddressesController < Api::V1::Ethereum::BaseController
   # @parameter token_instance_metadata_description(query) [String] Token instance metadata description
   # @parameter token_instance_metadata_image(query) [String] Token instance metadata image
   # @parameter token_instance_metadata_name(query) [String] Token instance metadata name
-  # @parameter coin_balance_history_block_timestamp_min(query) [String] Minimum coin balance history block timestamp
-  # @parameter coin_balance_history_block_timestamp_max(query) [String] Maximum coin balance history block timestamp
+
   # @parameter nft_collections_amount_min(query) [Integer] Minimum NFT collections amount
   # @parameter nft_collections_amount_max(query) [Integer] Maximum NFT collections amount
   # @parameter metadata_tags_name(query) [String] Metadata tags name
@@ -302,12 +293,7 @@ class Api::V1::Ethereum::AddressesController < Api::V1::Ethereum::BaseController
     addresses = addresses.where("data->'nft'->'items' @> ?", [{ metadata: { description: params[:nft_metadata_description] } }].to_json) if params[:nft_metadata_description].present?
     addresses = addresses.where("data->'nft'->'items' @> ?", [{ metadata: { name: params[:nft_metadata_name] } }].to_json) if params[:nft_metadata_name].present?
     
-    # Coin balance history fields (nested in coin_balance_history->items array)
-    addresses = addresses.where("data->'coin_balance_history'->'items' @> ?", [{ transaction_hash: params[:coin_balance_history_tx_hash] }].to_json) if params[:coin_balance_history_tx_hash].present?
-    addresses = addresses.where("CAST(data->'coin_balance_history_by_day'->>'days' AS INTEGER) >= ?", params[:coin_balance_history_by_day_days_min].to_i) if params[:coin_balance_history_by_day_days_min].present?
-    addresses = addresses.where("CAST(data->'coin_balance_history_by_day'->>'days' AS INTEGER) <= ?", params[:coin_balance_history_by_day_days_max].to_i) if params[:coin_balance_history_by_day_days_max].present?
-    addresses = addresses.where("data->'coin_balance_history'->'items' @> ?", [{ block_timestamp: params[:coin_balance_history_block_timestamp_min] }].to_json) if params[:coin_balance_history_block_timestamp_min].present?
-    addresses = addresses.where("data->'coin_balance_history'->'items' @> ?", [{ block_timestamp: params[:coin_balance_history_block_timestamp_max] }].to_json) if params[:coin_balance_history_block_timestamp_max].present?
+
     
     # Additional Transaction fields (nested in transactions->items array)
     addresses = addresses.where("data->'transactions'->'items' @> ?", [{ priority_fee: params[:tx_priority_fee_min] }].to_json) if params[:tx_priority_fee_min].present?
@@ -410,12 +396,7 @@ class Api::V1::Ethereum::AddressesController < Api::V1::Ethereum::BaseController
       'gas_usage_count' => "CAST(data->'counters'->>'gas_usage_count' AS INTEGER)",
       'validations_count' => "CAST(data->'counters'->>'validations_count' AS INTEGER)",
       
-      # Coin balance history fields
-      'coin_balance_history_block_number' => "CAST(data->'coin_balance_history'->'items'->0->>'block_number' AS INTEGER)",
-      'coin_balance_history_block_timestamp' => "data->'coin_balance_history'->'items'->0->>'block_timestamp'",
-      'coin_balance_history_delta' => "CAST(data->'coin_balance_history'->'items'->0->>'delta' AS NUMERIC)",
-      'coin_balance_history_value' => "CAST(data->'coin_balance_history'->'items'->0->>'value' AS NUMERIC)",
-      'coin_balance_history_by_day_days' => "CAST(data->'coin_balance_history_by_day'->>'days' AS INTEGER)",
+
       
       # Transaction fields (from transactions->items array, using first item)
       'tx_hash' => "data->'transactions'->'items'->0->>'hash'",
@@ -604,13 +585,7 @@ class Api::V1::Ethereum::AddressesController < Api::V1::Ethereum::BaseController
     blockscout_api_get("/addresses/#{address}/tokens")
   end
 
-  # def get_address_coin_balance_history(address)
-  #   blockscout_api_get("/addresses/#{address}/coin-balance-history")
-  # end
 
-  # def get_address_coin_balance_history_by_day(address)
-  #   blockscout_api_get("/addresses/#{address}/coin-balance-history-by-day")
-  # end
 
   def get_address_withdrawals(address)
     blockscout_api_get("/addresses/#{address}/withdrawals")
