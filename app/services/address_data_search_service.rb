@@ -99,10 +99,14 @@ class AddressDataSearchService
     uri = URI("#{@base_url}/api/v1/ethereum/addresses/json_search")
     uri.query = URI.encode_www_form(parameters) if parameters&.any?
     
-    # Use a thread to avoid deadlock when making internal requests
-    response = Thread.new do
+    retries = 0
+    max_retries = 2
+    
+    begin
       http = Net::HTTP.new(uri.host, uri.port)
+      http.open_timeout = 10
       http.read_timeout = 30
+      http.write_timeout = 10
       
       if uri.scheme == 'https'
         http.use_ssl = true
@@ -113,40 +117,54 @@ class AddressDataSearchService
       request['Content-Type'] = 'application/json'
       request['Authorization'] = "Bearer #{Ethereum::BaseService::BEARER_TOKEN}"
       
-      http.request(request)
-    end.value
-    
-    if response.code == '200'
-      result = JSON.parse(response.body)
+      response = http.request(request)
+      
+      if response.code == '200'
+        result = JSON.parse(response.body)
+        {
+          count: result.dig("results")&.length || 0,
+          parameters_used: parameters,
+          api_endpoint: uri.to_s,
+          addresses: result.dig("results") || []
+        }
+      else
+        {
+          error: "API request failed with status: #{response.code}",
+          response_body: response.body,
+          parameters_used: parameters,
+          count: 0,
+          addresses: []
+        }
+      end
+    rescue Net::ReadTimeout, Net::OpenTimeout, Net::WriteTimeout => e
+      retries += 1
+      if retries <= max_retries
+        Rails.logger.warn "Timeout on attempt #{retries}/#{max_retries} for address search: #{e.message}"
+        sleep(1 * retries)
+        retry
+      else
+        {
+          error: "Request timeout after #{max_retries} retries: #{e.message}",
+          parameters_used: parameters,
+          count: 0,
+          addresses: []
+        }
+      end
+    rescue JSON::ParserError => e
       {
-        count: result.dig("results")&.length || 0,
+        error: "Failed to parse API response: #{e.message}",
         parameters_used: parameters,
-        api_endpoint: uri.to_s,
-        addresses: result.dig("results") || []
+        count: 0,
+        addresses: []
       }
-    else
+    rescue => e
       {
-        error: "API request failed with status: #{response.code}",
-        response_body: response.body,
+        error: "Request failed: #{e.message}",
         parameters_used: parameters,
         count: 0,
         addresses: []
       }
     end
-  rescue JSON::ParserError => e
-    {
-      error: "Failed to parse API response: #{e.message}",
-      parameters_used: parameters,
-      count: 0,
-      addresses: []
-    }
-  rescue => e
-    {
-      error: "Request failed: #{e.message}",
-      parameters_used: parameters,
-      count: 0,
-      addresses: []
-    }
   end
 
   def make_llama_request(system_prompt, user_prompt)

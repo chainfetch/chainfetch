@@ -106,10 +106,14 @@ class TransactionDataSearchService
     uri = URI("#{@base_url}/api/v1/ethereum/transactions/json_search")
     uri.query = URI.encode_www_form(parameters) if parameters&.any?
     
-    # Use a thread to avoid deadlock when making internal requests
-    response = Thread.new do
+    retries = 0
+    max_retries = 2
+    
+    begin
       http = Net::HTTP.new(uri.host, uri.port)
+      http.open_timeout = 10
       http.read_timeout = 30
+      http.write_timeout = 10
       
       if uri.scheme == 'https'
         http.use_ssl = true
@@ -119,40 +123,54 @@ class TransactionDataSearchService
       request = Net::HTTP::Get.new(uri)
       request['Content-Type'] = 'application/json'
       
-      http.request(request)
-    end.value
-    
-    if response.code == '200'
-      result = JSON.parse(response.body)
+      response = http.request(request)
+      
+      if response.code == '200'
+        result = JSON.parse(response.body)
+        {
+          count: result.dig("results")&.length || 0,
+          parameters_used: parameters,
+          api_endpoint: uri.to_s,
+          transactions: result.dig("results") || []
+        }
+      else
+        {
+          error: "API request failed with status: #{response.code}",
+          response_body: response.body,
+          parameters_used: parameters,
+          count: 0,
+          transactions: []
+        }
+      end
+    rescue Net::ReadTimeout, Net::OpenTimeout, Net::WriteTimeout => e
+      retries += 1
+      if retries <= max_retries
+        Rails.logger.warn "Timeout on attempt #{retries}/#{max_retries} for transaction search: #{e.message}"
+        sleep(1 * retries)
+        retry
+      else
+        {
+          error: "Request timeout after #{max_retries} retries: #{e.message}",
+          parameters_used: parameters,
+          count: 0,
+          transactions: []
+        }
+      end
+    rescue JSON::ParserError => e
       {
-        count: result.dig("results")&.length || 0,
+        error: "Failed to parse API response: #{e.message}",
         parameters_used: parameters,
-        api_endpoint: uri.to_s,
-        transactions: result.dig("results") || []
+        count: 0,
+        transactions: []
       }
-    else
+    rescue => e
       {
-        error: "API request failed with status: #{response.code}",
-        response_body: response.body,
+        error: "Request failed: #{e.message}",
         parameters_used: parameters,
         count: 0,
         transactions: []
       }
     end
-  rescue JSON::ParserError => e
-    {
-      error: "Failed to parse API response: #{e.message}",
-      parameters_used: parameters,
-      count: 0,
-      transactions: []
-    }
-  rescue => e
-    {
-      error: "Request failed: #{e.message}",
-      parameters_used: parameters,
-      count: 0,
-      transactions: []
-    }
   end
 
   def make_llama_request(system_prompt, user_prompt)
