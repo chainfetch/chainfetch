@@ -7,7 +7,7 @@ OasRails.configure do |config|
   config.info.description = <<~HEREDOC
     # Welcome to ChainFetch
 
-    **AI-powered real-time Ethereum blockchain intelligence API** with advanced semantic search capabilities.
+    **AI-powered Ethereum blockchain intelligence API** with advanced semantic search capabilities.
 
     ## Real-Time Blockchain Stream Intelligence
 
