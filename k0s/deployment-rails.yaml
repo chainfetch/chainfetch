@@ -94,7 +94,7 @@ metadata:
   labels:
     app: chainfetch-jobs
 spec:
-  replicas: 1
+  replicas: 4
   selector:
     matchLabels:
       app: chainfetch-jobs
@@ -117,11 +117,11 @@ spec:
                 name: chainfetch-secrets
           resources:
             requests:
-              cpu: "400m"
+              cpu: "300m"
               memory: "2Gi"
               ephemeral-storage: "2Gi"
             limits:
-              cpu: "1000m"
+              cpu: "800m"
               memory: "6Gi"
               ephemeral-storage: "2Gi"
           securityContext:
@@ -137,7 +137,7 @@ metadata:
   labels:
     app: chainfetch-web
 spec:
-  replicas: 6
+  replicas: 5
   selector:
     matchLabels:
       app: chainfetch-web
@@ -173,11 +173,11 @@ spec:
             periodSeconds: 30
           resources:
             requests:
-              cpu: "400m"
+              cpu: "200m"
               memory: "2Gi"
               ephemeral-storage: "1Gi"
             limits:
-              cpu: "800m"
+              cpu: "600m"
               memory: "4Gi"
               ephemeral-storage: "1Gi"
           securityContext:
