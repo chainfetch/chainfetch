@@ -28,7 +28,7 @@ class Api::V1::Ethereum::SmartContractsController < Api::V1::Ethereum::BaseContr
     
     begin
       contract_data = Ethereum::SmartContractDataService.new(address).call
-      summary = Ethereum::SmartContractSummaryService.new(contract_data).call
+      summary = Ethereum::SmartContractSummaryService.new(contract_data, address).call
       render json: { summary: summary }
     rescue Ethereum::BaseService::NotFoundError => e
       render json: { error: "Address #{address} is not a smart contract" }, status: 400

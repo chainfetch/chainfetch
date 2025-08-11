@@ -6,7 +6,7 @@ class SmartContractDataJob < ApplicationJob
     smart_contract_data = Ethereum::SmartContractDataService.new(smart_contract.address_hash).call
     smart_contract.update!(data: smart_contract_data)
     if rand(5) == 0
-      summary = Ethereum::SmartContractSummaryService.new(smart_contract_data).call
+      summary = Ethereum::SmartContractSummaryService.new(smart_contract_data, smart_contract.address_hash).call
       embedding = EmbeddingService.new(summary).call
       QdrantService.new.upsert_point(collection: "smart_contracts", id: smart_contract_id.to_i, vector: embedding, payload: { summary: summary })
     end

@@ -3,18 +3,19 @@ require 'time'
 require 'set'
 
 class Ethereum::SmartContractSummaryService < Ethereum::BaseService
-  attr_reader :contract_data
+  attr_reader :contract_data, :address_hash
   CURRENT_DATE = Time.now
 
-  def initialize(contract_data)
+  def initialize(contract_data, address_hash)
     @contract_data = contract_data || {}
+    @address_hash = address_hash
+    raise ArgumentError, "address_hash cannot be nil" if address_hash.nil?
   end
 
   def call
     generate_text_representation(@contract_data)
   rescue => e
-    # Smart contract data doesn't include address hash, so use a generic identifier
-    puts "Error generating text for smart contract: #{e.message}"
+    puts "Error generating text for smart contract #{@address_hash}: #{e.message}"
     puts e.backtrace
     nil
   end
@@ -49,13 +50,16 @@ class Ethereum::SmartContractSummaryService < Ethereum::BaseService
   private
 
   def build_narrative_intro(data)
+    # Start with address hash
+    intro = "Address #{@address_hash} is"
+    
     # Contract type and identity
     if data['proxy_type']
       proxy_desc = "#{data['proxy_type']} proxy contract"
       if data['name'].present?
-        intro = "This smart contract is a #{proxy_desc} named #{data['name']}"
+        intro += " a #{proxy_desc} named #{data['name']}"
       else
-        intro = "This smart contract is a #{proxy_desc}"
+        intro += " a #{proxy_desc}"
       end
       
       # Add delegation info
@@ -67,9 +71,9 @@ class Ethereum::SmartContractSummaryService < Ethereum::BaseService
       intro += ", designed with an upgradeable architecture"
     else
       if data['name'].present?
-        intro = "This smart contract is a direct implementation contract named #{data['name']}"
+        intro += " a direct implementation contract named #{data['name']}"
       else
-        intro = "This smart contract is a direct implementation contract"
+        intro += " a direct implementation contract"
       end
       intro += " with an immutable design"
     end
