@@ -45,7 +45,7 @@ ethereum_address_transactions  # Many-to-many relationships
 # Application Models
 users                     # API users with credit system
 api_sessions             # API usage tracking and billing
-payments                 # Stripe integration for credit purchases
+payments                 # Solana integration for credit purchases
 sessions                 # User authentication sessions
 ```
 
@@ -277,7 +277,7 @@ k0s start
 
 ### Enterprise Features
 - Rate-limited API access with authentication
-- Credit-based billing system with Stripe integration
+- Credit-based billing system with Solana payment integration
 - Comprehensive API documentation with OpenAPI 3.1
 - Production monitoring and observability
 
