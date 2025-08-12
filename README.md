@@ -287,8 +287,7 @@ This project is licensed under the [MIT License](LICENSE) - see the LICENSE file
 
 ## 🆘 Support
 
-- **Documentation**: [https://docs.chainfetch.app](https://docs.chainfetch.app)
-- **API Reference**: [https://chainfetch.app/docs](https://chainfetch.app/docs)
+- **API Documentation**: [https://chainfetch.app/docs](https://chainfetch.app/docs)
 - **Issues**: GitHub Issues for bug reports and feature requests
 - **Email**: support@chainfetch.app
 
