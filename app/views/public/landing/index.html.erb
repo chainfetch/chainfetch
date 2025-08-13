@@ -1,37 +1,7 @@
 <%= content_for :title, "ChainFetch - AI-Powered Ethereum Blockchain Intelligence API" %>
 <%= content_for :description, "ChainFetch API: AI-powered real-time Ethereum blockchain intelligence with advanced semantic search capabilities. Real-time WebSocket streams, vector embeddings, LLM-powered query processing, and comprehensive blockchain data analytics. Start with instant access." %>
 <%= content_for :keywords, "ethereum API, blockchain intelligence API, semantic search API, ethereum data API, real-time blockchain API, ethereum address API, ethereum transaction API, blockchain analytics API, ethereum block API, AI blockchain API, vector search API, LLM blockchain API, smart contract API, ethereum explorer API, blockchain streaming API, web3 intelligence API, ethereum semantic search, blockchain vector database" %>
-<script>
-  const token = "<%= Rails.application.credentials.chainfetch_api_token %>"
-  const ws = new WebSocket(`wss://chainfetch.app/cable?token=${token}`);
 
-  ws.onopen = () => {
-    console.log("✅ Connected to ActionCable");
-
-    const subscribeMsg = {
-      command: "subscribe",
-      identifier: JSON.stringify({ channel: "EthereumBlocksChannel" })
-    };
-    ws.send(JSON.stringify(subscribeMsg));
-  };
-
-  ws.onmessage = (event) => {
-    const data = JSON.parse(event.data);
-
-    if (data.type === "ping") return;
-    if (data.type === "welcome") {
-      console.log("👋 Welcome:", data);
-      return;
-    }
-    if (data.message) {
-      console.log("📩 New Ethereum block:", data.message);
-    }
-  };
-
-  ws.onclose = () => {
-    console.log("❌ Disconnected from ActionCable");
-  };
-</script>
 <div class="min-h-screen bg-[#0F172A]">
   <main>
     <!-- Hero Section -->
@@ -235,9 +205,9 @@
                 <div class="mb-4">
                   <span class="text-sm text-gray-400">This analysis was generated in real-time using our AI pipeline</span>
                 </div>
-                <%= link_to "/app", class: "group relative px-6 py-3 bg-gradient-to-r from-green-500 to-emerald-500 text-white rounded-lg font-semibold transition-all duration-200 hover:shadow-[0_0_20px_rgba(34,197,94,0.3)] overflow-hidden inline-block" do %>
+                <%= link_to "/app", class: "group relative px-6 py-3 bg-gradient-to-r from-yellow-500 to-red-500 text-white rounded-lg font-semibold transition-all duration-200 hover:shadow-[0_0_20px_rgba(234,179,8,0.3)] overflow-hidden inline-block" do %>
                   <span class="relative z-10">Access Live Block Stream</span>
-                  <span class="absolute inset-0 bg-gradient-to-r from-emerald-500 to-green-500 transition-transform duration-200 translate-x-full group-hover:translate-x-0"></span>
+                  <span class="absolute inset-0 bg-gradient-to-r from-red-500 to-yellow-500 transition-transform duration-200 translate-x-full group-hover:translate-x-0"></span>
                 <% end %>
               </div>
             </div>
@@ -245,6 +215,8 @@
         </div>
       </div>
     </section>
+
+    <div class="border-b bg-[#1E293B] border-gray-500/50"></div>
 
     <!-- Core Features Section -->
     <section class="py-12 sm:py-16 lg:py-20 bg-[#1E293B]" id="core-features">
@@ -682,6 +654,84 @@
           </div>
         </div>
       </div>
+    </section>
+
+    <!-- WebSocket Streaming Endpoint -->
+    <div class="border-b bg-[#1E293B] border-gray-500/50 sm:py-8"></div>
+    <section class="sm:pt-20 bg-[#1E293B] p-5" id="websocket-endpoint">
+      <div class="grid sm:grid-cols-2 gap-8 max-w-7xl mx-auto overflow-hidden">
+        <div class="container mx-auto endpoint-block" data-endpoint="websocket-endpoint">
+          <div class="flex flex-col justify-between h-full">
+            <div class="mb-12">
+              <h2 class="text-3xl md:text-4xl font-bold mb-6 text-white"><a href="#websocket-endpoint" class="hover:text-blue-400 transition-colors">Block Summary WebSocket Streaming</a></h2>
+              <p class="text-gray-400 text-lg">
+                Real-time blockchain data streaming via WebSocket. Subscribe to live Ethereum block feeds and receive instant notifications as new blocks are mined and processed through our AI pipeline.
+              </p>
+            </div>
+
+            <div class="bg-[#0F172A] rounded-xl overflow-hidden border border-blue-500/20 max-w-sm sm:max-w-full h-full">
+              <div class="flex border-b border-gray-700">
+                <button class="code-tab px-6 py-3 font-mono text-sm text-gray-500 hover:text-gray-300 hover:bg-gray-700/50 transition-colors">JAVASCRIPT</button>
+                <button class="code-tab px-6 py-3 font-mono text-sm text-gray-500 hover:text-gray-300 hover:bg-gray-700/50 transition-colors">PYTHON</button>
+                <button class="code-tab px-6 py-3 font-mono text-sm text-gray-500 hover:text-gray-300 hover:bg-gray-700/50 transition-colors">RUBY</button>
+              </div>
+              
+              <div class="relative">
+                <pre class="p-6 overflow-x-auto">
+                  <div class="code-content font-mono text-sm text-gray-300"></div>
+                </pre>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="flex flex-col justify-between h-full relative z-10 max-w-sm sm:max-w-full">
+          <div class="flex flex-col">
+            <div class="mb-8 text-center">
+              <%= link_to "Go to playground", "https://docs.chainfetch.app/api-reference/websocket", class: "block py-3 bg-transparent border-2 border-blue-500/30 rounded-md font-semibold transition-all duration-200 hover:border-blue-500/60 hover:bg-blue-500/10 text-gray-300 mr-4 sm:mr-0" %>
+            </div>
+            <div class="text-center mb-8 mr-4 sm:mr-0">
+              <%= link_to "/app", class: "w-full group relative px-6 py-3 bg-gradient-to-r from-yellow-500 to-red-500 text-white rounded-md font-semibold transition-all duration-200 hover:shadow-[0_0_20px_rgba(234,179,8,0.3)] overflow-hidden inline-block" do %>
+                <span class="relative z-10">Get Started with Instant Access</span>
+                <span class="absolute inset-0 bg-gradient-to-r from-red-500 to-yellow-500 transition-transform duration-200 translate-x-full group-hover:translate-x-0"></span>
+              <% end %>
+            </div>
+          </div>
+          <div class="bg-[#0F172A] rounded-xl overflow-hidden border border-blue-500/20 max-w-sm sm:max-w-full p-5">
+            <div class="flex items-center justify-between mb-4">
+              <div class="flex items-center text-blue-400">
+                <span class="font-mono text-sm">Live Stream Response</span>
+              </div>
+            </div>
+      
+            <pre class="-ml-12 sm:-ml-0 bg-[#0F172A] p-5 rounded-md text-sm font-mono overflow-x-auto border border-gray-800 shadow-inner">
+      <code>
+      <span class="text-gray-300">// Connection established</span>
+      <span class="text-yellow-400">{</span>
+      <span class="text-orange-400">  "type"</span><span class="text-gray-300">: </span><span class="text-green-400">"welcome"</span><span class="text-gray-300"></span>
+      <span class="text-yellow-400">}</span>
+
+      <span class="text-gray-300">// Real-time block data</span>
+      <span class="text-yellow-400">{</span>
+      <span class="text-orange-400">  "identifier"</span><span class="text-gray-300">: </span><span class="text-green-400">"{\"channel\":\"EthereumBlocksChannel\"}"</span><span class="text-gray-300">,</span>
+      <span class="text-orange-400">  "message"</span><span class="text-gray-300">: {</span>
+      <span class="text-orange-400">    "block_number"</span><span class="text-gray-300">: </span><span class="text-blue-400">23134685</span><span class="text-gray-300">,</span>
+      <span class="text-orange-400">    "summary"</span><span class="text-gray-300">: </span><span class="text-green-400">"Block 23134685 was mined with 232 transactions and 16 withdrawals. Size: 148.21 KB, Gas used: 55.67%. Base fee: 1.19 gwei, fees: 0.049268 ETH, transfers: 36.345481 ETH. 229 succeeded, 3 failed. 373 unique addresses, 155 contract calls..."</span>
+      <span class="text-gray-300">  }</span>
+      <span class="text-yellow-400">}</span>
+      </code>
+      </pre>
+      
+            <div class="mt-4 pt-4 border-t border-gray-700/50">
+              <div class="text-xs text-gray-500 flex items-center justify-between">
+                <span>Protocol: WebSocket</span>
+                <span>Frequency: ~12s</span>
+                <span>Live: ✅</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="h-10"></div>
     </section>
 
     <!-- Technical Architecture Section -->
@@ -1451,6 +1501,91 @@ const codeExamples = {
 
 <span class="text-white">data</span> <span class="text-purple-400">=</span> <span class="text-blue-400">JSON</span><span class="text-gray-300">.</span><span class="text-blue-400">parse</span><span class="text-gray-300">(</span><span class="text-white">response</span><span class="text-gray-300">.</span><span class="text-white">body</span><span class="text-gray-300">)</span>
 <span class="text-blue-400">puts</span> <span class="text-white">data</span><span class="text-gray-300">[</span><span class="text-green-400">'results'</span><span class="text-gray-300">]</span>`
+  },
+  'websocket-endpoint': {
+    'JAVASCRIPT': `<span class="text-blue-400">const</span> <span class="text-white">token</span> <span class="text-purple-400">=</span> <span class="text-green-400">"YOUR_API_TOKEN"</span><span class="text-gray-300">;</span>
+<span class="text-blue-400">const</span> <span class="text-white">ws</span> <span class="text-purple-400">=</span> <span class="text-yellow-400">new</span> <span class="text-blue-400">WebSocket</span><span class="text-gray-300">(</span><span class="text-green-400">\`wss://chainfetch.app/cable?token=\${token}\`</span><span class="text-gray-300">);</span>
+
+<span class="text-white">ws</span><span class="text-gray-300">.</span><span class="text-orange-400">onopen</span> <span class="text-purple-400">=</span> <span class="text-gray-300">() => {</span>
+  <span class="text-white">console</span><span class="text-gray-300">.</span><span class="text-blue-400">log</span><span class="text-gray-300">(</span><span class="text-green-400">"✅ Connected to ActionCable"</span><span class="text-gray-300">);</span>
+
+  <span class="text-blue-400">const</span> <span class="text-white">subscribeMsg</span> <span class="text-purple-400">=</span> <span class="text-gray-300">{</span>
+    <span class="text-orange-400">command</span><span class="text-gray-300">:</span> <span class="text-green-400">"subscribe"</span><span class="text-gray-300">,</span>
+    <span class="text-orange-400">identifier</span><span class="text-gray-300">:</span> <span class="text-blue-400">JSON</span><span class="text-gray-300">.</span><span class="text-blue-400">stringify</span><span class="text-gray-300">({ </span><span class="text-orange-400">channel</span><span class="text-gray-300">: </span><span class="text-green-400">"EthereumBlocksChannel"</span> <span class="text-gray-300">})</span>
+  <span class="text-gray-300">};</span>
+  <span class="text-white">ws</span><span class="text-gray-300">.</span><span class="text-blue-400">send</span><span class="text-gray-300">(</span><span class="text-blue-400">JSON</span><span class="text-gray-300">.</span><span class="text-blue-400">stringify</span><span class="text-gray-300">(</span><span class="text-white">subscribeMsg</span><span class="text-gray-300">));</span>
+<span class="text-gray-300">};</span>
+
+<span class="text-white">ws</span><span class="text-gray-300">.</span><span class="text-orange-400">onmessage</span> <span class="text-purple-400">=</span> <span class="text-gray-300">(</span><span class="text-white">event</span><span class="text-gray-300">) => {</span>
+  <span class="text-blue-400">const</span> <span class="text-white">data</span> <span class="text-purple-400">=</span> <span class="text-blue-400">JSON</span><span class="text-gray-300">.</span><span class="text-blue-400">parse</span><span class="text-gray-300">(</span><span class="text-white">event</span><span class="text-gray-300">.</span><span class="text-white">data</span><span class="text-gray-300">);</span>
+  
+  <span class="text-yellow-400">if</span> <span class="text-gray-300">(</span><span class="text-white">data</span><span class="text-gray-300">.</span><span class="text-white">message</span><span class="text-gray-300">) {</span>
+    <span class="text-white">console</span><span class="text-gray-300">.</span><span class="text-blue-400">log</span><span class="text-gray-300">(</span><span class="text-green-400">"📩 New Ethereum block:"</span><span class="text-gray-300">, </span><span class="text-white">data</span><span class="text-gray-300">.</span><span class="text-white">message</span><span class="text-gray-300">);</span>
+  <span class="text-gray-300">}</span>
+<span class="text-gray-300">};</span>`,
+    'PYTHON': `<span class="text-yellow-400">import</span> <span class="text-blue-400">websocket</span>
+<span class="text-yellow-400">import</span> <span class="text-blue-400">json</span>
+
+<span class="text-blue-400">def</span> <span class="text-white">on_open</span><span class="text-gray-300">(</span><span class="text-white">ws</span><span class="text-gray-300">):</span>
+    <span class="text-blue-400">print</span><span class="text-gray-300">(</span><span class="text-green-400">"✅ Connected to ActionCable"</span><span class="text-gray-300">)</span>
+    
+    <span class="text-white">subscribe_msg</span> <span class="text-purple-400">=</span> <span class="text-gray-300">{</span>
+        <span class="text-green-400">"command"</span><span class="text-gray-300">: </span><span class="text-green-400">"subscribe"</span><span class="text-gray-300">,</span>
+        <span class="text-green-400">"identifier"</span><span class="text-gray-300">: </span><span class="text-blue-400">json</span><span class="text-gray-300">.</span><span class="text-blue-400">dumps</span><span class="text-gray-300">({</span><span class="text-green-400">"channel"</span><span class="text-gray-300">: </span><span class="text-green-400">"EthereumBlocksChannel"</span><span class="text-gray-300">})</span>
+    <span class="text-gray-300">}</span>
+    <span class="text-white">ws</span><span class="text-gray-300">.</span><span class="text-blue-400">send</span><span class="text-gray-300">(</span><span class="text-blue-400">json</span><span class="text-gray-300">.</span><span class="text-blue-400">dumps</span><span class="text-gray-300">(</span><span class="text-white">subscribe_msg</span><span class="text-gray-300">))</span>
+
+<span class="text-blue-400">def</span> <span class="text-white">on_message</span><span class="text-gray-300">(</span><span class="text-white">ws</span><span class="text-gray-300">, </span><span class="text-white">message</span><span class="text-gray-300">):</span>
+    <span class="text-white">data</span> <span class="text-purple-400">=</span> <span class="text-blue-400">json</span><span class="text-gray-300">.</span><span class="text-blue-400">loads</span><span class="text-gray-300">(</span><span class="text-white">message</span><span class="text-gray-300">)</span>
+    
+    <span class="text-yellow-400">if</span> <span class="text-green-400">'message'</span> <span class="text-yellow-400">in</span> <span class="text-white">data</span><span class="text-gray-300">:</span>
+        <span class="text-blue-400">print</span><span class="text-gray-300">(</span><span class="text-green-400">"📩 New Ethereum block:"</span><span class="text-gray-300">, </span><span class="text-white">data</span><span class="text-gray-300">[</span><span class="text-green-400">'message'</span><span class="text-gray-300">])</span>
+
+<span class="text-white">ws</span> <span class="text-purple-400">=</span> <span class="text-blue-400">websocket</span><span class="text-gray-300">.</span><span class="text-blue-400">WebSocketApp</span><span class="text-gray-300">(</span>
+    <span class="text-green-400">"wss://chainfetch.app/cable?token=YOUR_API_TOKEN"</span><span class="text-gray-300">,</span>
+    <span class="text-orange-400">on_open</span><span class="text-purple-400">=</span><span class="text-white">on_open</span><span class="text-gray-300">,</span>
+    <span class="text-orange-400">on_message</span><span class="text-purple-400">=</span><span class="text-white">on_message</span>
+<span class="text-gray-300">)</span>
+
+<span class="text-white">ws</span><span class="text-gray-300">.</span><span class="text-blue-400">run_forever</span><span class="text-gray-300">()</span>`,
+    'RUBY': `<span class="text-yellow-400">require</span> <span class="text-green-400">'async'</span>
+<span class="text-yellow-400">require</span> <span class="text-green-400">'async/http/endpoint'</span>
+<span class="text-yellow-400">require</span> <span class="text-green-400">'async/websocket/client'</span>
+<span class="text-yellow-400">require</span> <span class="text-green-400">'json'</span>
+
+<span class="text-white">@running</span> <span class="text-purple-400">=</span> <span class="text-blue-400">true</span>
+
+<span class="text-white">@task</span> <span class="text-purple-400">=</span> <span class="text-blue-400">Async</span> <span class="text-yellow-400">do</span> <span class="text-gray-300">|</span><span class="text-white">task</span><span class="text-gray-300">|</span>
+  <span class="text-yellow-400">begin</span>
+    <span class="text-white">endpoint</span> <span class="text-purple-400">=</span> <span class="text-blue-400">Async::HTTP::Endpoint</span><span class="text-gray-300">.</span><span class="text-blue-400">parse</span><span class="text-gray-300">(</span>
+      <span class="text-green-400">"wss://chainfetch.app/cable?token=YOUR_API_TOKEN"</span><span class="text-gray-300">,</span>
+      <span class="text-orange-400">alpn_protocols:</span> <span class="text-gray-300">[</span> <span class="text-green-400">"http/1.1"</span> <span class="text-gray-300">]</span>
+    <span class="text-gray-300">)</span>
+
+    <span class="text-blue-400">Async::WebSocket::Client</span><span class="text-gray-300">.</span><span class="text-blue-400">connect</span><span class="text-gray-300">(</span><span class="text-white">endpoint</span><span class="text-gray-300">)</span> <span class="text-yellow-400">do</span> <span class="text-gray-300">|</span><span class="text-white">ws</span><span class="text-gray-300">|</span>
+      <span class="text-blue-400">puts</span> <span class="text-green-400">"✅ Connected to ActionCable"</span>
+      
+      <span class="text-white">subscribe_msg</span> <span class="text-purple-400">=</span> <span class="text-gray-300">{</span>
+        <span class="text-orange-400">command:</span> <span class="text-green-400">"subscribe"</span><span class="text-gray-300">,</span>
+        <span class="text-orange-400">identifier:</span> <span class="text-gray-300">{</span> <span class="text-orange-400">channel:</span> <span class="text-green-400">"EthereumBlocksChannel"</span> <span class="text-gray-300">}.</span><span class="text-blue-400">to_json</span>
+      <span class="text-gray-300">}</span>
+      <span class="text-white">ws</span><span class="text-gray-300">.</span><span class="text-blue-400">write</span><span class="text-gray-300">(</span><span class="text-white">subscribe_msg</span><span class="text-gray-300">.</span><span class="text-blue-400">to_json</span><span class="text-gray-300">)</span>
+
+      <span class="text-yellow-400">while</span> <span class="text-white">@running</span> <span class="text-purple-400">&&</span> <span class="text-gray-300">(</span><span class="text-white">message</span> <span class="text-purple-400">=</span> <span class="text-white">ws</span><span class="text-gray-300">.</span><span class="text-blue-400">read</span><span class="text-gray-300">)</span>
+        <span class="text-white">data</span> <span class="text-purple-400">=</span> <span class="text-blue-400">JSON</span><span class="text-gray-300">.</span><span class="text-blue-400">parse</span><span class="text-gray-300">(</span><span class="text-white">message</span><span class="text-gray-300">.</span><span class="text-blue-400">to_s</span><span class="text-gray-300">)</span>
+        
+        <span class="text-yellow-400">if</span> <span class="text-white">data</span><span class="text-gray-300">[</span><span class="text-green-400">'message'</span><span class="text-gray-300">]</span>
+          <span class="text-blue-400">puts</span> <span class="text-green-400">"📩 New Ethereum block: </span><span class="text-orange-400">#{data['message']['block_number']}</span><span class="text-green-400">"</span>
+        <span class="text-yellow-400">end</span>
+      <span class="text-yellow-400">end</span>
+    <span class="text-yellow-400">end</span>
+  <span class="text-yellow-400">rescue</span> <span class="text-purple-400">=></span> <span class="text-white">e</span>
+    <span class="text-blue-400">puts</span> <span class="text-green-400">"❌ WebSocket error: </span><span class="text-orange-400">#{e.message}</span><span class="text-green-400">"</span>
+    <span class="text-blue-400">puts</span> <span class="text-green-400">"🔄 Retrying in 5 seconds..."</span>
+    <span class="text-white">task</span><span class="text-gray-300">.</span><span class="text-blue-400">sleep</span><span class="text-gray-300">(</span><span class="text-blue-400">5</span><span class="text-gray-300">)</span>
+    <span class="text-yellow-400">retry</span> <span class="text-yellow-400">if</span> <span class="text-white">@running</span>
+  <span class="text-yellow-400">end</span>
+<span class="text-yellow-400">end</span>`
   }
 };
 
