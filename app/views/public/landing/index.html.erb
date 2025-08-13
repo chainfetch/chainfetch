@@ -43,7 +43,7 @@
               <span class="text-blue-400 font-semibold">AI-Powered Blockchain Intelligence</span>
             </div>
             <h1 class="text-4xl md:text-5xl lg:text-6xl font-bold mb-6 leading-tight animate-fadeIn bg-clip-text text-transparent bg-gradient-to-r from-white via-blue-100 to-white">
-              AI-Powered Ethereum Intelligence API
+              Real-Time AI-Powered Ethereum Intelligence API
             </h1>
             <p class="text-xl md:text-2xl mb-6 text-gray-300 max-w-xl">
               Access real-time Ethereum blockchain data with advanced semantic search, vector embeddings, and LLM-powered query processing. Built for developers who need intelligent blockchain insights.
@@ -119,6 +119,131 @@
             </div>
           </div>
         </div>
+    </section>
+
+    <!-- Live Analysis Sample Section -->
+    <section class="py-16 bg-[#1E293B] border-b border-gray-800">
+      <div class="container mx-auto px-4">
+        <div class="max-w-6xl mx-auto">
+          <div class="text-center mb-12">
+            <div class="inline-block mb-6 px-4 py-2 bg-green-500/10 rounded-full border border-green-500/20">
+              <span class="text-green-400 font-semibold">🔴 Live Analysis</span>
+            </div>
+            <h2 class="text-3xl md:text-4xl lg:text-5xl font-bold mb-6 text-white leading-tight">
+              Real-Time AI Block Analysis
+            </h2>
+            <p class="text-lg sm:text-xl text-gray-300 max-w-3xl mx-auto">
+              See how our AI analyzes each Ethereum block in real-time, providing deep insights into network activity, transaction patterns, and economic movements.
+            </p>
+          </div>
+
+          <div class="bg-[#0F172A]/80 backdrop-blur-sm rounded-xl border border-green-500/20 overflow-hidden shadow-[0_0_30px_rgba(34,197,94,0.1)]">
+            <!-- Header -->
+            <div class="bg-gradient-to-r from-green-500/10 to-emerald-500/10 border-b border-green-500/20 p-6">
+              <div class="flex items-center justify-between">
+                <div class="flex items-center">
+                  <div class="w-3 h-3 rounded-full bg-green-500 mr-3 animate-pulse"></div>
+                  <h3 class="text-xl font-bold text-white">Latest Block Analysis</h3>
+                </div>
+                <div class="flex items-center text-sm text-gray-400">
+                  <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="mr-2">
+                    <circle cx="12" cy="12" r="3"></circle>
+                    <path d="M12 1v6m0 6v6m11-7h-6m-6 0H1"></path>
+                  </svg>
+                  <span>AI-Generated Summary</span>
+                </div>
+              </div>
+            </div>
+
+            <!-- Block Summary Content -->
+            <div class="p-8">
+              <div class="bg-[#1E293B]/60 rounded-lg p-6 border border-gray-700/50">
+                <div class="mb-4">
+                  <div class="flex items-center justify-between mb-3">
+                    <span class="text-green-400 font-mono text-sm">Block Analysis</span>
+                    <span class="text-gray-400 text-sm">Generated <%= time_ago_in_words(@latest_block.created_at) %> ago</span>
+                  </div>
+                  <div class="h-px bg-gradient-to-r from-green-500/20 via-green-500/40 to-green-500/20 mb-6"></div>
+                </div>
+                
+                <div class="text-gray-300 leading-relaxed text-base">
+                  <% if @latest_block&.summary.present? %>
+                    <%= @latest_block.summary %>
+                  <% else %>
+                    <span class="text-gray-400 italic">
+                      No recent block analysis available. Our AI is currently processing the latest Ethereum blocks to provide real-time insights.
+                    </span>
+                  <% end %>
+                </div>
+              </div>
+
+              <!-- Stats Grid -->
+              <% if @latest_block&.data.present? %>
+                <div class="grid grid-cols-2 md:grid-cols-4 gap-4 mt-6">
+                  <div class="bg-[#1E293B]/40 rounded-lg p-4 border border-gray-700/30">
+                    <div class="text-2xl font-bold text-green-400"><%= @latest_block.data.dig('info', 'transactions_count') || 'N/A' %></div>
+                    <div class="text-sm text-gray-400">Transactions</div>
+                  </div>
+                  <div class="bg-[#1E293B]/40 rounded-lg p-4 border border-gray-700/30">
+                    <div class="text-2xl font-bold text-blue-400">
+                      <% gas_used_percentage = @latest_block.data.dig('info', 'gas_used_percentage') %>
+                      <% if gas_used_percentage %>
+                        <%= number_with_precision(gas_used_percentage, precision: 1) %>%
+                      <% else %>
+                        N/A
+                      <% end %>
+                    </div>
+                    <div class="text-sm text-gray-400">Gas Used</div>
+                  </div>
+                  <div class="bg-[#1E293B]/40 rounded-lg p-4 border border-gray-700/30">
+                    <div class="text-2xl font-bold text-yellow-400">
+                      <% 
+                        # Calculate total ETH transferred from transactions
+                        transactions = @latest_block.data.dig('transactions', 'items') || []
+                        total_eth = 0
+                        transactions.each do |tx|
+                          if tx['value'] && tx['value'].to_f > 0
+                            total_eth += (tx['value'].to_f / 1e18)
+                          end
+                        end
+                        total_eth = total_eth.round(0)
+                      %>
+                      <%= total_eth > 0 ? number_with_delimiter(total_eth) : 'N/A' %>
+                    </div>
+                    <div class="text-sm text-gray-400">ETH Transferred</div>
+                  </div>
+                  <div class="bg-[#1E293B]/40 rounded-lg p-4 border border-gray-700/30">
+                    <div class="text-2xl font-bold text-purple-400">
+                      <% 
+                        # Calculate unique addresses from transactions
+                        transactions = @latest_block.data.dig('transactions', 'items') || []
+                        unique_addresses = Set.new
+                        transactions.each do |tx|
+                          unique_addresses.add(tx.dig('from', 'hash')) if tx.dig('from', 'hash')
+                          unique_addresses.add(tx.dig('to', 'hash')) if tx.dig('to', 'hash')
+                        end
+                      %>
+                      <%= unique_addresses.size > 0 ? unique_addresses.size : 'N/A' %>
+                    </div>
+                    <div class="text-sm text-gray-400">Unique Addresses</div>
+                  </div>
+                </div>
+              <% end %>
+
+              <!-- CTA -->
+              <div class="mt-8 text-center">
+                <div class="mb-4">
+                  <span class="text-sm text-gray-400">This analysis was generated in real-time using our AI pipeline</span>
+                </div>
+                <%= link_to "/app", class: "group relative px-6 py-3 bg-gradient-to-r from-green-500 to-emerald-500 text-white rounded-lg font-semibold transition-all duration-200 hover:shadow-[0_0_20px_rgba(34,197,94,0.3)] overflow-hidden inline-block" do %>
+                  <span class="relative z-10">Access Live Block Stream</span>
+                  <span class="absolute inset-0 bg-gradient-to-r from-emerald-500 to-green-500 transition-transform duration-200 translate-x-full group-hover:translate-x-0"></span>
+                <% end %>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
     </section>
 
     <!-- Core Features Section -->

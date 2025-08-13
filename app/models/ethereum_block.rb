@@ -6,4 +6,5 @@ class EthereumBlock < ApplicationRecord
   def fetch_data
     BlockDataJob.perform_later(self.id)
   end
+
 end

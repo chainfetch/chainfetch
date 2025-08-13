@@ -9,12 +9,12 @@ class BlockDataJob < ApplicationJob
   def perform(block_id)
     block = EthereumBlock.find(block_id)
     block_data = fetch_block(block.block_number)
-    return if block_data.nil?
-    block.update(data: block_data)
     summary = Ethereum::BlockSummaryService.new(block_data).call
+    return if block_data.nil? || summary.nil?
+    block.update(data: block_data, summary: summary)
     embedding = EmbeddingService.new(summary).call
     QdrantService.new.upsert_point(collection: "blocks", id: block_id.to_i, vector: embedding, payload: { summary: summary })
-    broadcast_block_summary(block_id, summary)
+    broadcast_block_summary(block.block_number, summary)
     block_data.dig('transactions', 'items').each do |transaction_data|
       block.ethereum_transactions.create!(transaction_hash: transaction_data['hash'])
     rescue => e
@@ -37,9 +37,9 @@ class BlockDataJob < ApplicationJob
     nil
   end
 
-  def broadcast_block_summary(block_id, summary)
+  def broadcast_block_summary(block_number, summary)
     ChannelSubscription.where(channel_name: "ethereum_blocks_channel").each do |subscription|
-      ActionCable.server.broadcast("ethereum_blocks_channel_#{subscription.user_id}", { block_id: block_id, summary: summary })
+      ActionCable.server.broadcast("ethereum_blocks_channel_#{subscription.user_id}", { block_number: block_number, summary: summary })
       subscription.user.decrement!(:api_credit, 1)
     end
   end
