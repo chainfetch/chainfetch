@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.0].define(version: 2025_08_10_203243) do
+ActiveRecord::Schema[8.0].define(version: 2025_08_13_133521) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_catalog.plpgsql"
   enable_extension "vector"
@@ -25,6 +25,16 @@ ActiveRecord::Schema[8.0].define(version: 2025_08_10_203243) do
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.index ["user_id"], name: "index_api_sessions_on_user_id"
+  end
+
+  create_table "channel_subscriptions", force: :cascade do |t|
+    t.bigint "user_id", null: false
+    t.string "channel_name"
+    t.string "connection_id"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["channel_name", "connection_id"], name: "index_channel_subscriptions_on_channel_name_and_connection_id", unique: true
+    t.index ["user_id"], name: "index_channel_subscriptions_on_user_id"
   end
 
   create_table "ethereum_address_transactions", force: :cascade do |t|
@@ -122,6 +132,7 @@ ActiveRecord::Schema[8.0].define(version: 2025_08_10_203243) do
   end
 
   add_foreign_key "api_sessions", "users"
+  add_foreign_key "channel_subscriptions", "users"
   add_foreign_key "ethereum_address_transactions", "ethereum_addresses"
   add_foreign_key "ethereum_address_transactions", "ethereum_transactions"
   add_foreign_key "ethereum_transactions", "ethereum_blocks"
