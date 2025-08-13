@@ -246,4 +246,58 @@ spec:
               service:
                 name: chainfetch-web
                 port:
+                  number: 80
+---
+# Separate Ingress for WebSocket connections
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: chainfetch-websocket-ingress
+  namespace: chainfetch
+  annotations:
+    cert-manager.io/cluster-issuer: letsencrypt-prod
+    nginx.ingress.kubernetes.io/ssl-redirect: "true"
+    nginx.ingress.kubernetes.io/proxy-read-timeout: "3600"
+    nginx.ingress.kubernetes.io/proxy-send-timeout: "3600"
+    nginx.ingress.kubernetes.io/proxy-connect-timeout: "60"
+    nginx.ingress.kubernetes.io/upstream-hash-by: "$remote_addr"
+    nginx.ingress.kubernetes.io/websocket-services: "chainfetch-web"
+spec:
+  ingressClassName: nginx
+  tls:
+    - hosts:
+        - chainfetch.app
+        - www.chainfetch.app
+        - api.chainfetch.app
+      secretName: chainfetch-websocket-tls
+  rules:
+    - host: chainfetch.app
+      http:
+        paths:
+          - path: /cable
+            pathType: Prefix
+            backend:
+              service:
+                name: chainfetch-web
+                port:
+                  number: 80
+    - host: www.chainfetch.app
+      http:
+        paths:
+          - path: /cable
+            pathType: Prefix
+            backend:
+              service:
+                name: chainfetch-web
+                port:
+                  number: 80
+    - host: api.chainfetch.app
+      http:
+        paths:
+          - path: /cable
+            pathType: Prefix
+            backend:
+              service:
+                name: chainfetch-web
+                port:
                   number: 80 
