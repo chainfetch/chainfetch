@@ -1504,7 +1504,7 @@ const codeExamples = {
   },
   'websocket-endpoint': {
     'JAVASCRIPT': `<span class="text-blue-400">const</span> <span class="text-white">token</span> <span class="text-purple-400">=</span> <span class="text-green-400">"YOUR_API_TOKEN"</span><span class="text-gray-300">;</span>
-<span class="text-blue-400">const</span> <span class="text-white">ws</span> <span class="text-purple-400">=</span> <span class="text-yellow-400">new</span> <span class="text-blue-400">WebSocket</span><span class="text-gray-300">(</span><span class="text-green-400">\`wss://chainfetch.app/cable?token=\${token}\`</span><span class="text-gray-300">);</span>
+<span class="text-blue-400">const</span> <span class="text-white">ws</span> <span class="text-purple-400">=</span> <span class="text-yellow-400">new</span> <span class="text-blue-400">WebSocket</span><span class="text-gray-300">(</span><span class="text-green-400">\`wss://api.chainfetch.app/cable?token=\${token}\`</span><span class="text-gray-300">);</span>
 
 <span class="text-white">ws</span><span class="text-gray-300">.</span><span class="text-orange-400">onopen</span> <span class="text-purple-400">=</span> <span class="text-gray-300">() => {</span>
   <span class="text-white">console</span><span class="text-gray-300">.</span><span class="text-blue-400">log</span><span class="text-gray-300">(</span><span class="text-green-400">"✅ Connected to ActionCable"</span><span class="text-gray-300">);</span>
@@ -1542,7 +1542,7 @@ const codeExamples = {
         <span class="text-blue-400">print</span><span class="text-gray-300">(</span><span class="text-green-400">"📩 New Ethereum block:"</span><span class="text-gray-300">, </span><span class="text-white">data</span><span class="text-gray-300">[</span><span class="text-green-400">'message'</span><span class="text-gray-300">])</span>
 
 <span class="text-white">ws</span> <span class="text-purple-400">=</span> <span class="text-blue-400">websocket</span><span class="text-gray-300">.</span><span class="text-blue-400">WebSocketApp</span><span class="text-gray-300">(</span>
-    <span class="text-green-400">"wss://chainfetch.app/cable?token=YOUR_API_TOKEN"</span><span class="text-gray-300">,</span>
+    <span class="text-green-400">"wss://api.chainfetch.app/cable?token=YOUR_API_TOKEN"</span><span class="text-gray-300">,</span>
     <span class="text-orange-400">on_open</span><span class="text-purple-400">=</span><span class="text-white">on_open</span><span class="text-gray-300">,</span>
     <span class="text-orange-400">on_message</span><span class="text-purple-400">=</span><span class="text-white">on_message</span>
 <span class="text-gray-300">)</span>
@@ -1558,7 +1558,7 @@ const codeExamples = {
 <span class="text-white">@task</span> <span class="text-purple-400">=</span> <span class="text-blue-400">Async</span> <span class="text-yellow-400">do</span> <span class="text-gray-300">|</span><span class="text-white">task</span><span class="text-gray-300">|</span>
   <span class="text-yellow-400">begin</span>
     <span class="text-white">endpoint</span> <span class="text-purple-400">=</span> <span class="text-blue-400">Async::HTTP::Endpoint</span><span class="text-gray-300">.</span><span class="text-blue-400">parse</span><span class="text-gray-300">(</span>
-      <span class="text-green-400">"wss://chainfetch.app/cable?token=YOUR_API_TOKEN"</span><span class="text-gray-300">,</span>
+      <span class="text-green-400">"wss://api.chainfetch.app/cable?token=YOUR_API_TOKEN"</span><span class="text-gray-300">,</span>
       <span class="text-orange-400">alpn_protocols:</span> <span class="text-gray-300">[</span> <span class="text-green-400">"http/1.1"</span> <span class="text-gray-300">]</span>
     <span class="text-gray-300">)</span>
 
