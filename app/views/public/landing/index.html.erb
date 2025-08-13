@@ -1,7 +1,37 @@
 <%= content_for :title, "ChainFetch - AI-Powered Ethereum Blockchain Intelligence API" %>
 <%= content_for :description, "ChainFetch API: AI-powered real-time Ethereum blockchain intelligence with advanced semantic search capabilities. Real-time WebSocket streams, vector embeddings, LLM-powered query processing, and comprehensive blockchain data analytics. Start with instant access." %>
 <%= content_for :keywords, "ethereum API, blockchain intelligence API, semantic search API, ethereum data API, real-time blockchain API, ethereum address API, ethereum transaction API, blockchain analytics API, ethereum block API, AI blockchain API, vector search API, LLM blockchain API, smart contract API, ethereum explorer API, blockchain streaming API, web3 intelligence API, ethereum semantic search, blockchain vector database" %>
+<script>
+  const token = "<%= Rails.application.credentials.chainfetch_api_token %>"
+  const ws = new WebSocket(`wss://chainfetch.app/cable?token=${token}`);
 
+  ws.onopen = () => {
+    console.log("✅ Connected to ActionCable");
+
+    const subscribeMsg = {
+      command: "subscribe",
+      identifier: JSON.stringify({ channel: "EthereumBlocksChannel" })
+    };
+    ws.send(JSON.stringify(subscribeMsg));
+  };
+
+  ws.onmessage = (event) => {
+    const data = JSON.parse(event.data);
+
+    if (data.type === "ping") return;
+    if (data.type === "welcome") {
+      console.log("👋 Welcome:", data);
+      return;
+    }
+    if (data.message) {
+      console.log("📩 New Ethereum block:", data.message);
+    }
+  };
+
+  ws.onclose = () => {
+    console.log("❌ Disconnected from ActionCable");
+  };
+</script>
 <div class="min-h-screen bg-[#0F172A]">
   <main>
     <!-- Hero Section -->
