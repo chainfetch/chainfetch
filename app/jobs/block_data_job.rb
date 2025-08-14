@@ -40,7 +40,7 @@ class BlockDataJob < ApplicationJob
   def broadcast_block_summary(block_number, summary)
     ChannelSubscription.where(channel_name: "ethereum_blocks_channel").each do |subscription|
       ActionCable.server.broadcast("ethereum_blocks_channel_#{subscription.user_id}", { block_number: block_number, summary: summary })
-      subscription.user.decrement!(:api_credit, 1)
+      subscription.user.decrement!(:api_credit, 0.1)
     end
   end
 end

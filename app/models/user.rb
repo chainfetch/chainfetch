@@ -5,6 +5,7 @@ class User < ApplicationRecord
   has_many :sessions, dependent: :destroy
   has_many :api_sessions, dependent: :destroy
   has_many :channel_subscriptions, dependent: :destroy
+  has_many :ethereum_alerts, dependent: :destroy
   before_create :add_api_credit
   after_create :send_email_confirmation
 

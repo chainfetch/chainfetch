@@ -259,6 +259,52 @@
             </div>
           </div>
 
+          <!-- Ethereum Alerts Card - Full Width -->
+          <div class="bg-[#1E293B]/80 backdrop-blur-sm rounded-lg p-6 text-white border border-yellow-500/20 shadow-[0_0_30px_rgba(234,179,8,0.1)] mb-12">
+            <div class="flex items-center justify-between mb-4">
+              <div class="flex items-center text-yellow-500">
+                <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="mr-3">
+                  <path d="M6 8a6 6 0 0 1 12 0c0 7 3 9 3 9H3s3-2 3-9"/>
+                  <path d="M10.3 21a1.94 1.94 0 0 0 3.4 0"/>
+                </svg>
+                <span class="font-semibold">Ethereum Alerts</span>
+              </div>
+              
+              <%= link_to app_ethereum_alerts_path, 
+                  class: "group relative px-4 py-2 bg-gradient-to-r from-yellow-500 to-red-500 text-white rounded-md font-semibold transition-all duration-200 hover:shadow-[0_0_20px_rgba(234,179,8,0.3)] overflow-hidden text-sm" do %>
+                <span class="relative z-10 flex items-center">
+                  <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="mr-2">
+                    <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10"/>
+                  </svg>
+                  Manage Alerts
+                </span>
+                <span class="absolute inset-0 bg-gradient-to-r from-red-500 to-yellow-500 transition-transform duration-200 translate-x-full group-hover:translate-x-0"></span>
+              <% end %>
+            </div>
+            
+            <div class="flex flex-col lg:flex-row lg:items-center lg:justify-between gap-6">
+              <div class="p-6">
+                <div class="text-3xl font-bold text-yellow-400 mb-2">
+                  <%= Current.user.ethereum_alerts.count %>
+                </div>
+                <p class="text-sm text-gray-400">Active alerts monitoring Ethereum addresses</p>
+              </div>
+              
+              <div class="bg-[#0F172A]/50 rounded-lg p-4 flex-1 max-w-md">
+                <p class="text-sm text-gray-300 mb-2">
+                  Monitor Ethereum addresses and get notified when transactions occur.
+                </p>
+                <div class="flex items-center text-xs text-gray-400">
+                  <svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="mr-1">
+                    <circle cx="12" cy="12" r="10"/>
+                    <path d="M12 6v6l4 2"/>
+                  </svg>
+                  Real-time webhook notifications
+                </div>
+              </div>
+            </div>
+          </div>
+
         </div>
       </div>
     </section>

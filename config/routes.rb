@@ -33,6 +33,7 @@ Rails.application.routes.draw do
     get 'sol_price', to: 'token_purchases#sol_price'
     post 'set_solana_key', to: 'token_purchases#set_solana_key'
     post 'buy_token', to: 'token_purchases#create'
+    resources :ethereum_alerts
     root 'dashboard#index'
   end
 

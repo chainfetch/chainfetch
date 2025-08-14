@@ -32,7 +32,9 @@
   <body>
     <%#= turbo_stream_from "stream" %>
     <%= render "shared/navbar" %>
-    <%= yield %>
+    <div class="bg-[#0F172A] min-h-screen">
+      <%= yield %>
+    </div>
     <%= render "shared/footer" %>
   </body>
 </html>

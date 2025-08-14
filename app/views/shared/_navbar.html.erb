@@ -30,6 +30,7 @@
     <% if controller_path.include?('app') || controller_path.include?("oas_rails") %>
       <div class="flex items-center">
         <div class="hidden sm:flex items-center space-x-4 mr-4">
+          <%= link_to "Alerts", app_ethereum_alerts_path, class: "text-gray-400 hover:text-gray-200 transition-colors" %>
           <%= link_to "Documentation", "/docs", class: "text-gray-400 hover:text-gray-200 transition-colors" %>
           <%= link_to "Dashboard", app_dashboard_index_path, class: "text-gray-400 hover:text-gray-200 transition-colors" %>
         </div>

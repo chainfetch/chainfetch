@@ -1,0 +1,15 @@
+# Read about fixtures at https://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
+
+one:
+  user: one
+  address_hash: MyString
+  webhook_url: MyString
+  status: 1
+  last_triggered_at: 2025-08-14 11:58:44
+
+two:
+  user: two
+  address_hash: MyString
+  webhook_url: MyString
+  status: 1
+  last_triggered_at: 2025-08-14 11:58:44

@@ -1,0 +1,42 @@
+<div class="min-h-screen bg-[#0F172A]">
+  <main>
+    <section class="py-16 sm:py-24 bg-[#0F172A] text-white relative overflow-hidden">
+      <div class="container mx-auto px-4 relative">
+        <!-- Header -->
+        <div class="flex flex-col items-center mb-12">
+          <div class="text-center">
+            <div class="inline-block mb-6 px-4 py-2 bg-yellow-500/10 rounded-full border border-yellow-500/20">
+              <span class="text-yellow-400 font-semibold">Ethereum Alerts</span>
+            </div>
+            <h1 class="text-4xl md:text-5xl lg:text-6xl font-bold mb-6 leading-tight bg-clip-text text-transparent bg-gradient-to-r from-white via-yellow-100 to-white">
+              Manage Your Alerts
+            </h1>
+            <p class="text-xl md:text-2xl mb-8 text-gray-300 max-w-xl">
+              Monitor Ethereum addresses and get notified when transactions occur.
+            </p>
+          </div>
+          
+          <%= link_to new_app_ethereum_alert_path, 
+              class: "bg-gradient-to-r from-yellow-500 to-red-500 hover:from-yellow-600 hover:to-red-600 text-white px-6 py-3 rounded-lg font-semibold transition-all duration-200 flex items-center space-x-2 hover:shadow-lg",
+              data: { turbo_frame: "alert_form" } do %>
+            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M12 5v14M5 12h14"/>
+            </svg>
+            <span>Create Alert</span>
+          <% end %>
+        </div>
+
+        <!-- Turbo Frame for Form Modal -->
+        <turbo-frame id="alert_form"></turbo-frame>
+
+        <!-- Alerts List -->
+        <div class="max-w-7xl mx-auto">
+          <%= render 'alerts_list' %>
+        </div>
+
+        <!-- Turbo Frame for Alert Details Modal -->
+        <turbo-frame id="alert_details"></turbo-frame>
+      </div>
+    </section>
+  </main>
+</div>

@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.0].define(version: 2025_08_13_201127) do
+ActiveRecord::Schema[8.0].define(version: 2025_08_14_095844) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_catalog.plpgsql"
   enable_extension "vector"
@@ -54,6 +54,18 @@ ActiveRecord::Schema[8.0].define(version: 2025_08_13_201127) do
     t.jsonb "data"
     t.index ["address_hash"], name: "index_ethereum_addresses_on_address_hash", unique: true
     t.index ["data"], name: "index_ethereum_addresses_on_data", using: :gin
+  end
+
+  create_table "ethereum_alerts", force: :cascade do |t|
+    t.bigint "user_id", null: false
+    t.string "address_hash"
+    t.string "webhook_url"
+    t.integer "status", default: 0
+    t.datetime "last_triggered_at"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["user_id", "address_hash"], name: "index_ethereum_alerts_on_user_id_and_address_hash", unique: true
+    t.index ["user_id"], name: "index_ethereum_alerts_on_user_id"
   end
 
   create_table "ethereum_blocks", force: :cascade do |t|
@@ -136,6 +148,7 @@ ActiveRecord::Schema[8.0].define(version: 2025_08_13_201127) do
   add_foreign_key "channel_subscriptions", "users"
   add_foreign_key "ethereum_address_transactions", "ethereum_addresses"
   add_foreign_key "ethereum_address_transactions", "ethereum_transactions"
+  add_foreign_key "ethereum_alerts", "users"
   add_foreign_key "ethereum_transactions", "ethereum_blocks"
   add_foreign_key "payments", "users"
   add_foreign_key "sessions", "users"

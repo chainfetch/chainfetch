@@ -102,11 +102,14 @@ class EthereumTransactionStreamService
 
     # Convert hex to integer
     transaction_hash_int = transaction_hash.to_i(16)
+    from_address = transaction_data["from"]
+    to_address = transaction_data["to"]
 
     begin
-      log_message "🧱 Processing transaction #{transaction_hash_int}..."
-      EthereumTransaction.find_or_create_by(transaction_hash: transaction_hash_int)
-      log_message "✅ Created transaction #{transaction_hash_int}"
+      alerts = Rails.cache.fetch("ethereum_alerts", expires_in: 1.minute) do
+        EthereumAlert.where(status: :active).to_a
+      end
+      alerts.select { |a| [from_address, to_address].include?(a.address_hash) }.each { |alert| alert.trigger_webhook(transaction_hash) }
     rescue => e
       log_message "❌ Error processing transaction #{transaction_hash_int}: #{e.message}"
     end
