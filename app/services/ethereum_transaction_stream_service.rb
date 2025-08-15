@@ -84,14 +84,26 @@ class EthereumTransactionStreamService
       return
     end
 
+    if data["id"] == 2 && data["result"]
+      process_transaction(data["result"])
+    end
+
     # Handle new transaction notifications
     if data["method"] == "eth_subscription" && data["params"]
-      transaction_data = data.dig("params", "result")
-      if transaction_data && transaction_data.is_a?(Hash)
-        process_transaction(transaction_data)
-      end
+      transaction_hash = data.dig("params", "result")
+      fetch_and_process_transaction(transaction_hash)
       nil
     end
+  end
+
+  def fetch_and_process_transaction(tx_hash)
+    request = {
+      id: 2,
+      method: "eth_getTransactionByHash",
+      params: [tx_hash]
+    }
+  
+    @ws.write(request.to_json)
   end
 
   def process_transaction(transaction_data)
@@ -104,6 +116,7 @@ class EthereumTransactionStreamService
     transaction_hash_int = transaction_hash.to_i(16)
     from_address = transaction_data["from"]
     to_address = transaction_data["to"]
+    #log_message "🔍 Processing transaction #{transaction_hash_int} from #{from_address} to #{to_address}"
 
     begin
       alerts = Rails.cache.fetch("ethereum_alerts", expires_in: 1.minute) do
