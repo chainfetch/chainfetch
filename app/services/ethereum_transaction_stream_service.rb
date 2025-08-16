@@ -116,7 +116,7 @@ class EthereumTransactionStreamService
     transaction_hash_int = transaction_hash.to_i(16)
     from_address = transaction_data["from"]
     to_address = transaction_data["to"]
-    #log_message "🔍 Processing transaction #{transaction_hash_int} from #{from_address} to #{to_address}"
+    log_message "🔍 Processing transaction #{transaction_hash_int} from #{from_address} to #{to_address}"
 
     begin
       alerts = Rails.cache.fetch("ethereum_alerts", expires_in: 1.minute) do

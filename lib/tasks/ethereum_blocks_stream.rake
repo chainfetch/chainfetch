@@ -1,6 +1,6 @@
 namespace :ethereum do
   desc 'Start Ethereum Block Stream Service in Background'
-  task start_block_stream: :environment do
+  task start_blocks_stream: :environment do
     puts "🚀 Starting Ethereum Block Stream Service..."
     
     # Simple background process without fork() to avoid macOS issues
@@ -28,7 +28,7 @@ namespace :ethereum do
   end
 
   desc 'Stop Ethereum Block Stream Service'
-  task stop_block_stream: :environment do
+  task stop_blocks_stream: :environment do
     pid_file = Rails.root.join('tmp', 'pids', 'ethereum_block_stream.pid')
     if File.exist?(pid_file)
       pid = File.read(pid_file).to_i
@@ -46,7 +46,7 @@ namespace :ethereum do
   end
 
   desc 'Check Ethereum Block Stream Service Status'
-  task status_block_stream: :environment do
+  task status_blocks_stream: :environment do
     pid_file = Rails.root.join('tmp', 'pids', 'ethereum_block_stream.pid')
     log_file = Rails.root.join('log', 'ethereum_block_stream.log')
     
