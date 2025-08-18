@@ -1,0 +1,15 @@
+{
+  "name": "ChainFetch",
+  "symbol": "CHAINFETCH",
+  "description": "ChainFetch ($CHAINFETCH) powers the ChainFetch.app platform — an AI-driven blockchain intelligence API that enables fair access to real-time on-chain insights and data analytics. $CHAINFETCH is the governance and utility token supporting protocol sustainability, developer incentives, and liquidity incentives.",
+  "decimals": 18,
+  "image": "ipfs://bafybeiam4j252vg7x4jshwjxi6lye3f2aiiisq6vgubatsszx5pyc3224y/logo.png",
+  "external_url": "https://chainfetch.app",
+  "attributes": [
+    { "trait_type": "Launch Platform", "value": "Doppler.lol" },
+    { "trait_type": "Total Supply", "value": "100,000,000" },
+    { "trait_type": "Fair Launch", "value": "Yes" },
+    { "trait_type": "Token Standard", "value": "ERC-20" },
+    { "trait_type": "Chain", "value": "Base" }
+  ]
+}

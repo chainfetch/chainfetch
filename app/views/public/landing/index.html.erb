@@ -1444,7 +1444,7 @@
 
 <script>
 // Code example content for different endpoints
-const codeExamples = {
+window.codeExamples = window.codeExamples || {
   'summary-endpoint': {
     'CURL': `<span class="text-blue-400">curl</span> <span class="text-purple-400">-X</span> <span class="text-yellow-400">GET</span> <span class="text-green-400">"https://api.chainfetch.app/api/v1/ethereum/addresses/summary"</span> <span class="text-gray-400">\\</span>
   <span class="text-purple-400">-H</span> <span class="text-green-400">"accept: application/json"</span> <span class="text-gray-400">\\</span>
@@ -1769,10 +1769,10 @@ document.addEventListener('turbo:load', function() {
     const tabs = block.querySelectorAll('.code-tab');
     const codeContent = block.querySelector('.code-content');
     
-    if (tabs.length > 0 && codeContent && codeExamples[endpointId]) {
+    if (tabs.length > 0 && codeContent && window.codeExamples[endpointId]) {
       // Set first tab as active
       tabs[0].classList.add('active', 'bg-yellow-500/20', 'text-yellow-400');
-      codeContent.innerHTML = codeExamples[endpointId][tabs[0].textContent];
+      codeContent.innerHTML = window.codeExamples[endpointId][tabs[0].textContent];
       
       tabs.forEach(tab => {
         tab.addEventListener('click', () => {
@@ -1784,8 +1784,8 @@ document.addEventListener('turbo:load', function() {
           
           // Update code content
           const language = tab.textContent;
-          if (codeExamples[endpointId][language]) {
-            codeContent.innerHTML = codeExamples[endpointId][language];
+          if (window.codeExamples[endpointId][language]) {
+            codeContent.innerHTML = window.codeExamples[endpointId][language];
           }
         });
       });

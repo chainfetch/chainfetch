@@ -9,11 +9,16 @@
     "build:css": "npx @tailwindcss/cli -i ./app/assets/stylesheets/application.tailwind.css -o ./app/assets/builds/application.css --minify"
   },
   "dependencies": {
+    "@delvtech/drift": "^1.0.0",
+    "@delvtech/drift-viem": "^1.0.0",
     "@hotwired/stimulus": "^3.2.2",
     "@hotwired/turbo-rails": "^8.0.16",
     "@solana/spl-token": "^0.4.13",
     "@tailwindcss/cli": "^4.1.11",
     "buffer": "^6.0.3",
-    "tailwindcss": "^4.1.11"
+    "doppler-v4-sdk": "^0.2.14",
+    "dotenv": "^17.2.1",
+    "tailwindcss": "^4.1.11",
+    "viem": "^2.34.0"
   }
 }

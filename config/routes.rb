@@ -37,8 +37,9 @@ Rails.application.routes.draw do
     root 'dashboard#index'
   end
 
-  namespace :public do
+  namespace :public, path: '/' do
     get 'landing', to: 'landing#index'
+    get 'lite_paper', to: 'lite_paper#index'
     root 'landing#index'
   end
 
