@@ -22,7 +22,7 @@ class EthereumBlockStreamService
     
     @task = Async do |task|
       begin
-        endpoint = Async::HTTP::Endpoint.parse('wss://ethereum-rpc.publicnode.com', alpn_protocols: ['http/1.1'])
+        endpoint = Async::HTTP::Endpoint.parse("wss://mainnet.infura.io/ws/v3/#{Rails.application.credentials.metamask_developer_api_key}", alpn_protocols: ['http/1.1'])
        
         Async::WebSocket::Client.connect(endpoint) do |ws|
           @ws = ws
