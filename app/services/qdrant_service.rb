@@ -68,7 +68,7 @@ class QdrantService < BaseService
   
     body = {
       query: query,
-      limit: limit,
+      limit: limit.to_i,
       with_payload: true
     }
     body[:prefetch] = prefetch if prefetch
