@@ -202,57 +202,57 @@ class Api::V1::Ethereum::BlocksController < Api::V1::Ethereum::BaseController
   # @parameter sort_by(query) [String] Field to sort by (default: "id")
   # @parameter sort_order(query) [String] Sort direction: "asc" or "desc" (default: "desc")
   # @response success(200) [Hash{results: Array<Hash{id: Integer, block_number: Integer, data: Hash}>, pagination: Hash{total: Integer, limit: Integer, offset: Integer, page: Integer, total_pages: Integer}}]
-  # This endpoint provides 120+ parameters to search for blocks based on the provided input.
+  # This endpoint provides block search with string-based comparisons for scalability (no CAST operations).
   def json_search
     blocks = EthereumBlock.where(nil)
     
-    # Block info fields - Numeric with min/max
-    blocks = blocks.where("CAST(data->'info'->>'base_fee_per_gas' AS NUMERIC) >= ?", params[:base_fee_per_gas_min]) if params[:base_fee_per_gas_min].present?
-    blocks = blocks.where("CAST(data->'info'->>'base_fee_per_gas' AS NUMERIC) <= ?", params[:base_fee_per_gas_max]) if params[:base_fee_per_gas_max].present?
-    blocks = blocks.where("CAST(data->'info'->>'blob_gas_price' AS NUMERIC) >= ?", params[:blob_gas_price_min]) if params[:blob_gas_price_min].present?
-    blocks = blocks.where("CAST(data->'info'->>'blob_gas_price' AS NUMERIC) <= ?", params[:blob_gas_price_max]) if params[:blob_gas_price_max].present?
-    blocks = blocks.where("CAST(data->'info'->>'blob_gas_used' AS NUMERIC) >= ?", params[:blob_gas_used_min]) if params[:blob_gas_used_min].present?
-    blocks = blocks.where("CAST(data->'info'->>'blob_gas_used' AS NUMERIC) <= ?", params[:blob_gas_used_max]) if params[:blob_gas_used_max].present?
-    blocks = blocks.where("CAST(data->'info'->>'blob_transaction_count' AS INTEGER) >= ?", params[:blob_transaction_count_min].to_i) if params[:blob_transaction_count_min].present?
-    blocks = blocks.where("CAST(data->'info'->>'blob_transaction_count' AS INTEGER) <= ?", params[:blob_transaction_count_max].to_i) if params[:blob_transaction_count_max].present?
-    blocks = blocks.where("CAST(data->'info'->>'blob_transactions_count' AS INTEGER) >= ?", params[:blob_transactions_count_min].to_i) if params[:blob_transactions_count_min].present?
-    blocks = blocks.where("CAST(data->'info'->>'blob_transactions_count' AS INTEGER) <= ?", params[:blob_transactions_count_max].to_i) if params[:blob_transactions_count_max].present?
-    blocks = blocks.where("CAST(data->'info'->>'burnt_blob_fees' AS NUMERIC) >= ?", params[:burnt_blob_fees_min]) if params[:burnt_blob_fees_min].present?
-    blocks = blocks.where("CAST(data->'info'->>'burnt_blob_fees' AS NUMERIC) <= ?", params[:burnt_blob_fees_max]) if params[:burnt_blob_fees_max].present?
-    blocks = blocks.where("CAST(data->'info'->>'burnt_fees' AS NUMERIC) >= ?", params[:burnt_fees_min]) if params[:burnt_fees_min].present?
-    blocks = blocks.where("CAST(data->'info'->>'burnt_fees' AS NUMERIC) <= ?", params[:burnt_fees_max]) if params[:burnt_fees_max].present?
-    blocks = blocks.where("CAST(data->'info'->>'burnt_fees_percentage' AS DECIMAL) >= ?", params[:burnt_fees_percentage_min].to_f) if params[:burnt_fees_percentage_min].present?
-    blocks = blocks.where("CAST(data->'info'->>'burnt_fees_percentage' AS DECIMAL) <= ?", params[:burnt_fees_percentage_max].to_f) if params[:burnt_fees_percentage_max].present?
-    blocks = blocks.where("CAST(data->'info'->>'difficulty' AS NUMERIC) >= ?", params[:difficulty_min]) if params[:difficulty_min].present?
-    blocks = blocks.where("CAST(data->'info'->>'difficulty' AS NUMERIC) <= ?", params[:difficulty_max]) if params[:difficulty_max].present?
-    blocks = blocks.where("CAST(data->'info'->>'excess_blob_gas' AS NUMERIC) >= ?", params[:excess_blob_gas_min]) if params[:excess_blob_gas_min].present?
-    blocks = blocks.where("CAST(data->'info'->>'excess_blob_gas' AS NUMERIC) <= ?", params[:excess_blob_gas_max]) if params[:excess_blob_gas_max].present?
-    blocks = blocks.where("CAST(data->'info'->>'gas_limit' AS NUMERIC) >= ?", params[:gas_limit_min]) if params[:gas_limit_min].present?
-    blocks = blocks.where("CAST(data->'info'->>'gas_limit' AS NUMERIC) <= ?", params[:gas_limit_max]) if params[:gas_limit_max].present?
-    blocks = blocks.where("CAST(data->'info'->>'gas_target_percentage' AS DECIMAL) >= ?", params[:gas_target_percentage_min].to_f) if params[:gas_target_percentage_min].present?
-    blocks = blocks.where("CAST(data->'info'->>'gas_target_percentage' AS DECIMAL) <= ?", params[:gas_target_percentage_max].to_f) if params[:gas_target_percentage_max].present?
-    blocks = blocks.where("CAST(data->'info'->>'gas_used' AS NUMERIC) >= ?", params[:gas_used_min]) if params[:gas_used_min].present?
-    blocks = blocks.where("CAST(data->'info'->>'gas_used' AS NUMERIC) <= ?", params[:gas_used_max]) if params[:gas_used_max].present?
-    blocks = blocks.where("CAST(data->'info'->>'gas_used_percentage' AS DECIMAL) >= ?", params[:gas_used_percentage_min].to_f) if params[:gas_used_percentage_min].present?
-    blocks = blocks.where("CAST(data->'info'->>'gas_used_percentage' AS DECIMAL) <= ?", params[:gas_used_percentage_max].to_f) if params[:gas_used_percentage_max].present?
-    blocks = blocks.where("CAST(data->'info'->>'height' AS INTEGER) >= ?", params[:height_min].to_i) if params[:height_min].present?
-    blocks = blocks.where("CAST(data->'info'->>'height' AS INTEGER) <= ?", params[:height_max].to_i) if params[:height_max].present?
-    blocks = blocks.where("CAST(data->'info'->>'internal_transactions_count' AS INTEGER) >= ?", params[:internal_transactions_count_min].to_i) if params[:internal_transactions_count_min].present?
-    blocks = blocks.where("CAST(data->'info'->>'internal_transactions_count' AS INTEGER) <= ?", params[:internal_transactions_count_max].to_i) if params[:internal_transactions_count_max].present?
-    blocks = blocks.where("CAST(data->'info'->>'priority_fee' AS NUMERIC) >= ?", params[:priority_fee_min]) if params[:priority_fee_min].present?
-    blocks = blocks.where("CAST(data->'info'->>'priority_fee' AS NUMERIC) <= ?", params[:priority_fee_max]) if params[:priority_fee_max].present?
-    blocks = blocks.where("CAST(data->'info'->>'size' AS INTEGER) >= ?", params[:size_min].to_i) if params[:size_min].present?
-    blocks = blocks.where("CAST(data->'info'->>'size' AS INTEGER) <= ?", params[:size_max].to_i) if params[:size_max].present?
-    blocks = blocks.where("CAST(data->'info'->>'total_difficulty' AS NUMERIC) >= ?", params[:total_difficulty_min]) if params[:total_difficulty_min].present?
-    blocks = blocks.where("CAST(data->'info'->>'total_difficulty' AS NUMERIC) <= ?", params[:total_difficulty_max]) if params[:total_difficulty_max].present?
-    blocks = blocks.where("CAST(data->'info'->>'transaction_count' AS INTEGER) >= ?", params[:transaction_count_min].to_i) if params[:transaction_count_min].present?
-    blocks = blocks.where("CAST(data->'info'->>'transaction_count' AS INTEGER) <= ?", params[:transaction_count_max].to_i) if params[:transaction_count_max].present?
-    blocks = blocks.where("CAST(data->'info'->>'transaction_fees' AS NUMERIC) >= ?", params[:transaction_fees_min]) if params[:transaction_fees_min].present?
-    blocks = blocks.where("CAST(data->'info'->>'transaction_fees' AS NUMERIC) <= ?", params[:transaction_fees_max]) if params[:transaction_fees_max].present?
-    blocks = blocks.where("CAST(data->'info'->>'transactions_count' AS INTEGER) >= ?", params[:transactions_count_min].to_i) if params[:transactions_count_min].present?
-    blocks = blocks.where("CAST(data->'info'->>'transactions_count' AS INTEGER) <= ?", params[:transactions_count_max].to_i) if params[:transactions_count_max].present?
-    blocks = blocks.where("CAST(data->'info'->>'withdrawals_count' AS INTEGER) >= ?", params[:withdrawals_count_min].to_i) if params[:withdrawals_count_min].present?
-    blocks = blocks.where("CAST(data->'info'->>'withdrawals_count' AS INTEGER) <= ?", params[:withdrawals_count_max].to_i) if params[:withdrawals_count_max].present?
+    # Block info fields - using string comparisons for scalability
+    blocks = blocks.where("data->'info'->>'base_fee_per_gas' >= ?", params[:base_fee_per_gas_min]) if params[:base_fee_per_gas_min].present?
+    blocks = blocks.where("data->'info'->>'base_fee_per_gas' <= ?", params[:base_fee_per_gas_max]) if params[:base_fee_per_gas_max].present?
+    blocks = blocks.where("data->'info'->>'blob_gas_price' >= ?", params[:blob_gas_price_min]) if params[:blob_gas_price_min].present?
+    blocks = blocks.where("data->'info'->>'blob_gas_price' <= ?", params[:blob_gas_price_max]) if params[:blob_gas_price_max].present?
+    blocks = blocks.where("data->'info'->>'blob_gas_used' >= ?", params[:blob_gas_used_min]) if params[:blob_gas_used_min].present?
+    blocks = blocks.where("data->'info'->>'blob_gas_used' <= ?", params[:blob_gas_used_max]) if params[:blob_gas_used_max].present?
+    blocks = blocks.where("data->'info'->>'blob_transaction_count' >= ?", params[:blob_transaction_count_min]) if params[:blob_transaction_count_min].present?
+    blocks = blocks.where("data->'info'->>'blob_transaction_count' <= ?", params[:blob_transaction_count_max]) if params[:blob_transaction_count_max].present?
+    blocks = blocks.where("data->'info'->>'blob_transactions_count' >= ?", params[:blob_transactions_count_min]) if params[:blob_transactions_count_min].present?
+    blocks = blocks.where("data->'info'->>'blob_transactions_count' <= ?", params[:blob_transactions_count_max]) if params[:blob_transactions_count_max].present?
+    blocks = blocks.where("data->'info'->>'burnt_blob_fees' >= ?", params[:burnt_blob_fees_min]) if params[:burnt_blob_fees_min].present?
+    blocks = blocks.where("data->'info'->>'burnt_blob_fees' <= ?", params[:burnt_blob_fees_max]) if params[:burnt_blob_fees_max].present?
+    blocks = blocks.where("data->'info'->>'burnt_fees' >= ?", params[:burnt_fees_min]) if params[:burnt_fees_min].present?
+    blocks = blocks.where("data->'info'->>'burnt_fees' <= ?", params[:burnt_fees_max]) if params[:burnt_fees_max].present?
+    blocks = blocks.where("data->'info'->>'burnt_fees_percentage' >= ?", params[:burnt_fees_percentage_min]) if params[:burnt_fees_percentage_min].present?
+    blocks = blocks.where("data->'info'->>'burnt_fees_percentage' <= ?", params[:burnt_fees_percentage_max]) if params[:burnt_fees_percentage_max].present?
+    blocks = blocks.where("data->'info'->>'difficulty' >= ?", params[:difficulty_min]) if params[:difficulty_min].present?
+    blocks = blocks.where("data->'info'->>'difficulty' <= ?", params[:difficulty_max]) if params[:difficulty_max].present?
+    blocks = blocks.where("data->'info'->>'excess_blob_gas' >= ?", params[:excess_blob_gas_min]) if params[:excess_blob_gas_min].present?
+    blocks = blocks.where("data->'info'->>'excess_blob_gas' <= ?", params[:excess_blob_gas_max]) if params[:excess_blob_gas_max].present?
+    blocks = blocks.where("data->'info'->>'gas_limit' >= ?", params[:gas_limit_min]) if params[:gas_limit_min].present?
+    blocks = blocks.where("data->'info'->>'gas_limit' <= ?", params[:gas_limit_max]) if params[:gas_limit_max].present?
+    blocks = blocks.where("data->'info'->>'gas_target_percentage' >= ?", params[:gas_target_percentage_min]) if params[:gas_target_percentage_min].present?
+    blocks = blocks.where("data->'info'->>'gas_target_percentage' <= ?", params[:gas_target_percentage_max]) if params[:gas_target_percentage_max].present?
+    blocks = blocks.where("data->'info'->>'gas_used' >= ?", params[:gas_used_min]) if params[:gas_used_min].present?
+    blocks = blocks.where("data->'info'->>'gas_used' <= ?", params[:gas_used_max]) if params[:gas_used_max].present?
+    blocks = blocks.where("data->'info'->>'gas_used_percentage' >= ?", params[:gas_used_percentage_min]) if params[:gas_used_percentage_min].present?
+    blocks = blocks.where("data->'info'->>'gas_used_percentage' <= ?", params[:gas_used_percentage_max]) if params[:gas_used_percentage_max].present?
+    blocks = blocks.where("data->'info'->>'height' >= ?", params[:height_min]) if params[:height_min].present?
+    blocks = blocks.where("data->'info'->>'height' <= ?", params[:height_max]) if params[:height_max].present?
+    blocks = blocks.where("data->'info'->>'internal_transactions_count' >= ?", params[:internal_transactions_count_min]) if params[:internal_transactions_count_min].present?
+    blocks = blocks.where("data->'info'->>'internal_transactions_count' <= ?", params[:internal_transactions_count_max]) if params[:internal_transactions_count_max].present?
+    blocks = blocks.where("data->'info'->>'priority_fee' >= ?", params[:priority_fee_min]) if params[:priority_fee_min].present?
+    blocks = blocks.where("data->'info'->>'priority_fee' <= ?", params[:priority_fee_max]) if params[:priority_fee_max].present?
+    blocks = blocks.where("data->'info'->>'size' >= ?", params[:size_min]) if params[:size_min].present?
+    blocks = blocks.where("data->'info'->>'size' <= ?", params[:size_max]) if params[:size_max].present?
+    blocks = blocks.where("data->'info'->>'total_difficulty' >= ?", params[:total_difficulty_min]) if params[:total_difficulty_min].present?
+    blocks = blocks.where("data->'info'->>'total_difficulty' <= ?", params[:total_difficulty_max]) if params[:total_difficulty_max].present?
+    blocks = blocks.where("data->'info'->>'transaction_count' >= ?", params[:transaction_count_min]) if params[:transaction_count_min].present?
+    blocks = blocks.where("data->'info'->>'transaction_count' <= ?", params[:transaction_count_max]) if params[:transaction_count_max].present?
+    blocks = blocks.where("data->'info'->>'transaction_fees' >= ?", params[:transaction_fees_min]) if params[:transaction_fees_min].present?
+    blocks = blocks.where("data->'info'->>'transaction_fees' <= ?", params[:transaction_fees_max]) if params[:transaction_fees_max].present?
+    blocks = blocks.where("data->'info'->>'transactions_count' >= ?", params[:transactions_count_min]) if params[:transactions_count_min].present?
+    blocks = blocks.where("data->'info'->>'transactions_count' <= ?", params[:transactions_count_max]) if params[:transactions_count_max].present?
+    blocks = blocks.where("data->'info'->>'withdrawals_count' >= ?", params[:withdrawals_count_min]) if params[:withdrawals_count_min].present?
+    blocks = blocks.where("data->'info'->>'withdrawals_count' <= ?", params[:withdrawals_count_max]) if params[:withdrawals_count_max].present?
     
     # Block info fields - String
     blocks = blocks.where("data->'info'->>'hash' = ?", params[:hash]) if params[:hash].present?
@@ -271,10 +271,10 @@ class Api::V1::Ethereum::BlocksController < Api::V1::Ethereum::BaseController
     blocks = blocks.where("data->'info'->'miner'->>'name' = ?", params[:miner_name]) if params[:miner_name].present?
     blocks = blocks.where("data->'info'->'miner'->>'proxy_type' = ?", params[:miner_proxy_type]) if params[:miner_proxy_type].present?
     
-    # Rewards fields
+    # Rewards fields using string comparisons
     blocks = blocks.where("data->'info'->'rewards' @> ?", [{ type: params[:reward_type] }].to_json) if params[:reward_type].present?
-    blocks = blocks.where("CAST(data->'info'->'rewards'->0->>'reward' AS NUMERIC) >= ?", params[:reward_value_min]) if params[:reward_value_min].present?
-    blocks = blocks.where("CAST(data->'info'->'rewards'->0->>'reward' AS NUMERIC) <= ?", params[:reward_value_max]) if params[:reward_value_max].present?
+    blocks = blocks.where("data->'info'->'rewards'->0->>'reward' >= ?", params[:reward_value_min]) if params[:reward_value_min].present?
+    blocks = blocks.where("data->'info'->'rewards'->0->>'reward' <= ?", params[:reward_value_max]) if params[:reward_value_max].present?
     
     # Transaction fields (nested in transactions->items array)
     blocks = blocks.where("data->'transactions'->'items' @> ?", [{ hash: params[:tx_hash] }].to_json) if params[:tx_hash].present?
@@ -312,52 +312,52 @@ class Api::V1::Ethereum::BlocksController < Api::V1::Ethereum::BaseController
     # Transaction fee fields
     blocks = blocks.where("data->'transactions'->'items' @> ?", [{ fee: { type: params[:tx_fee_type] } }].to_json) if params[:tx_fee_type].present?
     
-    # Transaction numeric fields with min/max
-    blocks = blocks.where("CAST(data->'transactions'->'items'->0->>'max_fee_per_gas' AS NUMERIC) >= ?", params[:tx_max_fee_per_gas_min]) if params[:tx_max_fee_per_gas_min].present?
-    blocks = blocks.where("CAST(data->'transactions'->'items'->0->>'max_fee_per_gas' AS NUMERIC) <= ?", params[:tx_max_fee_per_gas_max]) if params[:tx_max_fee_per_gas_max].present?
-    blocks = blocks.where("CAST(data->'transactions'->'items'->0->>'transaction_burnt_fee' AS NUMERIC) >= ?", params[:tx_transaction_burnt_fee_min]) if params[:tx_transaction_burnt_fee_min].present?
-    blocks = blocks.where("CAST(data->'transactions'->'items'->0->>'transaction_burnt_fee' AS NUMERIC) <= ?", params[:tx_transaction_burnt_fee_max]) if params[:tx_transaction_burnt_fee_max].present?
-    blocks = blocks.where("CAST(data->'transactions'->'items'->0->>'type' AS INTEGER) >= ?", params[:tx_type_min].to_i) if params[:tx_type_min].present?
-    blocks = blocks.where("CAST(data->'transactions'->'items'->0->>'type' AS INTEGER) <= ?", params[:tx_type_max].to_i) if params[:tx_type_max].present?
-    blocks = blocks.where("CAST(data->'transactions'->'items'->0->>'confirmations' AS INTEGER) >= ?", params[:tx_confirmations_min].to_i) if params[:tx_confirmations_min].present?
-    blocks = blocks.where("CAST(data->'transactions'->'items'->0->>'confirmations' AS INTEGER) <= ?", params[:tx_confirmations_max].to_i) if params[:tx_confirmations_max].present?
-    blocks = blocks.where("CAST(data->'transactions'->'items'->0->>'position' AS INTEGER) >= ?", params[:tx_position_min].to_i) if params[:tx_position_min].present?
-    blocks = blocks.where("CAST(data->'transactions'->'items'->0->>'position' AS INTEGER) <= ?", params[:tx_position_max].to_i) if params[:tx_position_max].present?
-    blocks = blocks.where("CAST(data->'transactions'->'items'->0->>'max_priority_fee_per_gas' AS NUMERIC) >= ?", params[:tx_max_priority_fee_per_gas_min]) if params[:tx_max_priority_fee_per_gas_min].present?
-    blocks = blocks.where("CAST(data->'transactions'->'items'->0->>'max_priority_fee_per_gas' AS NUMERIC) <= ?", params[:tx_max_priority_fee_per_gas_max]) if params[:tx_max_priority_fee_per_gas_max].present?
-    blocks = blocks.where("CAST(data->'transactions'->'items'->0->>'value' AS NUMERIC) >= ?", params[:tx_value_min]) if params[:tx_value_min].present?
-    blocks = blocks.where("CAST(data->'transactions'->'items'->0->>'value' AS NUMERIC) <= ?", params[:tx_value_max]) if params[:tx_value_max].present?
-    blocks = blocks.where("CAST(data->'transactions'->'items'->0->>'gas_used' AS NUMERIC) >= ?", params[:tx_gas_used_min]) if params[:tx_gas_used_min].present?
-    blocks = blocks.where("CAST(data->'transactions'->'items'->0->>'gas_used' AS NUMERIC) <= ?", params[:tx_gas_used_max]) if params[:tx_gas_used_max].present?
-    blocks = blocks.where("CAST(data->'transactions'->'items'->0->>'gas_limit' AS NUMERIC) >= ?", params[:tx_gas_limit_min]) if params[:tx_gas_limit_min].present?
-    blocks = blocks.where("CAST(data->'transactions'->'items'->0->>'gas_limit' AS NUMERIC) <= ?", params[:tx_gas_limit_max]) if params[:tx_gas_limit_max].present?
-    blocks = blocks.where("CAST(data->'transactions'->'items'->0->>'gas_price' AS NUMERIC) >= ?", params[:tx_gas_price_min]) if params[:tx_gas_price_min].present?
-    blocks = blocks.where("CAST(data->'transactions'->'items'->0->>'gas_price' AS NUMERIC) <= ?", params[:tx_gas_price_max]) if params[:tx_gas_price_max].present?
-    blocks = blocks.where("CAST(data->'transactions'->'items'->0->>'base_fee_per_gas' AS NUMERIC) >= ?", params[:tx_base_fee_per_gas_min]) if params[:tx_base_fee_per_gas_min].present?
-    blocks = blocks.where("CAST(data->'transactions'->'items'->0->>'base_fee_per_gas' AS NUMERIC) <= ?", params[:tx_base_fee_per_gas_max]) if params[:tx_base_fee_per_gas_max].present?
-    blocks = blocks.where("CAST(data->'transactions'->'items'->0->>'nonce' AS INTEGER) >= ?", params[:tx_nonce_min].to_i) if params[:tx_nonce_min].present?
-    blocks = blocks.where("CAST(data->'transactions'->'items'->0->>'nonce' AS INTEGER) <= ?", params[:tx_nonce_max].to_i) if params[:tx_nonce_max].present?
-    blocks = blocks.where("CAST(data->'transactions'->'items'->0->>'historic_exchange_rate' AS DECIMAL) >= ?", params[:tx_historic_exchange_rate_min].to_f) if params[:tx_historic_exchange_rate_min].present?
-    blocks = blocks.where("CAST(data->'transactions'->'items'->0->>'historic_exchange_rate' AS DECIMAL) <= ?", params[:tx_historic_exchange_rate_max].to_f) if params[:tx_historic_exchange_rate_max].present?
-    blocks = blocks.where("CAST(data->'transactions'->'items'->0->>'exchange_rate' AS DECIMAL) >= ?", params[:tx_exchange_rate_min].to_f) if params[:tx_exchange_rate_min].present?
-    blocks = blocks.where("CAST(data->'transactions'->'items'->0->>'exchange_rate' AS DECIMAL) <= ?", params[:tx_exchange_rate_max].to_f) if params[:tx_exchange_rate_max].present?
-    blocks = blocks.where("CAST(data->'transactions'->'items'->0->>'block_number' AS INTEGER) >= ?", params[:tx_block_number_min].to_i) if params[:tx_block_number_min].present?
-    blocks = blocks.where("CAST(data->'transactions'->'items'->0->>'block_number' AS INTEGER) <= ?", params[:tx_block_number_max].to_i) if params[:tx_block_number_max].present?
-    blocks = blocks.where("CAST(data->'transactions'->'items'->0->'fee'->>'value' AS NUMERIC) >= ?", params[:tx_fee_value_min]) if params[:tx_fee_value_min].present?
-    blocks = blocks.where("CAST(data->'transactions'->'items'->0->'fee'->>'value' AS NUMERIC) <= ?", params[:tx_fee_value_max]) if params[:tx_fee_value_max].present?
+    # Transaction fields with string comparisons
+    blocks = blocks.where("data->'transactions'->'items'->0->>'max_fee_per_gas' >= ?", params[:tx_max_fee_per_gas_min]) if params[:tx_max_fee_per_gas_min].present?
+    blocks = blocks.where("data->'transactions'->'items'->0->>'max_fee_per_gas' <= ?", params[:tx_max_fee_per_gas_max]) if params[:tx_max_fee_per_gas_max].present?
+    blocks = blocks.where("data->'transactions'->'items'->0->>'transaction_burnt_fee' >= ?", params[:tx_transaction_burnt_fee_min]) if params[:tx_transaction_burnt_fee_min].present?
+    blocks = blocks.where("data->'transactions'->'items'->0->>'transaction_burnt_fee' <= ?", params[:tx_transaction_burnt_fee_max]) if params[:tx_transaction_burnt_fee_max].present?
+    blocks = blocks.where("data->'transactions'->'items'->0->>'type' >= ?", params[:tx_type_min]) if params[:tx_type_min].present?
+    blocks = blocks.where("data->'transactions'->'items'->0->>'type' <= ?", params[:tx_type_max]) if params[:tx_type_max].present?
+    blocks = blocks.where("data->'transactions'->'items'->0->>'confirmations' >= ?", params[:tx_confirmations_min]) if params[:tx_confirmations_min].present?
+    blocks = blocks.where("data->'transactions'->'items'->0->>'confirmations' <= ?", params[:tx_confirmations_max]) if params[:tx_confirmations_max].present?
+    blocks = blocks.where("data->'transactions'->'items'->0->>'position' >= ?", params[:tx_position_min]) if params[:tx_position_min].present?
+    blocks = blocks.where("data->'transactions'->'items'->0->>'position' <= ?", params[:tx_position_max]) if params[:tx_position_max].present?
+    blocks = blocks.where("data->'transactions'->'items'->0->>'max_priority_fee_per_gas' >= ?", params[:tx_max_priority_fee_per_gas_min]) if params[:tx_max_priority_fee_per_gas_min].present?
+    blocks = blocks.where("data->'transactions'->'items'->0->>'max_priority_fee_per_gas' <= ?", params[:tx_max_priority_fee_per_gas_max]) if params[:tx_max_priority_fee_per_gas_max].present?
+    blocks = blocks.where("data->'transactions'->'items'->0->>'value' >= ?", params[:tx_value_min]) if params[:tx_value_min].present?
+    blocks = blocks.where("data->'transactions'->'items'->0->>'value' <= ?", params[:tx_value_max]) if params[:tx_value_max].present?
+    blocks = blocks.where("data->'transactions'->'items'->0->>'gas_used' >= ?", params[:tx_gas_used_min]) if params[:tx_gas_used_min].present?
+    blocks = blocks.where("data->'transactions'->'items'->0->>'gas_used' <= ?", params[:tx_gas_used_max]) if params[:tx_gas_used_max].present?
+    blocks = blocks.where("data->'transactions'->'items'->0->>'gas_limit' >= ?", params[:tx_gas_limit_min]) if params[:tx_gas_limit_min].present?
+    blocks = blocks.where("data->'transactions'->'items'->0->>'gas_limit' <= ?", params[:tx_gas_limit_max]) if params[:tx_gas_limit_max].present?
+    blocks = blocks.where("data->'transactions'->'items'->0->>'gas_price' >= ?", params[:tx_gas_price_min]) if params[:tx_gas_price_min].present?
+    blocks = blocks.where("data->'transactions'->'items'->0->>'gas_price' <= ?", params[:tx_gas_price_max]) if params[:tx_gas_price_max].present?
+    blocks = blocks.where("data->'transactions'->'items'->0->>'base_fee_per_gas' >= ?", params[:tx_base_fee_per_gas_min]) if params[:tx_base_fee_per_gas_min].present?
+    blocks = blocks.where("data->'transactions'->'items'->0->>'base_fee_per_gas' <= ?", params[:tx_base_fee_per_gas_max]) if params[:tx_base_fee_per_gas_max].present?
+    blocks = blocks.where("data->'transactions'->'items'->0->>'nonce' >= ?", params[:tx_nonce_min]) if params[:tx_nonce_min].present?
+    blocks = blocks.where("data->'transactions'->'items'->0->>'nonce' <= ?", params[:tx_nonce_max]) if params[:tx_nonce_max].present?
+    blocks = blocks.where("data->'transactions'->'items'->0->>'historic_exchange_rate' >= ?", params[:tx_historic_exchange_rate_min]) if params[:tx_historic_exchange_rate_min].present?
+    blocks = blocks.where("data->'transactions'->'items'->0->>'historic_exchange_rate' <= ?", params[:tx_historic_exchange_rate_max]) if params[:tx_historic_exchange_rate_max].present?
+    blocks = blocks.where("data->'transactions'->'items'->0->>'exchange_rate' >= ?", params[:tx_exchange_rate_min]) if params[:tx_exchange_rate_min].present?
+    blocks = blocks.where("data->'transactions'->'items'->0->>'exchange_rate' <= ?", params[:tx_exchange_rate_max]) if params[:tx_exchange_rate_max].present?
+    blocks = blocks.where("data->'transactions'->'items'->0->>'block_number' >= ?", params[:tx_block_number_min]) if params[:tx_block_number_min].present?
+    blocks = blocks.where("data->'transactions'->'items'->0->>'block_number' <= ?", params[:tx_block_number_max]) if params[:tx_block_number_max].present?
+    blocks = blocks.where("data->'transactions'->'items'->0->'fee'->>'value' >= ?", params[:tx_fee_value_min]) if params[:tx_fee_value_min].present?
+    blocks = blocks.where("data->'transactions'->'items'->0->'fee'->>'value' <= ?", params[:tx_fee_value_max]) if params[:tx_fee_value_max].present?
     
-    # Confirmation duration fields (array with min/max values)
-    blocks = blocks.where("CAST(data->'transactions'->'items'->0->'confirmation_duration'->0 AS INTEGER) >= ?", params[:tx_confirmation_duration_min].to_i) if params[:tx_confirmation_duration_min].present?
-    blocks = blocks.where("CAST(data->'transactions'->'items'->0->'confirmation_duration'->1 AS INTEGER) <= ?", params[:tx_confirmation_duration_max].to_i) if params[:tx_confirmation_duration_max].present?
+    # Confirmation duration fields using string comparisons
+    blocks = blocks.where("data->'transactions'->'items'->0->'confirmation_duration'->0 >= ?", params[:tx_confirmation_duration_min]) if params[:tx_confirmation_duration_min].present?
+    blocks = blocks.where("data->'transactions'->'items'->0->'confirmation_duration'->1 <= ?", params[:tx_confirmation_duration_max]) if params[:tx_confirmation_duration_max].present?
     
     # Transaction types array
     blocks = blocks.where("data->'transactions'->'items'->0->'transaction_types' @> ?", [params[:tx_transaction_types]].to_json) if params[:tx_transaction_types].present?
     
-    # Withdrawal fields (nested in withdrawals->items array)
-    blocks = blocks.where("CAST(data->'withdrawals'->'items'->0->>'amount' AS NUMERIC) >= ?", params[:withdrawal_amount_min]) if params[:withdrawal_amount_min].present?
-    blocks = blocks.where("CAST(data->'withdrawals'->'items'->0->>'amount' AS NUMERIC) <= ?", params[:withdrawal_amount_max]) if params[:withdrawal_amount_max].present?
-    blocks = blocks.where("CAST(data->'withdrawals'->'items'->0->>'index' AS INTEGER) >= ?", params[:withdrawal_index_min].to_i) if params[:withdrawal_index_min].present?
-    blocks = blocks.where("CAST(data->'withdrawals'->'items'->0->>'index' AS INTEGER) <= ?", params[:withdrawal_index_max].to_i) if params[:withdrawal_index_max].present?
+    # Withdrawal fields using string comparisons
+    blocks = blocks.where("data->'withdrawals'->'items'->0->>'amount' >= ?", params[:withdrawal_amount_min]) if params[:withdrawal_amount_min].present?
+    blocks = blocks.where("data->'withdrawals'->'items'->0->>'amount' <= ?", params[:withdrawal_amount_max]) if params[:withdrawal_amount_max].present?
+    blocks = blocks.where("data->'withdrawals'->'items'->0->>'index' >= ?", params[:withdrawal_index_min]) if params[:withdrawal_index_min].present?
+    blocks = blocks.where("data->'withdrawals'->'items'->0->>'index' <= ?", params[:withdrawal_index_max]) if params[:withdrawal_index_max].present?
     blocks = blocks.where("data->'withdrawals'->'items' @> ?", [{ receiver: { hash: params[:withdrawal_receiver_hash] } }].to_json) if params[:withdrawal_receiver_hash].present?
     blocks = blocks.where("data->'withdrawals'->'items' @> ?", [{ receiver: { ens_domain_name: params[:withdrawal_receiver_ens_domain_name] } }].to_json) if params[:withdrawal_receiver_ens_domain_name].present?
     blocks = blocks.where("data->'withdrawals'->'items' @> ?", [{ receiver: { is_contract: params[:withdrawal_receiver_is_contract] } }].to_json) if params[:withdrawal_receiver_is_contract].present?
@@ -365,56 +365,33 @@ class Api::V1::Ethereum::BlocksController < Api::V1::Ethereum::BaseController
     blocks = blocks.where("data->'withdrawals'->'items' @> ?", [{ receiver: { is_verified: params[:withdrawal_receiver_is_verified] } }].to_json) if params[:withdrawal_receiver_is_verified].present?
     blocks = blocks.where("data->'withdrawals'->'items' @> ?", [{ receiver: { name: params[:withdrawal_receiver_name] } }].to_json) if params[:withdrawal_receiver_name].present?
     blocks = blocks.where("data->'withdrawals'->'items' @> ?", [{ receiver: { proxy_type: params[:withdrawal_receiver_proxy_type] } }].to_json) if params[:withdrawal_receiver_proxy_type].present?
-    blocks = blocks.where("CAST(data->'withdrawals'->'items'->0->>'validator_index' AS INTEGER) >= ?", params[:withdrawal_validator_index_min].to_i) if params[:withdrawal_validator_index_min].present?
-    blocks = blocks.where("CAST(data->'withdrawals'->'items'->0->>'validator_index' AS INTEGER) <= ?", params[:withdrawal_validator_index_max].to_i) if params[:withdrawal_validator_index_max].present?
+    blocks = blocks.where("data->'withdrawals'->'items'->0->>'validator_index' >= ?", params[:withdrawal_validator_index_min]) if params[:withdrawal_validator_index_min].present?
+    blocks = blocks.where("data->'withdrawals'->'items'->0->>'validator_index' <= ?", params[:withdrawal_validator_index_max]) if params[:withdrawal_validator_index_max].present?
     
     # Withdrawal metadata tags fields
     blocks = blocks.where("data->'withdrawals'->'items' @> ?", [{ receiver: { metadata: { tags: [{ name: params[:withdrawal_metadata_tags_name] }] } } }].to_json) if params[:withdrawal_metadata_tags_name].present?
     blocks = blocks.where("data->'withdrawals'->'items' @> ?", [{ receiver: { metadata: { tags: [{ slug: params[:withdrawal_metadata_tags_slug] }] } } }].to_json) if params[:withdrawal_metadata_tags_slug].present?
     blocks = blocks.where("data->'withdrawals'->'items' @> ?", [{ receiver: { metadata: { tags: [{ tagType: params[:withdrawal_metadata_tags_tag_type] }] } } }].to_json) if params[:withdrawal_metadata_tags_tag_type].present?
-    blocks = blocks.where("CAST(data->'withdrawals'->'items'->0->'receiver'->'metadata'->'tags'->0->>'ordinal' AS INTEGER) >= ?", params[:withdrawal_metadata_tags_ordinal_min].to_i) if params[:withdrawal_metadata_tags_ordinal_min].present?
-    blocks = blocks.where("CAST(data->'withdrawals'->'items'->0->'receiver'->'metadata'->'tags'->0->>'ordinal' AS INTEGER) <= ?", params[:withdrawal_metadata_tags_ordinal_max].to_i) if params[:withdrawal_metadata_tags_ordinal_max].present?
+    blocks = blocks.where("data->'withdrawals'->'items'->0->'receiver'->'metadata'->'tags'->0->>'ordinal' >= ?", params[:withdrawal_metadata_tags_ordinal_min]) if params[:withdrawal_metadata_tags_ordinal_min].present?
+    blocks = blocks.where("data->'withdrawals'->'items'->0->'receiver'->'metadata'->'tags'->0->>'ordinal' <= ?", params[:withdrawal_metadata_tags_ordinal_max]) if params[:withdrawal_metadata_tags_ordinal_max].present?
     
     # Apply sorting
     sort_by = params[:sort_by] || 'id'
     sort_order = params[:sort_order]&.downcase == 'asc' ? 'asc' : 'desc'
     
     allowed_sort_fields = {
-      # Basic fields
+      # Basic table fields
       'id' => 'ethereum_blocks.id',
       'created_at' => 'ethereum_blocks.created_at',
       'updated_at' => 'ethereum_blocks.updated_at',
       'block_number' => 'ethereum_blocks.block_number',
       
-      # Block info fields
-      'base_fee_per_gas' => "CAST(data->'info'->>'base_fee_per_gas' AS NUMERIC)",
-      'blob_gas_price' => "CAST(data->'info'->>'blob_gas_price' AS NUMERIC)",
-      'blob_gas_used' => "CAST(data->'info'->>'blob_gas_used' AS NUMERIC)",
-      'blob_transaction_count' => "CAST(data->'info'->>'blob_transaction_count' AS INTEGER)",
-      'blob_transactions_count' => "CAST(data->'info'->>'blob_transactions_count' AS INTEGER)",
-      'burnt_blob_fees' => "CAST(data->'info'->>'burnt_blob_fees' AS NUMERIC)",
-      'burnt_fees' => "CAST(data->'info'->>'burnt_fees' AS NUMERIC)",
-      'burnt_fees_percentage' => "CAST(data->'info'->>'burnt_fees_percentage' AS DECIMAL)",
-      'difficulty' => "CAST(data->'info'->>'difficulty' AS NUMERIC)",
-      'excess_blob_gas' => "CAST(data->'info'->>'excess_blob_gas' AS NUMERIC)",
-      'gas_limit' => "CAST(data->'info'->>'gas_limit' AS NUMERIC)",
-      'gas_target_percentage' => "CAST(data->'info'->>'gas_target_percentage' AS DECIMAL)",
-      'gas_used' => "CAST(data->'info'->>'gas_used' AS NUMERIC)",
-      'gas_used_percentage' => "CAST(data->'info'->>'gas_used_percentage' AS DECIMAL)",
+      # String-based JSON fields (no CAST operations for scalability)
       'hash' => "data->'info'->>'hash'",
-      'height' => "CAST(data->'info'->>'height' AS INTEGER)",
-      'internal_transactions_count' => "CAST(data->'info'->>'internal_transactions_count' AS INTEGER)",
       'nonce' => "data->'info'->>'nonce'",
       'parent_hash' => "data->'info'->>'parent_hash'",
-      'priority_fee' => "CAST(data->'info'->>'priority_fee' AS NUMERIC)",
-      'size' => "CAST(data->'info'->>'size' AS INTEGER)",
       'timestamp' => "data->'info'->>'timestamp'",
-      'total_difficulty' => "CAST(data->'info'->>'total_difficulty' AS NUMERIC)",
-      'transaction_count' => "CAST(data->'info'->>'transaction_count' AS INTEGER)",
-      'transaction_fees' => "CAST(data->'info'->>'transaction_fees' AS NUMERIC)",
-      'transactions_count' => "CAST(data->'info'->>'transactions_count' AS INTEGER)",
       'block_type' => "data->'info'->>'type'",
-      'withdrawals_count' => "CAST(data->'info'->>'withdrawals_count' AS INTEGER)",
       
       # Miner fields
       'miner_hash' => "data->'info'->'miner'->>'hash'",
@@ -425,42 +402,24 @@ class Api::V1::Ethereum::BlocksController < Api::V1::Ethereum::BaseController
       'miner_name' => "data->'info'->'miner'->>'name'",
       'miner_proxy_type' => "data->'info'->'miner'->>'proxy_type'",
       
-      # Reward fields (using first reward)
+      # Reward fields (string-based)
       'reward_type' => "data->'info'->'rewards'->0->>'type'",
-      'reward_value' => "CAST(data->'info'->'rewards'->0->>'reward' AS NUMERIC)",
       
-      # Transaction fields (using first transaction)
+      # Transaction fields (string-based, using first transaction)
       'tx_hash' => "data->'transactions'->'items'->0->>'hash'",
-      'tx_priority_fee' => "CAST(data->'transactions'->'items'->0->>'priority_fee' AS NUMERIC)",
       'tx_raw_input' => "data->'transactions'->'items'->0->>'raw_input'",
       'tx_result' => "data->'transactions'->'items'->0->>'result'",
-      'tx_max_fee_per_gas' => "CAST(data->'transactions'->'items'->0->>'max_fee_per_gas' AS NUMERIC)",
       'tx_revert_reason' => "data->'transactions'->'items'->0->>'revert_reason'",
-      'tx_transaction_burnt_fee' => "CAST(data->'transactions'->'items'->0->>'transaction_burnt_fee' AS NUMERIC)",
-      'tx_type' => "CAST(data->'transactions'->'items'->0->>'type' AS INTEGER)",
       'tx_token_transfers_overflow' => "CASE WHEN data->'transactions'->'items'->0->>'token_transfers_overflow' = 'true' THEN 1 ELSE 0 END",
-      'tx_confirmations' => "CAST(data->'transactions'->'items'->0->>'confirmations' AS INTEGER)",
-      'tx_position' => "CAST(data->'transactions'->'items'->0->>'position' AS INTEGER)",
-      'tx_max_priority_fee_per_gas' => "CAST(data->'transactions'->'items'->0->>'max_priority_fee_per_gas' AS NUMERIC)",
       'tx_transaction_tag' => "data->'transactions'->'items'->0->>'transaction_tag'",
       'tx_created_contract' => "data->'transactions'->'items'->0->>'created_contract'",
-      'tx_value' => "CAST(data->'transactions'->'items'->0->>'value' AS NUMERIC)",
-      'tx_gas_used' => "CAST(data->'transactions'->'items'->0->>'gas_used' AS NUMERIC)",
       'tx_status' => "data->'transactions'->'items'->0->>'status'",
       'tx_method' => "data->'transactions'->'items'->0->>'method'",
-      'tx_gas_limit' => "CAST(data->'transactions'->'items'->0->>'gas_limit' AS NUMERIC)",
-      'tx_gas_price' => "CAST(data->'transactions'->'items'->0->>'gas_price' AS NUMERIC)",
       'tx_decoded_input' => "data->'transactions'->'items'->0->>'decoded_input'",
       'tx_token_transfers' => "data->'transactions'->'items'->0->>'token_transfers'",
-      'tx_base_fee_per_gas' => "CAST(data->'transactions'->'items'->0->>'base_fee_per_gas' AS NUMERIC)",
       'tx_timestamp' => "data->'transactions'->'items'->0->>'timestamp'",
-      'tx_nonce' => "CAST(data->'transactions'->'items'->0->>'nonce' AS INTEGER)",
-      'tx_historic_exchange_rate' => "CAST(data->'transactions'->'items'->0->>'historic_exchange_rate' AS DECIMAL)",
-      'tx_exchange_rate' => "CAST(data->'transactions'->'items'->0->>'exchange_rate' AS DECIMAL)",
-      'tx_block_number' => "CAST(data->'transactions'->'items'->0->>'block_number' AS INTEGER)",
       'tx_has_error_in_internal_transactions' => "CASE WHEN data->'transactions'->'items'->0->>'has_error_in_internal_transactions' = 'true' THEN 1 ELSE 0 END",
       'tx_fee_type' => "data->'transactions'->'items'->0->'fee'->>'type'",
-      'tx_fee_value' => "CAST(data->'transactions'->'items'->0->'fee'->>'value' AS NUMERIC)",
       
       # Transaction from/to address fields
       'tx_from_hash' => "data->'transactions'->'items'->0->'from'->>'hash'",
@@ -478,9 +437,7 @@ class Api::V1::Ethereum::BlocksController < Api::V1::Ethereum::BaseController
       'tx_to_name' => "data->'transactions'->'items'->0->'to'->>'name'",
       'tx_to_proxy_type' => "data->'transactions'->'items'->0->'to'->>'proxy_type'",
       
-      # Withdrawal fields (using first withdrawal)
-      'withdrawal_amount' => "CAST(data->'withdrawals'->'items'->0->>'amount' AS NUMERIC)",
-      'withdrawal_index' => "CAST(data->'withdrawals'->'items'->0->>'index' AS INTEGER)",
+      # Withdrawal fields (string-based, using first withdrawal)
       'withdrawal_receiver_hash' => "data->'withdrawals'->'items'->0->'receiver'->>'hash'",
       'withdrawal_receiver_ens_domain_name' => "data->'withdrawals'->'items'->0->'receiver'->>'ens_domain_name'",
       'withdrawal_receiver_is_contract' => "CASE WHEN data->'withdrawals'->'items'->0->'receiver'->>'is_contract' = 'true' THEN 1 ELSE 0 END",
@@ -488,13 +445,11 @@ class Api::V1::Ethereum::BlocksController < Api::V1::Ethereum::BaseController
       'withdrawal_receiver_is_verified' => "CASE WHEN data->'withdrawals'->'items'->0->'receiver'->>'is_verified' = 'true' THEN 1 ELSE 0 END",
       'withdrawal_receiver_name' => "data->'withdrawals'->'items'->0->'receiver'->>'name'",
       'withdrawal_receiver_proxy_type' => "data->'withdrawals'->'items'->0->'receiver'->>'proxy_type'",
-      'withdrawal_validator_index' => "CAST(data->'withdrawals'->'items'->0->>'validator_index' AS INTEGER)",
       
       # Withdrawal metadata tags fields
       'withdrawal_metadata_tags_name' => "data->'withdrawals'->'items'->0->'receiver'->'metadata'->'tags'->0->>'name'",
       'withdrawal_metadata_tags_slug' => "data->'withdrawals'->'items'->0->'receiver'->'metadata'->'tags'->0->>'slug'",
-      'withdrawal_metadata_tags_tag_type' => "data->'withdrawals'->'items'->0->'receiver'->'metadata'->'tags'->0->>'tagType'",
-      'withdrawal_metadata_tags_ordinal' => "CAST(data->'withdrawals'->'items'->0->'receiver'->'metadata'->'tags'->0->>'ordinal' AS INTEGER)"
+      'withdrawal_metadata_tags_tag_type' => "data->'withdrawals'->'items'->0->'receiver'->'metadata'->'tags'->0->>'tagType'"
     }
     
     if allowed_sort_fields.key?(sort_by)

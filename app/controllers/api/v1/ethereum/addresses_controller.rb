@@ -558,4 +558,12 @@ class Api::V1::Ethereum::AddressesController < Api::V1::Ethereum::BaseController
 end
 
 
+# EthereumAddress.find_in_batches(batch_size: 100) do |batch|
+#   batch.each do |address|
+#     wei_str = address.data&.dig('info', 'coin_balance')
+#     wei = wei_str.present? ? BigDecimal(wei_str) : 0
+#     eth_balance = wei / 1e18
+#     address.update!(eth_balance: eth_balance)
+#   end
+# end
 

@@ -276,43 +276,43 @@ class Api::V1::Ethereum::TransactionsController < Api::V1::Ethereum::BaseControl
   # @parameter sort_by(query) [String] Field to sort by (e.g., value, gas_used, timestamp, priority_fee, etc.)
   # @parameter sort_order(query) [String] Sort order: 'asc' for ascending or 'desc' for descending (default: 'desc')
   # @response success(200) [Hash{results: Array<Hash{id: Integer, transaction_hash: String, data: Hash}>, pagination: Hash{total: Integer, limit: Integer, offset: Integer, page: Integer, total_pages: Integer}}]
-  # This endpoint provides 254 carefully curated parameters to search for transactions, optimized for both comprehensive coverage and LLM performance.
+  # This endpoint provides transaction search with string-based comparisons for scalability (no CAST operations).
   def json_search
     transactions = EthereumTransaction.where(nil)
 
-    # Core transaction fields with min/max ranges
-    transactions = transactions.where("CAST(data->'info'->>'priority_fee' AS NUMERIC) >= ?", params[:priority_fee_min]) if params[:priority_fee_min].present?
-    transactions = transactions.where("CAST(data->'info'->>'priority_fee' AS NUMERIC) <= ?", params[:priority_fee_max]) if params[:priority_fee_max].present?
+    # Core transaction fields with min/max ranges using string comparisons
+    transactions = transactions.where("data->'info'->>'priority_fee' >= ?", params[:priority_fee_min]) if params[:priority_fee_min].present?
+    transactions = transactions.where("data->'info'->>'priority_fee' <= ?", params[:priority_fee_max]) if params[:priority_fee_max].present?
     transactions = transactions.where("data->'info'->>'raw_input' ILIKE ?", "%#{params[:raw_input]}%") if params[:raw_input].present?
     transactions = transactions.where("data->'info'->>'result' = ?", params[:result]) if params[:result].present?
     transactions = transactions.where("data->'info'->>'hash' = ?", params[:hash]) if params[:hash].present?
-    transactions = transactions.where("CAST(data->'info'->>'max_fee_per_gas' AS NUMERIC) >= ?", params[:max_fee_per_gas_min]) if params[:max_fee_per_gas_min].present?
-    transactions = transactions.where("CAST(data->'info'->>'max_fee_per_gas' AS NUMERIC) <= ?", params[:max_fee_per_gas_max]) if params[:max_fee_per_gas_max].present?
+    transactions = transactions.where("data->'info'->>'max_fee_per_gas' >= ?", params[:max_fee_per_gas_min]) if params[:max_fee_per_gas_min].present?
+    transactions = transactions.where("data->'info'->>'max_fee_per_gas' <= ?", params[:max_fee_per_gas_max]) if params[:max_fee_per_gas_max].present?
     transactions = transactions.where("data->'info'->>'revert_reason' ILIKE ?", "%#{params[:revert_reason]}%") if params[:revert_reason].present?
-    transactions = transactions.where("CAST(data->'info'->>'confirmation_duration'->>0 AS NUMERIC) >= ?", params[:confirmation_duration_min]) if params[:confirmation_duration_min].present?
-    transactions = transactions.where("CAST(data->'info'->>'confirmation_duration'->>0 AS NUMERIC) <= ?", params[:confirmation_duration_max]) if params[:confirmation_duration_max].present?
-    transactions = transactions.where("CAST(data->'info'->>'transaction_burnt_fee' AS NUMERIC) >= ?", params[:transaction_burnt_fee_min]) if params[:transaction_burnt_fee_min].present?
-    transactions = transactions.where("CAST(data->'info'->>'transaction_burnt_fee' AS NUMERIC) <= ?", params[:transaction_burnt_fee_max]) if params[:transaction_burnt_fee_max].present?
-    transactions = transactions.where("CAST(data->'info'->>'type' AS INTEGER) >= ?", params[:type_min]) if params[:type_min].present?
-    transactions = transactions.where("CAST(data->'info'->>'type' AS INTEGER) <= ?", params[:type_max]) if params[:type_max].present?
-    transactions = transactions.where("CAST(data->'info'->>'token_transfers_overflow' AS BOOLEAN) = ?", params[:token_transfers_overflow]) if params[:token_transfers_overflow].present?
-    transactions = transactions.where("CAST(data->'info'->>'confirmations' AS INTEGER) >= ?", params[:confirmations_min]) if params[:confirmations_min].present?
-    transactions = transactions.where("CAST(data->'info'->>'confirmations' AS INTEGER) <= ?", params[:confirmations_max]) if params[:confirmations_max].present?
-    transactions = transactions.where("CAST(data->'info'->>'position' AS INTEGER) >= ?", params[:position_min]) if params[:position_min].present?
-    transactions = transactions.where("CAST(data->'info'->>'position' AS INTEGER) <= ?", params[:position_max]) if params[:position_max].present?
-    transactions = transactions.where("CAST(data->'info'->>'max_priority_fee_per_gas' AS NUMERIC) >= ?", params[:max_priority_fee_per_gas_min]) if params[:max_priority_fee_per_gas_min].present?
-    transactions = transactions.where("CAST(data->'info'->>'max_priority_fee_per_gas' AS NUMERIC) <= ?", params[:max_priority_fee_per_gas_max]) if params[:max_priority_fee_per_gas_max].present?
+    transactions = transactions.where("data->'info'->>'confirmation_duration'->>0 >= ?", params[:confirmation_duration_min]) if params[:confirmation_duration_min].present?
+    transactions = transactions.where("data->'info'->>'confirmation_duration'->>0 <= ?", params[:confirmation_duration_max]) if params[:confirmation_duration_max].present?
+    transactions = transactions.where("data->'info'->>'transaction_burnt_fee' >= ?", params[:transaction_burnt_fee_min]) if params[:transaction_burnt_fee_min].present?
+    transactions = transactions.where("data->'info'->>'transaction_burnt_fee' <= ?", params[:transaction_burnt_fee_max]) if params[:transaction_burnt_fee_max].present?
+    transactions = transactions.where("data->'info'->>'type' >= ?", params[:type_min]) if params[:type_min].present?
+    transactions = transactions.where("data->'info'->>'type' <= ?", params[:type_max]) if params[:type_max].present?
+    transactions = transactions.where("data->'info'->>'token_transfers_overflow' = ?", params[:token_transfers_overflow].to_s) if params[:token_transfers_overflow].present?
+    transactions = transactions.where("data->'info'->>'confirmations' >= ?", params[:confirmations_min]) if params[:confirmations_min].present?
+    transactions = transactions.where("data->'info'->>'confirmations' <= ?", params[:confirmations_max]) if params[:confirmations_max].present?
+    transactions = transactions.where("data->'info'->>'position' >= ?", params[:position_min]) if params[:position_min].present?
+    transactions = transactions.where("data->'info'->>'position' <= ?", params[:position_max]) if params[:position_max].present?
+    transactions = transactions.where("data->'info'->>'max_priority_fee_per_gas' >= ?", params[:max_priority_fee_per_gas_min]) if params[:max_priority_fee_per_gas_min].present?
+    transactions = transactions.where("data->'info'->>'max_priority_fee_per_gas' <= ?", params[:max_priority_fee_per_gas_max]) if params[:max_priority_fee_per_gas_max].present?
     transactions = transactions.where("data->'info'->>'transaction_tag' ILIKE ?", "%#{params[:transaction_tag]}%") if params[:transaction_tag].present?
     transactions = transactions.where("data->'info'->>'created_contract' = ?", params[:created_contract]) if params[:created_contract].present?
-    transactions = transactions.where("CAST(data->'info'->>'value' AS NUMERIC) >= ?", params[:value_min]) if params[:value_min].present?
-    transactions = transactions.where("CAST(data->'info'->>'value' AS NUMERIC) <= ?", params[:value_max]) if params[:value_max].present?
+    transactions = transactions.where("data->'info'->>'value' >= ?", params[:value_min]) if params[:value_min].present?
+    transactions = transactions.where("data->'info'->>'value' <= ?", params[:value_max]) if params[:value_max].present?
 
     # From address fields
     transactions = transactions.where("data->'info'->'from'->>'ens_domain_name' ILIKE ?", "%#{params[:from_ens_domain_name]}%") if params[:from_ens_domain_name].present?
     transactions = transactions.where("data->'info'->'from'->>'hash' = ?", params[:from_hash]) if params[:from_hash].present?
-    transactions = transactions.where("CAST(data->'info'->'from'->>'is_contract' AS BOOLEAN) = ?", params[:from_is_contract]) if params[:from_is_contract].present?
-    transactions = transactions.where("CAST(data->'info'->'from'->>'is_scam' AS BOOLEAN) = ?", params[:from_is_scam]) if params[:from_is_scam].present?
-    transactions = transactions.where("CAST(data->'info'->'from'->>'is_verified' AS BOOLEAN) = ?", params[:from_is_verified]) if params[:from_is_verified].present?
+    transactions = transactions.where("data->'info'->'from'->>'is_contract' = ?", params[:from_is_contract].to_s) if params[:from_is_contract].present?
+    transactions = transactions.where("data->'info'->'from'->>'is_scam' = ?", params[:from_is_scam].to_s) if params[:from_is_scam].present?
+    transactions = transactions.where("data->'info'->'from'->>'is_verified' = ?", params[:from_is_verified].to_s) if params[:from_is_verified].present?
     transactions = transactions.where("data->'info'->'from'->>'name' ILIKE ?", "%#{params[:from_name]}%") if params[:from_name].present?
     transactions = transactions.where("data->'info'->'from'->>'proxy_type' = ?", params[:from_proxy_type]) if params[:from_proxy_type].present?
     transactions = transactions.where("data->'info'->'from'->>'private_tags' @> ?", [params[:from_private_tags]].to_json) if params[:from_private_tags].present?
@@ -327,9 +327,9 @@ class Api::V1::Ethereum::TransactionsController < Api::V1::Ethereum::BaseControl
     # To address fields
     transactions = transactions.where("data->'info'->'to'->>'ens_domain_name' ILIKE ?", "%#{params[:to_ens_domain_name]}%") if params[:to_ens_domain_name].present?
     transactions = transactions.where("data->'info'->'to'->>'hash' = ?", params[:to_hash]) if params[:to_hash].present?
-    transactions = transactions.where("CAST(data->'info'->'to'->>'is_contract' AS BOOLEAN) = ?", params[:to_is_contract]) if params[:to_is_contract].present?
-    transactions = transactions.where("CAST(data->'info'->'to'->>'is_scam' AS BOOLEAN) = ?", params[:to_is_scam]) if params[:to_is_scam].present?
-    transactions = transactions.where("CAST(data->'info'->'to'->>'is_verified' AS BOOLEAN) = ?", params[:to_is_verified]) if params[:to_is_verified].present?
+    transactions = transactions.where("data->'info'->'to'->>'is_contract' = ?", params[:to_is_contract].to_s) if params[:to_is_contract].present?
+    transactions = transactions.where("data->'info'->'to'->>'is_scam' = ?", params[:to_is_scam].to_s) if params[:to_is_scam].present?
+    transactions = transactions.where("data->'info'->'to'->>'is_verified' = ?", params[:to_is_verified].to_s) if params[:to_is_verified].present?
     transactions = transactions.where("data->'info'->'to'->>'name' ILIKE ?", "%#{params[:to_name]}%") if params[:to_name].present?
     transactions = transactions.where("data->'info'->'to'->>'proxy_type' = ?", params[:to_proxy_type]) if params[:to_proxy_type].present?
 
@@ -338,38 +338,38 @@ class Api::V1::Ethereum::TransactionsController < Api::V1::Ethereum::BaseControl
     transactions = transactions.where("data->'info'->'authorization_list' @> ?", [{"delegated_address": params[:authorization_list_delegated_address]}].to_json) if params[:authorization_list_delegated_address].present?
     transactions = transactions.where("data->'info'->'authorization_list' @> ?", [{"nonce": params[:authorization_list_nonce]}].to_json) if params[:authorization_list_nonce].present?
 
-    # Gas and fee fields
-    transactions = transactions.where("CAST(data->'info'->>'gas_used' AS NUMERIC) >= ?", params[:gas_used_min]) if params[:gas_used_min].present?
-    transactions = transactions.where("CAST(data->'info'->>'gas_used' AS NUMERIC) <= ?", params[:gas_used_max]) if params[:gas_used_max].present?
-    transactions = transactions.where("CAST(data->'info'->>'gas_limit' AS NUMERIC) >= ?", params[:gas_limit_min]) if params[:gas_limit_min].present?
-    transactions = transactions.where("CAST(data->'info'->>'gas_limit' AS NUMERIC) <= ?", params[:gas_limit_max]) if params[:gas_limit_max].present?
-    transactions = transactions.where("CAST(data->'info'->>'gas_price' AS NUMERIC) >= ?", params[:gas_price_min]) if params[:gas_price_min].present?
-    transactions = transactions.where("CAST(data->'info'->>'gas_price' AS NUMERIC) <= ?", params[:gas_price_max]) if params[:gas_price_max].present?
-    transactions = transactions.where("CAST(data->'info'->>'base_fee_per_gas' AS NUMERIC) >= ?", params[:base_fee_per_gas_min]) if params[:base_fee_per_gas_min].present?
-    transactions = transactions.where("CAST(data->'info'->>'base_fee_per_gas' AS NUMERIC) <= ?", params[:base_fee_per_gas_max]) if params[:base_fee_per_gas_max].present?
+    # Gas and fee fields using string comparisons
+    transactions = transactions.where("data->'info'->>'gas_used' >= ?", params[:gas_used_min]) if params[:gas_used_min].present?
+    transactions = transactions.where("data->'info'->>'gas_used' <= ?", params[:gas_used_max]) if params[:gas_used_max].present?
+    transactions = transactions.where("data->'info'->>'gas_limit' >= ?", params[:gas_limit_min]) if params[:gas_limit_min].present?
+    transactions = transactions.where("data->'info'->>'gas_limit' <= ?", params[:gas_limit_max]) if params[:gas_limit_max].present?
+    transactions = transactions.where("data->'info'->>'gas_price' >= ?", params[:gas_price_min]) if params[:gas_price_min].present?
+    transactions = transactions.where("data->'info'->>'gas_price' <= ?", params[:gas_price_max]) if params[:gas_price_max].present?
+    transactions = transactions.where("data->'info'->>'base_fee_per_gas' >= ?", params[:base_fee_per_gas_min]) if params[:base_fee_per_gas_min].present?
+    transactions = transactions.where("data->'info'->>'base_fee_per_gas' <= ?", params[:base_fee_per_gas_max]) if params[:base_fee_per_gas_max].present?
 
-    # Other core fields
+    # Other core fields using string comparisons
     transactions = transactions.where("data->'info'->>'method' ILIKE ?", "%#{params[:method]}%") if params[:method].present?
     transactions = transactions.where("data->'info'->>'status' = ?", params[:status]) if params[:status].present?
     transactions = transactions.where("data->'info'->>'timestamp' >= ?", params[:timestamp_min]) if params[:timestamp_min].present?
     transactions = transactions.where("data->'info'->>'timestamp' <= ?", params[:timestamp_max]) if params[:timestamp_max].present?
-    transactions = transactions.where("CAST(data->'info'->>'nonce' AS INTEGER) >= ?", params[:nonce_min]) if params[:nonce_min].present?
-    transactions = transactions.where("CAST(data->'info'->>'nonce' AS INTEGER) <= ?", params[:nonce_max]) if params[:nonce_max].present?
-    transactions = transactions.where("CAST(data->'info'->>'historic_exchange_rate' AS NUMERIC) >= ?", params[:historic_exchange_rate_min]) if params[:historic_exchange_rate_min].present?
-    transactions = transactions.where("CAST(data->'info'->>'historic_exchange_rate' AS NUMERIC) <= ?", params[:historic_exchange_rate_max]) if params[:historic_exchange_rate_max].present?
-    transactions = transactions.where("CAST(data->'info'->>'exchange_rate' AS NUMERIC) >= ?", params[:exchange_rate_min]) if params[:exchange_rate_min].present?
-    transactions = transactions.where("CAST(data->'info'->>'exchange_rate' AS NUMERIC) <= ?", params[:exchange_rate_max]) if params[:exchange_rate_max].present?
-    transactions = transactions.where("CAST(data->'info'->>'block_number' AS INTEGER) >= ?", params[:block_number_min]) if params[:block_number_min].present?
-    transactions = transactions.where("CAST(data->'info'->>'block_number' AS INTEGER) <= ?", params[:block_number_max]) if params[:block_number_max].present?
-    transactions = transactions.where("CAST(data->'info'->>'has_error_in_internal_transactions' AS BOOLEAN) = ?", params[:has_error_in_internal_transactions]) if params[:has_error_in_internal_transactions].present?
+    transactions = transactions.where("data->'info'->>'nonce' >= ?", params[:nonce_min]) if params[:nonce_min].present?
+    transactions = transactions.where("data->'info'->>'nonce' <= ?", params[:nonce_max]) if params[:nonce_max].present?
+    transactions = transactions.where("data->'info'->>'historic_exchange_rate' >= ?", params[:historic_exchange_rate_min]) if params[:historic_exchange_rate_min].present?
+    transactions = transactions.where("data->'info'->>'historic_exchange_rate' <= ?", params[:historic_exchange_rate_max]) if params[:historic_exchange_rate_max].present?
+    transactions = transactions.where("data->'info'->>'exchange_rate' >= ?", params[:exchange_rate_min]) if params[:exchange_rate_min].present?
+    transactions = transactions.where("data->'info'->>'exchange_rate' <= ?", params[:exchange_rate_max]) if params[:exchange_rate_max].present?
+    transactions = transactions.where("data->'info'->>'block_number' >= ?", params[:block_number_min]) if params[:block_number_min].present?
+    transactions = transactions.where("data->'info'->>'block_number' <= ?", params[:block_number_max]) if params[:block_number_max].present?
+    transactions = transactions.where("data->'info'->>'has_error_in_internal_transactions' = ?", params[:has_error_in_internal_transactions].to_s) if params[:has_error_in_internal_transactions].present?
     transactions = transactions.where("data->'info'->>'block_hash' = ?", params[:block_hash]) if params[:block_hash].present?
-    transactions = transactions.where("CAST(data->'info'->>'transaction_index' AS INTEGER) >= ?", params[:transaction_index_min]) if params[:transaction_index_min].present?
-    transactions = transactions.where("CAST(data->'info'->>'transaction_index' AS INTEGER) <= ?", params[:transaction_index_max]) if params[:transaction_index_max].present?
+    transactions = transactions.where("data->'info'->>'transaction_index' >= ?", params[:transaction_index_min]) if params[:transaction_index_min].present?
+    transactions = transactions.where("data->'info'->>'transaction_index' <= ?", params[:transaction_index_max]) if params[:transaction_index_max].present?
 
-    # Fee structure
+    # Fee structure using string comparisons
     transactions = transactions.where("data->'info'->'fee'->>'type' = ?", params[:fee_type]) if params[:fee_type].present?
-    transactions = transactions.where("CAST(data->'info'->'fee'->>'value' AS NUMERIC) >= ?", params[:fee_value_min]) if params[:fee_value_min].present?
-    transactions = transactions.where("CAST(data->'info'->'fee'->>'value' AS NUMERIC) <= ?", params[:fee_value_max]) if params[:fee_value_max].present?
+    transactions = transactions.where("data->'info'->'fee'->>'value' >= ?", params[:fee_value_min]) if params[:fee_value_min].present?
+    transactions = transactions.where("data->'info'->'fee'->>'value' <= ?", params[:fee_value_max]) if params[:fee_value_max].present?
 
     # Actions
     transactions = transactions.where("data->'info'->'actions' @> ?", [{"action_type": params[:actions_action_type]}].to_json) if params[:actions_action_type].present?
@@ -399,11 +399,11 @@ class Api::V1::Ethereum::TransactionsController < Api::V1::Ethereum::BaseControl
     transactions = transactions.where("data->'internal_transactions'->'items' @> ?", [{"from": {"hash": params[:internal_transactions_from_hash]}}].to_json) if params[:internal_transactions_from_hash].present?
     transactions = transactions.where("data->'internal_transactions'->'items' @> ?", [{"to": {"hash": params[:internal_transactions_to_hash]}}].to_json) if params[:internal_transactions_to_hash].present?
     transactions = transactions.where("data->'internal_transactions'->'items' @> ?", [{"type": params[:internal_transactions_type]}].to_json) if params[:internal_transactions_type].present?
-    transactions = transactions.where("CAST(data->'internal_transactions'->'items'->0->>'success' AS BOOLEAN) = ?", params[:internal_transactions_success]) if params[:internal_transactions_success].present?
-    transactions = transactions.where("CAST(data->'internal_transactions'->'items'->0->>'gas_limit' AS NUMERIC) >= ?", params[:internal_transactions_gas_limit_min]) if params[:internal_transactions_gas_limit_min].present?
-    transactions = transactions.where("CAST(data->'internal_transactions'->'items'->0->>'gas_limit' AS NUMERIC) <= ?", params[:internal_transactions_gas_limit_max]) if params[:internal_transactions_gas_limit_max].present?
-    transactions = transactions.where("CAST(data->'internal_transactions'->'items'->0->>'value' AS NUMERIC) >= ?", params[:internal_transactions_value_min]) if params[:internal_transactions_value_min].present?
-    transactions = transactions.where("CAST(data->'internal_transactions'->'items'->0->>'value' AS NUMERIC) <= ?", params[:internal_transactions_value_max]) if params[:internal_transactions_value_max].present?
+    transactions = transactions.where("data->'internal_transactions'->'items'->0->>'success' = ?", params[:internal_transactions_success].to_s) if params[:internal_transactions_success].present?
+    transactions = transactions.where("data->'internal_transactions'->'items'->0->>'gas_limit' >= ?", params[:internal_transactions_gas_limit_min]) if params[:internal_transactions_gas_limit_min].present?
+    transactions = transactions.where("data->'internal_transactions'->'items'->0->>'gas_limit' <= ?", params[:internal_transactions_gas_limit_max]) if params[:internal_transactions_gas_limit_max].present?
+    transactions = transactions.where("data->'internal_transactions'->'items'->0->>'value' >= ?", params[:internal_transactions_value_min]) if params[:internal_transactions_value_min].present?
+    transactions = transactions.where("data->'internal_transactions'->'items'->0->>'value' <= ?", params[:internal_transactions_value_max]) if params[:internal_transactions_value_max].present?
 
     # Logs
     transactions = transactions.where("data->'logs'->'items' @> ?", [{"address": {"hash": params[:logs_address_hash]}}].to_json) if params[:logs_address_hash].present?
@@ -425,24 +425,24 @@ class Api::V1::Ethereum::TransactionsController < Api::V1::Ethereum::BaseControl
     transactions = transactions.where("data->'raw_trace' @> ?", [{"result": {"output": params[:raw_trace_result_output]}}].to_json) if params[:raw_trace_result_output].present?
     transactions = transactions.where("data->'raw_trace' @> ?", [{"type": params[:raw_trace_type]}].to_json) if params[:raw_trace_type].present?
 
-    # State changes
+    # State changes using string comparisons
     transactions = transactions.where("data->'state_changes'->'items' @> ?", [{"address": {"hash": params[:state_changes_address_hash]}}].to_json) if params[:state_changes_address_hash].present?
-    transactions = transactions.where("CAST(data->'state_changes'->'items'->0->>'balance_after' AS NUMERIC) >= ?", params[:state_changes_balance_after_min]) if params[:state_changes_balance_after_min].present?
-    transactions = transactions.where("CAST(data->'state_changes'->'items'->0->>'balance_after' AS NUMERIC) <= ?", params[:state_changes_balance_after_max]) if params[:state_changes_balance_after_max].present?
-    transactions = transactions.where("CAST(data->'state_changes'->'items'->0->>'balance_before' AS NUMERIC) >= ?", params[:state_changes_balance_before_min]) if params[:state_changes_balance_before_min].present?
-    transactions = transactions.where("CAST(data->'state_changes'->'items'->0->>'balance_before' AS NUMERIC) <= ?", params[:state_changes_balance_before_max]) if params[:state_changes_balance_before_max].present?
-    transactions = transactions.where("CAST(data->'state_changes'->'items'->0->>'change' AS NUMERIC) >= ?", params[:state_changes_change_min]) if params[:state_changes_change_min].present?
-    transactions = transactions.where("CAST(data->'state_changes'->'items'->0->>'change' AS NUMERIC) <= ?", params[:state_changes_change_max]) if params[:state_changes_change_max].present?
-    transactions = transactions.where("CAST(data->'state_changes'->'items'->0->>'is_miner' AS BOOLEAN) = ?", params[:state_changes_is_miner]) if params[:state_changes_is_miner].present?
+    transactions = transactions.where("data->'state_changes'->'items'->0->>'balance_after' >= ?", params[:state_changes_balance_after_min]) if params[:state_changes_balance_after_min].present?
+    transactions = transactions.where("data->'state_changes'->'items'->0->>'balance_after' <= ?", params[:state_changes_balance_after_max]) if params[:state_changes_balance_after_max].present?
+    transactions = transactions.where("data->'state_changes'->'items'->0->>'balance_before' >= ?", params[:state_changes_balance_before_min]) if params[:state_changes_balance_before_min].present?
+    transactions = transactions.where("data->'state_changes'->'items'->0->>'balance_before' <= ?", params[:state_changes_balance_before_max]) if params[:state_changes_balance_before_max].present?
+    transactions = transactions.where("data->'state_changes'->'items'->0->>'change' >= ?", params[:state_changes_change_min]) if params[:state_changes_change_min].present?
+    transactions = transactions.where("data->'state_changes'->'items'->0->>'change' <= ?", params[:state_changes_change_max]) if params[:state_changes_change_max].present?
+    transactions = transactions.where("data->'state_changes'->'items'->0->>'is_miner' = ?", params[:state_changes_is_miner].to_s) if params[:state_changes_is_miner].present?
     transactions = transactions.where("data->'state_changes'->'items' @> ?", [{"token_id": params[:state_changes_token_id]}].to_json) if params[:state_changes_token_id].present?
     transactions = transactions.where("data->'state_changes'->'items' @> ?", [{"type": params[:state_changes_type]}].to_json) if params[:state_changes_type].present?
     transactions = transactions.where("data->'state_changes'->'items' @> ?", [{"token": {"address": params[:state_changes_token_address]}}].to_json) if params[:state_changes_token_address].present?
     transactions = transactions.where("data->'state_changes'->'items' @> ?", [{"token": {"symbol": params[:state_changes_token_symbol]}}].to_json) if params[:state_changes_token_symbol].present?
     transactions = transactions.where("data->'state_changes'->'items' @> ?", [{"token": {"name": params[:state_changes_token_name]}}].to_json) if params[:state_changes_token_name].present?
 
-    # Summary
-    transactions = transactions.where("CAST(data->'summary'->>'success' AS BOOLEAN) = ?", params[:summary_success]) if params[:summary_success].present?
-    transactions = transactions.where("CAST(data->'summary'->'data'->'debug_data'->>'is_prompt_truncated' AS BOOLEAN) = ?", params[:summary_debug_data_is_prompt_truncated]) if params[:summary_debug_data_is_prompt_truncated].present?
+    # Summary using string comparisons
+    transactions = transactions.where("data->'summary'->>'success' = ?", params[:summary_success].to_s) if params[:summary_success].present?
+    transactions = transactions.where("data->'summary'->'data'->'debug_data'->>'is_prompt_truncated' = ?", params[:summary_debug_data_is_prompt_truncated].to_s) if params[:summary_debug_data_is_prompt_truncated].present?
     transactions = transactions.where("data->'summary'->'data'->'debug_data'->>'model_classification_type' = ?", params[:summary_debug_data_model_classification_type]) if params[:summary_debug_data_model_classification_type].present?
     transactions = transactions.where("data->'summary'->'data'->'debug_data'->>'post_llm_classification_type' = ?", params[:summary_debug_data_post_llm_classification_type]) if params[:summary_debug_data_post_llm_classification_type].present?
     transactions = transactions.where("data->'summary'->'data'->'debug_data'->>'transaction_hash' = ?", params[:summary_debug_data_transaction_hash]) if params[:summary_debug_data_transaction_hash].present?
@@ -451,52 +451,62 @@ class Api::V1::Ethereum::TransactionsController < Api::V1::Ethereum::BaseControl
     transactions = transactions.where("data->'summary'->'data'->'debug_data'->'summary_template'->'transfer'->>'template_name' = ?", params[:summary_debug_data_summary_template_transfer_template_name]) if params[:summary_debug_data_summary_template_transfer_template_name].present?
     transactions = transactions.where("data->'summary'->'data'->'debug_data'->'summary_template'->'transfer'->'template_vars'->>'decoded_input' ILIKE ?", "%#{params[:summary_debug_data_summary_template_transfer_template_vars_decoded_input]}%") if params[:summary_debug_data_summary_template_transfer_template_vars_decoded_input].present?
     transactions = transactions.where("data->'summary'->'data'->'debug_data'->'summary_template'->'transfer'->'template_vars'->>'erc20_amount' = ?", params[:summary_debug_data_summary_template_transfer_template_vars_erc20_amount]) if params[:summary_debug_data_summary_template_transfer_template_vars_erc20_amount].present?
-    transactions = transactions.where("CAST(data->'summary'->'data'->'debug_data'->'summary_template'->'transfer'->'template_vars'->>'is_erc20_transfer' AS BOOLEAN) = ?", params[:summary_debug_data_summary_template_transfer_template_vars_is_erc20_transfer]) if params[:summary_debug_data_summary_template_transfer_template_vars_is_erc20_transfer].present?
-    transactions = transactions.where("CAST(data->'summary'->'data'->'debug_data'->'summary_template'->'transfer'->'template_vars'->>'is_nft_transfer' AS BOOLEAN) = ?", params[:summary_debug_data_summary_template_transfer_template_vars_is_nft_transfer]) if params[:summary_debug_data_summary_template_transfer_template_vars_is_nft_transfer].present?
+    transactions = transactions.where("data->'summary'->'data'->'debug_data'->'summary_template'->'transfer'->'template_vars'->>'is_erc20_transfer' = ?", params[:summary_debug_data_summary_template_transfer_template_vars_is_erc20_transfer].to_s) if params[:summary_debug_data_summary_template_transfer_template_vars_is_erc20_transfer].present?
+    transactions = transactions.where("data->'summary'->'data'->'debug_data'->'summary_template'->'transfer'->'template_vars'->>'is_nft_transfer' = ?", params[:summary_debug_data_summary_template_transfer_template_vars_is_nft_transfer].to_s) if params[:summary_debug_data_summary_template_transfer_template_vars_is_nft_transfer].present?
 
     # Summary template basic ETH transfer
     transactions = transactions.where("data->'summary'->'data'->'debug_data'->'summary_template'->'basic_eth_transfer'->>'template_name' = ?", params[:summary_debug_data_summary_template_basic_eth_transfer_template_name]) if params[:summary_debug_data_summary_template_basic_eth_transfer_template_name].present?
     transactions = transactions.where("data->'summary'->'data'->'debug_data'->'summary_template'->'basic_eth_transfer'->'template_vars'->>'ether_value' = ?", params[:summary_debug_data_summary_template_basic_eth_transfer_template_vars_ether_value]) if params[:summary_debug_data_summary_template_basic_eth_transfer_template_vars_ether_value].present?
     transactions = transactions.where("data->'summary'->'data'->'debug_data'->'summary_template'->'basic_eth_transfer'->'template_vars'->>'from_hash' = ?", params[:summary_debug_data_summary_template_basic_eth_transfer_template_vars_from_hash]) if params[:summary_debug_data_summary_template_basic_eth_transfer_template_vars_from_hash].present?
-    transactions = transactions.where("CAST(data->'summary'->'data'->'debug_data'->'summary_template'->'basic_eth_transfer'->'template_vars'->>'is_from_binance' AS BOOLEAN) = ?", params[:summary_debug_data_summary_template_basic_eth_transfer_template_vars_is_from_binance]) if params[:summary_debug_data_summary_template_basic_eth_transfer_template_vars_is_from_binance].present?
-    transactions = transactions.where("CAST(data->'summary'->'data'->'debug_data'->'summary_template'->'basic_eth_transfer'->'template_vars'->>'is_to_binance' AS BOOLEAN) = ?", params[:summary_debug_data_summary_template_basic_eth_transfer_template_vars_is_to_binance]) if params[:summary_debug_data_summary_template_basic_eth_transfer_template_vars_is_to_binance].present?
+    transactions = transactions.where("data->'summary'->'data'->'debug_data'->'summary_template'->'basic_eth_transfer'->'template_vars'->>'is_from_binance' = ?", params[:summary_debug_data_summary_template_basic_eth_transfer_template_vars_is_from_binance].to_s) if params[:summary_debug_data_summary_template_basic_eth_transfer_template_vars_is_from_binance].present?
+    transactions = transactions.where("data->'summary'->'data'->'debug_data'->'summary_template'->'basic_eth_transfer'->'template_vars'->>'is_to_binance' = ?", params[:summary_debug_data_summary_template_basic_eth_transfer_template_vars_is_to_binance].to_s) if params[:summary_debug_data_summary_template_basic_eth_transfer_template_vars_is_to_binance].present?
 
     # Summary summaries
     transactions = transactions.where("data->'summary'->'data'->'summaries'->0->>'summary_template' ILIKE ?", "%#{params[:summary_summaries_summary_template]}%") if params[:summary_summaries_summary_template].present?
     transactions = transactions.where("data->'summary'->'data'->'summaries'->0->'summary_template_variables'->'action_type'->>'type' = ?", params[:summary_summaries_summary_template_variables_action_type_type]) if params[:summary_summaries_summary_template_variables_action_type_type].present?
     transactions = transactions.where("data->'summary'->'data'->'summaries'->0->'summary_template_variables'->'action_type'->>'value' = ?", params[:summary_summaries_summary_template_variables_action_type_value]) if params[:summary_summaries_summary_template_variables_action_type_value].present?
 
-    # Token transfers next page params
-    transactions = transactions.where("CAST(data->'token_transfers'->'next_page_params'->>'block_number' AS INTEGER) >= ?", params[:token_transfers_next_page_params_block_number_min]) if params[:token_transfers_next_page_params_block_number_min].present?
-    transactions = transactions.where("CAST(data->'token_transfers'->'next_page_params'->>'block_number' AS INTEGER) <= ?", params[:token_transfers_next_page_params_block_number_max]) if params[:token_transfers_next_page_params_block_number_max].present?
-    transactions = transactions.where("CAST(data->'token_transfers'->'next_page_params'->>'index' AS INTEGER) >= ?", params[:token_transfers_next_page_params_index_min]) if params[:token_transfers_next_page_params_index_min].present?
-    transactions = transactions.where("CAST(data->'token_transfers'->'next_page_params'->>'index' AS INTEGER) <= ?", params[:token_transfers_next_page_params_index_max]) if params[:token_transfers_next_page_params_index_max].present?
-    transactions = transactions.where("CAST(data->'token_transfers'->'next_page_params'->>'items_count' AS INTEGER) >= ?", params[:token_transfers_next_page_params_items_count_min]) if params[:token_transfers_next_page_params_items_count_min].present?
-    transactions = transactions.where("CAST(data->'token_transfers'->'next_page_params'->>'items_count' AS INTEGER) <= ?", params[:token_transfers_next_page_params_items_count_max]) if params[:token_transfers_next_page_params_items_count_max].present?
+    # Token transfers next page params using string comparisons
+    transactions = transactions.where("data->'token_transfers'->'next_page_params'->>'block_number' >= ?", params[:token_transfers_next_page_params_block_number_min]) if params[:token_transfers_next_page_params_block_number_min].present?
+    transactions = transactions.where("data->'token_transfers'->'next_page_params'->>'block_number' <= ?", params[:token_transfers_next_page_params_block_number_max]) if params[:token_transfers_next_page_params_block_number_max].present?
+    transactions = transactions.where("data->'token_transfers'->'next_page_params'->>'index' >= ?", params[:token_transfers_next_page_params_index_min]) if params[:token_transfers_next_page_params_index_min].present?
+    transactions = transactions.where("data->'token_transfers'->'next_page_params'->>'index' <= ?", params[:token_transfers_next_page_params_index_max]) if params[:token_transfers_next_page_params_index_max].present?
+    transactions = transactions.where("data->'token_transfers'->'next_page_params'->>'items_count' >= ?", params[:token_transfers_next_page_params_items_count_min]) if params[:token_transfers_next_page_params_items_count_min].present?
+    transactions = transactions.where("data->'token_transfers'->'next_page_params'->>'items_count' <= ?", params[:token_transfers_next_page_params_items_count_max]) if params[:token_transfers_next_page_params_items_count_max].present?
 
     # Apply sorting
     sort_by = params[:sort_by] || 'id'
     sort_order = params[:sort_order]&.downcase == 'asc' ? 'asc' : 'desc'
 
     allowed_sort_fields = {
+      # Basic table fields
       'id' => 'ethereum_transactions.id',
       'transaction_hash' => 'ethereum_transactions.transaction_hash',
-      'value' => "CAST(data->'info'->>'value' AS NUMERIC)",
-      'gas_used' => "CAST(data->'info'->>'gas_used' AS NUMERIC)",
-      'gas_price' => "CAST(data->'info'->>'gas_price' AS NUMERIC)",
-      'priority_fee' => "CAST(data->'info'->>'priority_fee' AS NUMERIC)",
-      'max_fee_per_gas' => "CAST(data->'info'->>'max_fee_per_gas' AS NUMERIC)",
-      'transaction_burnt_fee' => "CAST(data->'info'->>'transaction_burnt_fee' AS NUMERIC)",
-      'confirmations' => "CAST(data->'info'->>'confirmations' AS INTEGER)",
-      'position' => "CAST(data->'info'->>'position' AS INTEGER)",
-      'type' => "CAST(data->'info'->>'type' AS INTEGER)",
-      'block_number' => "CAST(data->'info'->>'block_number' AS INTEGER)",
-      'transaction_index' => "CAST(data->'info'->>'transaction_index' AS INTEGER)",
-      'nonce' => "CAST(data->'info'->>'nonce' AS INTEGER)",
+      'created_at' => 'ethereum_transactions.created_at',
+      
+      # String-based JSON fields (no CAST operations for scalability)
       'timestamp' => "data->'info'->>'timestamp'",
-      'exchange_rate' => "CAST(data->'info'->>'exchange_rate' AS NUMERIC)",
-      'historic_exchange_rate' => "CAST(data->'info'->>'historic_exchange_rate' AS NUMERIC)",
-      'created_at' => 'transactions.created_at'
+      'method' => "data->'info'->>'method'",
+      'status' => "data->'info'->>'status'",
+      'result' => "data->'info'->>'result'",
+      'hash' => "data->'info'->>'hash'",
+      'block_hash' => "data->'info'->>'block_hash'",
+      'from_hash' => "data->'info'->'from'->>'hash'",
+      'to_hash' => "data->'info'->'to'->>'hash'",
+      'from_name' => "data->'info'->'from'->>'name'",
+      'to_name' => "data->'info'->'to'->>'name'",
+      'transaction_tag' => "data->'info'->>'transaction_tag'",
+      'created_contract' => "data->'info'->>'created_contract'",
+      
+      # Boolean fields (convert to numeric for sorting)
+      'from_is_contract' => "CASE WHEN data->'info'->'from'->>'is_contract' = 'true' THEN 1 ELSE 0 END",
+      'from_is_verified' => "CASE WHEN data->'info'->'from'->>'is_verified' = 'true' THEN 1 ELSE 0 END",
+      'from_is_scam' => "CASE WHEN data->'info'->'from'->>'is_scam' = 'true' THEN 1 ELSE 0 END",
+      'to_is_contract' => "CASE WHEN data->'info'->'to'->>'is_contract' = 'true' THEN 1 ELSE 0 END",
+      'to_is_verified' => "CASE WHEN data->'info'->'to'->>'is_verified' = 'true' THEN 1 ELSE 0 END",
+      'to_is_scam' => "CASE WHEN data->'info'->'to'->>'is_scam' = 'true' THEN 1 ELSE 0 END",
+      'has_error_in_internal_transactions' => "CASE WHEN data->'info'->>'has_error_in_internal_transactions' = 'true' THEN 1 ELSE 0 END",
+      'token_transfers_overflow' => "CASE WHEN data->'info'->>'token_transfers_overflow' = 'true' THEN 1 ELSE 0 END"
     }
 
     if allowed_sort_fields.key?(sort_by)
