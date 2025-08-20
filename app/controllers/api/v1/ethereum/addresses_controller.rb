@@ -216,18 +216,16 @@ class Api::V1::Ethereum::AddressesController < Api::V1::Ethereum::BaseController
   # @parameter sort_by(query) [String] Field to sort by (default: "id")
   # @parameter sort_order(query) [String] Sort direction: "asc" or "desc" (default: "desc")
   # @response success(200) [Hash{results: Array<Hash{id: Integer, address_hash: String, data: Hash}>, pagination: Hash{total: Integer, limit: Integer, offset: Integer, page: Integer, total_pages: Integer}}]
-  # This endpoint provides 150+ parameters to search for addresses based on the provided input.
+  # This endpoint provides address search with string-based comparisons for scalability (no CAST operations).
   def json_search
     addresses = EthereumAddress.where(nil)
     
-    # ETH Balance search (in ETH units - converted to wei)
+    # ETH Balance search (in ETH units)
     if params[:eth_balance_min].present?
-      eth_min_wei = (params[:eth_balance_min].to_f * 1e18).to_s
-      addresses = addresses.where("CAST(data->'info'->>'coin_balance' AS NUMERIC) >= ?", eth_min_wei)
+      addresses = addresses.where("eth_balance >= ?", params[:eth_balance_min].to_f)
     end
     if params[:eth_balance_max].present?
-      eth_max_wei = (params[:eth_balance_max].to_f * 1e18).to_s
-      addresses = addresses.where("CAST(data->'info'->>'coin_balance' AS NUMERIC) <= ?", eth_max_wei)
+      addresses = addresses.where("eth_balance <= ?", params[:eth_balance_max].to_f)
     end
     
     # Info fields - Boolean
@@ -249,23 +247,23 @@ class Api::V1::Ethereum::AddressesController < Api::V1::Ethereum::BaseController
     addresses = addresses.where("data->'info'->>'proxy_type' = ?", params[:proxy_type]) if params[:proxy_type].present?
     addresses = addresses.where("data->'info'->>'watchlist_address_id' = ?", params[:watchlist_address_id]) if params[:watchlist_address_id].present?
     
-    # Info fields - Numeric with min/max
-    addresses = addresses.where("CAST(data->'info'->>'coin_balance' AS NUMERIC) >= ?", params[:coin_balance_min]) if params[:coin_balance_min].present?
-    addresses = addresses.where("CAST(data->'info'->>'coin_balance' AS NUMERIC) <= ?", params[:coin_balance_max]) if params[:coin_balance_max].present?
-    addresses = addresses.where("CAST(data->'info'->>'exchange_rate' AS DECIMAL) >= ?", params[:exchange_rate_min].to_f) if params[:exchange_rate_min].present?
-    addresses = addresses.where("CAST(data->'info'->>'exchange_rate' AS DECIMAL) <= ?", params[:exchange_rate_max].to_f) if params[:exchange_rate_max].present?
-    addresses = addresses.where("CAST(data->'info'->>'block_number_balance_updated_at' AS INTEGER) >= ?", params[:block_number_balance_updated_at_min].to_i) if params[:block_number_balance_updated_at_min].present?
-    addresses = addresses.where("CAST(data->'info'->>'block_number_balance_updated_at' AS INTEGER) <= ?", params[:block_number_balance_updated_at_max].to_i) if params[:block_number_balance_updated_at_max].present?
+    # Info fields - Numeric with min/max using string comparisons
+    addresses = addresses.where("data->'info'->>'coin_balance' >= ?", params[:coin_balance_min]) if params[:coin_balance_min].present?
+    addresses = addresses.where("data->'info'->>'coin_balance' <= ?", params[:coin_balance_max]) if params[:coin_balance_max].present?
+    addresses = addresses.where("data->'info'->>'exchange_rate' >= ?", params[:exchange_rate_min]) if params[:exchange_rate_min].present?
+    addresses = addresses.where("data->'info'->>'exchange_rate' <= ?", params[:exchange_rate_max]) if params[:exchange_rate_max].present?
+    addresses = addresses.where("data->'info'->>'block_number_balance_updated_at' >= ?", params[:block_number_balance_updated_at_min]) if params[:block_number_balance_updated_at_min].present?
+    addresses = addresses.where("data->'info'->>'block_number_balance_updated_at' <= ?", params[:block_number_balance_updated_at_max]) if params[:block_number_balance_updated_at_max].present?
     
     # Counter fields
-    addresses = addresses.where("CAST(data->'counters'->>'transactions_count' AS INTEGER) >= ?", params[:transactions_count_min].to_i) if params[:transactions_count_min].present?
-    addresses = addresses.where("CAST(data->'counters'->>'transactions_count' AS INTEGER) <= ?", params[:transactions_count_max].to_i) if params[:transactions_count_max].present?
-    addresses = addresses.where("CAST(data->'counters'->>'token_transfers_count' AS INTEGER) >= ?", params[:token_transfers_count_min].to_i) if params[:token_transfers_count_min].present?
-    addresses = addresses.where("CAST(data->'counters'->>'token_transfers_count' AS INTEGER) <= ?", params[:token_transfers_count_max].to_i) if params[:token_transfers_count_max].present?
-    addresses = addresses.where("CAST(data->'counters'->>'gas_usage_count' AS INTEGER) >= ?", params[:gas_usage_count_min].to_i) if params[:gas_usage_count_min].present?
-    addresses = addresses.where("CAST(data->'counters'->>'gas_usage_count' AS INTEGER) <= ?", params[:gas_usage_count_max].to_i) if params[:gas_usage_count_max].present?
-    addresses = addresses.where("CAST(data->'counters'->>'validations_count' AS INTEGER) >= ?", params[:validations_count_min].to_i) if params[:validations_count_min].present?
-    addresses = addresses.where("CAST(data->'counters'->>'validations_count' AS INTEGER) <= ?", params[:validations_count_max].to_i) if params[:validations_count_max].present?
+    addresses = addresses.where("data->'counters'->>'transactions_count' >= ?", params[:transactions_count_min]) if params[:transactions_count_min].present?
+    addresses = addresses.where("data->'counters'->>'transactions_count' <= ?", params[:transactions_count_max]) if params[:transactions_count_max].present?
+    addresses = addresses.where("data->'counters'->>'token_transfers_count' >= ?", params[:token_transfers_count_min]) if params[:token_transfers_count_min].present?
+    addresses = addresses.where("data->'counters'->>'token_transfers_count' <= ?", params[:token_transfers_count_max]) if params[:token_transfers_count_max].present?
+    addresses = addresses.where("data->'counters'->>'gas_usage_count' >= ?", params[:gas_usage_count_min]) if params[:gas_usage_count_min].present?
+    addresses = addresses.where("data->'counters'->>'gas_usage_count' <= ?", params[:gas_usage_count_max]) if params[:gas_usage_count_max].present?
+    addresses = addresses.where("data->'counters'->>'validations_count' >= ?", params[:validations_count_min]) if params[:validations_count_min].present?
+    addresses = addresses.where("data->'counters'->>'validations_count' <= ?", params[:validations_count_max]) if params[:validations_count_max].present?
     
     # Transaction fields (nested in transactions->items array)
     addresses = addresses.where("data->'transactions'->'items' @> ?", [{ hash: params[:tx_hash] }].to_json) if params[:tx_hash].present?
@@ -364,12 +362,7 @@ class Api::V1::Ethereum::AddressesController < Api::V1::Ethereum::BaseController
       'created_at' => 'ethereum_addresses.created_at',
       'updated_at' => 'ethereum_addresses.updated_at',
       'address_hash' => 'ethereum_addresses.address_hash',
-      
-      # Balance fields (from JSON data)
-      'eth_balance' => "CAST(data->'info'->>'coin_balance' AS NUMERIC)",
-      'coin_balance' => "CAST(data->'info'->>'coin_balance' AS NUMERIC)",
-      'exchange_rate' => "CAST(data->'info'->>'exchange_rate' AS DECIMAL)",
-      'block_number_balance_updated_at' => "CAST(data->'info'->>'block_number_balance_updated_at' AS INTEGER)",
+      'eth_balance' => 'ethereum_addresses.eth_balance',
       
       # Boolean fields (convert to numeric for sorting)
       'has_logs' => "CASE WHEN data->'info'->>'has_logs' = 'true' THEN 1 ELSE 0 END",
@@ -390,50 +383,22 @@ class Api::V1::Ethereum::AddressesController < Api::V1::Ethereum::BaseController
       'proxy_type' => "data->'info'->>'proxy_type'",
       'watchlist_address_id' => "data->'info'->>'watchlist_address_id'",
       
-      # Counter fields
-      'transactions_count' => "CAST(data->'counters'->>'transactions_count' AS INTEGER)",
-      'token_transfers_count' => "CAST(data->'counters'->>'token_transfers_count' AS INTEGER)",
-      'gas_usage_count' => "CAST(data->'counters'->>'gas_usage_count' AS INTEGER)",
-      'validations_count' => "CAST(data->'counters'->>'validations_count' AS INTEGER)",
-      
-
-      
       # Transaction fields (from transactions->items array, using first item)
       'tx_hash' => "data->'transactions'->'items'->0->>'hash'",
       'tx_status' => "data->'transactions'->'items'->0->>'status'",
       'tx_result' => "data->'transactions'->'items'->0->>'result'",
       'tx_method' => "data->'transactions'->'items'->0->>'method'",
-      'tx_type' => "CAST(data->'transactions'->'items'->0->>'type' AS INTEGER)",
-      'tx_value' => "CAST(data->'transactions'->'items'->0->>'value' AS NUMERIC)",
-      'tx_gas_used' => "CAST(data->'transactions'->'items'->0->>'gas_used' AS NUMERIC)",
-      'tx_gas_limit' => "CAST(data->'transactions'->'items'->0->>'gas_limit' AS NUMERIC)",
-      'tx_gas_price' => "CAST(data->'transactions'->'items'->0->>'gas_price' AS NUMERIC)",
-      'tx_block_number' => "CAST(data->'transactions'->'items'->0->>'block_number' AS INTEGER)",
       'tx_block_hash' => "data->'transactions'->'items'->0->>'block_hash'",
-      'tx_priority_fee' => "CAST(data->'transactions'->'items'->0->>'priority_fee' AS NUMERIC)",
       'tx_raw_input' => "data->'transactions'->'items'->0->>'raw_input'",
-      'tx_max_fee_per_gas' => "CAST(data->'transactions'->'items'->0->>'max_fee_per_gas' AS NUMERIC)",
       'tx_revert_reason' => "data->'transactions'->'items'->0->>'revert_reason'",
-      'tx_transaction_burnt_fee' => "CAST(data->'transactions'->'items'->0->>'transaction_burnt_fee' AS NUMERIC)",
       'tx_token_transfers_overflow' => "CASE WHEN data->'transactions'->'items'->0->>'token_transfers_overflow' = 'true' THEN 1 ELSE 0 END",
-      'tx_confirmations' => "CAST(data->'transactions'->'items'->0->>'confirmations' AS INTEGER)",
-      'tx_position' => "CAST(data->'transactions'->'items'->0->>'position' AS INTEGER)",
-      'tx_max_priority_fee_per_gas' => "CAST(data->'transactions'->'items'->0->>'max_priority_fee_per_gas' AS NUMERIC)",
       'tx_transaction_tag' => "data->'transactions'->'items'->0->>'transaction_tag'",
       'tx_created_contract' => "data->'transactions'->'items'->0->>'created_contract'",
-      'tx_base_fee_per_gas' => "CAST(data->'transactions'->'items'->0->>'base_fee_per_gas' AS NUMERIC)",
       'tx_timestamp' => "data->'transactions'->'items'->0->>'timestamp'",
-      'tx_nonce' => "CAST(data->'transactions'->'items'->0->>'nonce' AS INTEGER)",
-      'tx_historic_exchange_rate' => "CAST(data->'transactions'->'items'->0->>'historic_exchange_rate' AS DECIMAL)",
-      'tx_exchange_rate' => "CAST(data->'transactions'->'items'->0->>'exchange_rate' AS DECIMAL)",
       'tx_has_error_in_internal_transactions' => "CASE WHEN data->'transactions'->'items'->0->>'has_error_in_internal_transactions' = 'true' THEN 1 ELSE 0 END",
-      'tx_log_index' => "CAST(data->'transactions'->'items'->0->>'log_index' AS INTEGER)",
       'tx_decoded_input' => "data->'transactions'->'items'->0->>'decoded_input'",
       'tx_token_transfers' => "data->'transactions'->'items'->0->>'token_transfers'",
       'tx_fee_type' => "data->'transactions'->'items'->0->'fee'->>'type'",
-      'tx_fee_value' => "CAST(data->'transactions'->'items'->0->'fee'->>'value' AS NUMERIC)",
-      'tx_total_decimals' => "CAST(data->'transactions'->'items'->0->'total'->>'decimals' AS INTEGER)",
-      'tx_total_value' => "CAST(data->'transactions'->'items'->0->'total'->>'value' AS NUMERIC)",
       
       # Transaction from/to address fields
       'tx_from_hash' => "data->'transactions'->'items'->0->'from'->>'hash'",
@@ -456,14 +421,8 @@ class Api::V1::Ethereum::AddressesController < Api::V1::Ethereum::BaseController
       'token_name' => "data->'token_balances'->0->'token'->>'name'",
       'token_symbol' => "data->'token_balances'->0->'token'->>'symbol'",
       'token_type' => "data->'token_balances'->0->'token'->>'type'",
-      'token_decimals' => "CAST(data->'token_balances'->0->'token'->>'decimals' AS INTEGER)",
-      'token_holders' => "CAST(data->'token_balances'->0->'token'->>'holders' AS INTEGER)",
-      'token_total_supply' => "CAST(data->'token_balances'->0->'token'->>'total_supply' AS NUMERIC)",
-      'token_balance_value' => "CAST(data->'token_balances'->0->>'value' AS NUMERIC)",
       'token_id' => "data->'token_balances'->0->>'token_id'",
-      'token_circulating_market_cap' => "CAST(data->'token_balances'->0->'token'->>'circulating_market_cap' AS NUMERIC)",
       'token_icon_url' => "data->'token_balances'->0->'token'->>'icon_url'",
-      'token_volume_24h' => "CAST(data->'token_balances'->0->'token'->>'volume_24h' AS NUMERIC)",
       
       # Token instance fields (from tokens->items array, using first item)
       'token_instance_animation_url' => "data->'tokens'->'items'->0->'token_instance'->>'animation_url'",
@@ -489,13 +448,11 @@ class Api::V1::Ethereum::AddressesController < Api::V1::Ethereum::BaseController
       'nft_token_type' => "data->'nft'->'items'->0->>'token_type'",
       'nft_metadata_description' => "data->'nft'->'items'->0->'metadata'->>'description'",
       'nft_metadata_name' => "data->'nft'->'items'->0->'metadata'->>'name'",
-      'nft_collections_amount' => "CAST(data->'nft_collections'->'items'->0->>'amount' AS INTEGER)",
       
       # Metadata tags fields (from transactions->items->from->metadata->tags array)
       'metadata_tags_name' => "data->'transactions'->'items'->0->'from'->'metadata'->'tags'->0->>'name'",
       'metadata_tags_slug' => "data->'transactions'->'items'->0->'from'->'metadata'->'tags'->0->>'slug'",
       'metadata_tags_tag_type' => "data->'transactions'->'items'->0->'from'->'metadata'->'tags'->0->>'tagType'",
-      'metadata_tags_ordinal' => "CAST(data->'transactions'->'items'->0->'from'->'metadata'->'tags'->0->>'ordinal' AS INTEGER)",
       'metadata_tags_meta_main_entity' => "data->'transactions'->'items'->0->'from'->'metadata'->'tags'->0->'meta'->>'main_entity'",
       'metadata_tags_meta_tooltip_url' => "data->'transactions'->'items'->0->'from'->'metadata'->'tags'->0->'meta'->>'tooltipUrl'"
     }
@@ -510,7 +467,7 @@ class Api::V1::Ethereum::AddressesController < Api::V1::Ethereum::BaseController
       end
     else
       # Default fallback
-      addresses = addresses.order(Arel.sql("ethereum_addresses.id DESC"))
+      addresses = addresses.order(id: :desc)
     end
     
     # Apply pagination with defaults

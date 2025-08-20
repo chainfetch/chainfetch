@@ -7,7 +7,8 @@ class AddressDataJob < ApplicationJob
     address = EthereumAddress.find(address_id)
     
     address_data = Ethereum::AddressDataService.new(address.address_hash).call
-    address.update!(data: address_data)
+    eth_balance = BigDecimal(address_data['info']['coin_balance']) / 1e18
+    address.update!(data: address_data, eth_balance: eth_balance)
 
     if address_data['info']['is_contract']
       smart_contract = EthereumSmartContract.find_or_create_by!(address_hash: address.address_hash)
