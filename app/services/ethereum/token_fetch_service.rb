@@ -22,7 +22,7 @@ class Ethereum::TokenFetchService < Ethereum::BaseService
     
     tokens_data["items"].each do |token_data|
       begin
-        address_hash = token_data["address"]
+        address_hash = token_data["address_hash"]
         next unless address_hash.present?
         
         token = EthereumToken.find_or_create_by!(address_hash: address_hash.downcase)
@@ -31,7 +31,7 @@ class Ethereum::TokenFetchService < Ethereum::BaseService
         Rails.logger.info "Created token: #{token.address_hash} (#{token_data['name']})"
         
       rescue => e
-        Rails.logger.error "Failed to create token #{token_data['address']}: #{e.message}"
+        Rails.logger.error "Failed to create token #{token_data['address_hash']}: #{e.message}"
       end
     end
     
