@@ -5,7 +5,7 @@ metadata:
   namespace: metallb-system
 spec:
   addresses:
-    - 95.217.88.254/32  # VPS public IP
+    - 95.216.11.35/32  # VPS public IP
 ---
 apiVersion: metallb.io/v1beta1
 kind: L2Advertisement

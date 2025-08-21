@@ -9,9 +9,8 @@ class BlockDataSearchService
 
   def initialize(query)
     @query = query
-    @api_url = "https://llama.chainfetch.app"
-    @model = "llama3.2:3b"
-    @api_key = Rails.application.credentials.auth_bearer_token
+    @api_url = "https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:generateContent"
+    @api_key = Rails.application.credentials.gemini_api_key
     @base_url = Rails.env.production? ? 'https://chainfetch.app' : 'http://localhost:3000'
   end
 
@@ -79,19 +78,18 @@ class BlockDataSearchService
       Always call the search_blocks tool with the parameters that best match the user's intent.
     PROMPT
 
-    response = make_llama_request(system_prompt, user_query)
+    response = make_gemini_request(system_prompt, user_query)
     parse_tool_call_response(response)
   end
 
   def parse_tool_call_response(response)
-    tool_calls = JSON.parse(response)
+    parsed_response = JSON.parse(response)
     
-    if tool_calls.is_a?(Array) && tool_calls.first&.dig("function", "name") == "search_blocks"
-      arguments = JSON.parse(tool_calls.first.dig("function", "arguments"))
-      return arguments
-    elsif tool_calls.is_a?(Hash) && tool_calls.dig("function", "name") == "search_blocks"
-      arguments = JSON.parse(tool_calls.dig("function", "arguments"))
-      return arguments
+    # Gemini response structure: candidates[0].content.parts[0].functionCall
+    function_call = parsed_response.dig("candidates", 0, "content", "parts", 0, "functionCall")
+    
+    if function_call&.dig("name") == "search_blocks"
+      return function_call.dig("args") || {}
     else
       raise InvalidQueryError, "No valid tool call found in response"
     end
@@ -171,8 +169,8 @@ class BlockDataSearchService
     end
   end
 
-  def make_llama_request(system_prompt, user_prompt)
-    uri = URI("#{@api_url}/v1/chat/completions")
+  def make_gemini_request(system_prompt, user_prompt)
+    uri = URI(@api_url)
     
     # Use a thread to avoid deadlock when making external requests
     response = Thread.new do
@@ -186,21 +184,25 @@ class BlockDataSearchService
       
       request = Net::HTTP::Post.new(uri)
       request['Content-Type'] = 'application/json'
-      request['Authorization'] = "Bearer #{@api_key}"
+      request['x-goog-api-key'] = @api_key
       request.body = {
-        messages: [
-          { role: "system", content: system_prompt },
-          { role: "user", content: user_prompt }
+        contents: [
+          {
+            role: "user",
+            parts: [
+              {
+                text: "#{system_prompt}\n\nUser Query: #{user_prompt}"
+              }
+            ]
+          }
         ],
-      model: @model,
-      tools: [{
-        type: "function",
-        function: {
-          name: "search_blocks",
-          description: "Search for Ethereum blocks based on various criteria",
-          parameters: {
-            type: "object",
-            properties: {
+        tools: [{
+          functionDeclarations: [{
+            name: "search_blocks",
+            description: "Search for Ethereum blocks based on various criteria",
+            parameters: {
+              type: "object",
+              properties: {
               # Block info fields - Numeric with min/max
               base_fee_per_gas_min: { type: "string", description: "Minimum base fee per gas" },
               base_fee_per_gas_max: { type: "string", description: "Maximum base fee per gas" },
@@ -367,11 +369,9 @@ class BlockDataSearchService
               sort_by: { type: "string", description: "Field to sort by (e.g., height, gas_used, transaction_fees, timestamp, etc.)" },
               sort_order: { type: "string", description: "Sort order: 'asc' for ascending or 'desc' for descending (default: 'desc')" }
             },
-            required: [],
-            additionalProperties: false
-          },
-          strict: true
-        }
+            required: []
+          }
+        }]
       }]
     }.to_json
 
@@ -380,13 +380,6 @@ class BlockDataSearchService
     
     raise ApiError, "API error: #{response.code}" unless response.code == '200'
     
-    parsed_response = JSON.parse(response.body)
-    tool_calls = parsed_response.dig("choices", 0, "message", "tool_calls")
-    
-    if tool_calls.nil?
-      raise InvalidQueryError, "No tool calls found in response"
-    end
-    
-    tool_calls.to_json
+    response.body
   end
 end

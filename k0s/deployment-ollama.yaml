@@ -5,11 +5,6 @@
 # Access: http://ollama.chainfetch.svc.cluster.local:11434
 #
 apiVersion: v1
-kind: Namespace
-metadata:
-  name: chainfetch
----
-apiVersion: v1
 kind: PersistentVolumeClaim
 metadata:
   name: ollama-qwen-embedding-models-pvc

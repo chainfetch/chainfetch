@@ -12,7 +12,7 @@ class BlockDataJob < ApplicationJob
     summary = Ethereum::BlockSummaryService.new(block_data).call
     return if block_data.nil? || summary.nil?
     block.update(data: block_data, summary: summary)
-    embedding = EmbeddingService.new(summary).call
+    embedding = Embedding::GeminiService.new(summary).embed_document
     QdrantService.new.upsert_point(collection: "blocks", id: block_id.to_i, vector: embedding, payload: { summary: summary })
     broadcast_block_summary(block.block_number, summary)
     block_data.dig('transactions', 'items').each do |transaction_data|

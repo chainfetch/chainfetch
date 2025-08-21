@@ -4,6 +4,11 @@
 # Deployment: kubectl apply -f deployment-rails.yaml
 #
 apiVersion: v1
+kind: Namespace
+metadata:
+  name: chainfetch
+---
+apiVersion: v1
 kind: PersistentVolumeClaim
 metadata:
   name: postgres-data-longhorn
@@ -14,7 +19,7 @@ spec:
   storageClassName: longhorn
   resources:
     requests:
-      storage: 400Gi
+      storage: 150Gi
 ---
 apiVersion: apps/v1
 kind: Deployment

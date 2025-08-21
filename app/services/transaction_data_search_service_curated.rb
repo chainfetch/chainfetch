@@ -9,9 +9,8 @@ class TransactionDataSearchServiceCurated
 
   def initialize(query)
     @query = query
-    @api_url = "https://llama.chainfetch.app"
-    @model = "llama3.2:3b"
-    @api_key = Rails.application.credentials.auth_bearer_token
+    @api_url = "https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:generateContent"
+    @api_key = Rails.application.credentials.gemini_api_key
     @base_url = Rails.env.production? ? 'https://chainfetch.app' : 'http://localhost:3000'
   end
 
@@ -66,19 +65,18 @@ class TransactionDataSearchServiceCurated
       Only include parameters that are directly relevant to the user's query. Be precise and use appropriate parameter names.
     PROMPT
 
-    response = make_llama_request(system_prompt, user_query)
+    response = make_gemini_request(system_prompt, user_query)
     parse_tool_call_response(response)
   end
 
-  def parse_tool_call_response(response)
-    tool_calls = JSON.parse(response)
-
-    if tool_calls.is_a?(Array) && tool_calls.first&.dig("function", "name") == "search_transactions"
-      arguments = JSON.parse(tool_calls.first.dig("function", "arguments"))
-      return arguments
-    elsif tool_calls.is_a?(Hash) && tool_calls.dig("function", "name") == "search_transactions"
-      arguments = JSON.parse(tool_calls.dig("function", "arguments"))
-      return arguments
+    def parse_tool_call_response(response)
+    parsed_response = JSON.parse(response)
+    
+    # Gemini response structure: candidates[0].content.parts[0].functionCall
+    function_call = parsed_response.dig("candidates", 0, "content", "parts", 0, "functionCall")
+    
+    if function_call&.dig("name") == "search_transactions"
+      return function_call.dig("args") || {}
     else
       raise InvalidQueryError, "No valid tool call found in response"
     end
@@ -140,8 +138,8 @@ class TransactionDataSearchServiceCurated
     }
   end
 
-  def make_llama_request(system_prompt, user_prompt)
-    uri = URI("#{@api_url}/v1/chat/completions")
+  def make_gemini_request(system_prompt, user_prompt)
+    uri = URI(@api_url)
     
     # Use a thread to avoid deadlock when making external requests
     response = Thread.new do
@@ -155,16 +153,20 @@ class TransactionDataSearchServiceCurated
 
       request = Net::HTTP::Post.new(uri)
       request['Content-Type'] = 'application/json'
-      request['Authorization'] = "Bearer #{@api_key}"
+      request['x-goog-api-key'] = @api_key
       request.body = {
-        messages: [
-          { role: "system", content: system_prompt },
-          { role: "user", content: user_prompt }
+        contents: [
+          {
+            role: "user",
+            parts: [
+              {
+                text: "#{system_prompt}\n\nUser Query: #{user_prompt}"
+              }
+            ]
+          }
         ],
-        model: @model,
         tools: [{
-          type: "function",
-          function: {
+          functionDeclarations: [{
             name: "search_transactions",
           description: "Search for Ethereum transactions based on various criteria",
           parameters: {
@@ -466,11 +468,9 @@ class TransactionDataSearchServiceCurated
               sort_by: { type: "string", description: "Field to sort by (e.g., value, gas_used, timestamp, priority_fee, etc.)" },
               sort_order: { type: "string", description: "Sort order: 'asc' for ascending or 'desc' for descending (default: 'desc')" }
             },
-            required: [],
-            additionalProperties: false
-          },
-          strict: true
-        }
+            required: []
+          }
+        }]
       }]
     }.to_json
 
@@ -479,16 +479,6 @@ class TransactionDataSearchServiceCurated
     
     raise ApiError, "API error: #{response.code}" unless response.code == '200'
 
-    parsed_response = JSON.parse(response.body)
-    Rails.logger.debug "LLM Response: #{parsed_response}"
-    tool_calls = parsed_response.dig("choices", 0, "message", "tool_calls")
-
-    if tool_calls.nil?
-      message_content = parsed_response.dig("choices", 0, "message", "content")
-      Rails.logger.error "No tool calls found. Message content: #{message_content}"
-      raise InvalidQueryError, "No tool calls found in response: #{message_content}"
-    end
-
-    tool_calls.to_json
+    response.body
   end
 end

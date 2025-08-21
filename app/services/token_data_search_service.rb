@@ -9,9 +9,8 @@ class TokenDataSearchService
 
   def initialize(query)
     @query = query
-    @api_url = "https://llama.chainfetch.app"
-    @model = "llama3.2:3b"
-    @api_key = Rails.application.credentials.auth_bearer_token
+    @api_url = "https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:generateContent"
+    @api_key = Rails.application.credentials.gemini_api_key
     @base_url = Rails.env.production? ? 'https://chainfetch.app' : 'http://localhost:3000'
   end
 
@@ -73,19 +72,18 @@ class TokenDataSearchService
       Always call the search_tokens tool with the parameters that best match the user's intent.
     PROMPT
 
-    response = make_llama_request(system_prompt, user_query)
+    response = make_gemini_request(system_prompt, user_query)
     parse_tool_call_response(response)
   end
 
   def parse_tool_call_response(response)
-    tool_calls = JSON.parse(response)
+    parsed_response = JSON.parse(response)
     
-    if tool_calls.is_a?(Array) && tool_calls.first&.dig("function", "name") == "search_tokens"
-      arguments = JSON.parse(tool_calls.first.dig("function", "arguments"))
-      return arguments
-    elsif tool_calls.is_a?(Hash) && tool_calls.dig("function", "name") == "search_tokens"
-      arguments = JSON.parse(tool_calls.dig("function", "arguments"))
-      return arguments
+    # Gemini response structure: candidates[0].content.parts[0].functionCall
+    function_call = parsed_response.dig("candidates", 0, "content", "parts", 0, "functionCall")
+    
+    if function_call&.dig("name") == "search_tokens"
+      return function_call.dig("args") || {}
     else
       raise InvalidQueryError, "No valid tool call found in response"
     end
@@ -165,8 +163,8 @@ class TokenDataSearchService
     end
   end
 
-  def make_llama_request(system_prompt, user_prompt)
-    uri = URI("#{@api_url}/v1/chat/completions")
+  def make_gemini_request(system_prompt, user_prompt)
+    uri = URI(@api_url)
     
     # Use a thread to avoid deadlock when making external requests
     response = Thread.new do
@@ -180,83 +178,78 @@ class TokenDataSearchService
       
       request = Net::HTTP::Post.new(uri)
       request['Content-Type'] = 'application/json'
-      request['Authorization'] = "Bearer #{@api_key}"
+      request['x-goog-api-key'] = @api_key
       request.body = {
-      messages: [
-        { role: "system", content: system_prompt },
-        { role: "user", content: user_prompt }
-      ],
-      model: @model,
-      tools: [{
-        type: "function",
-        function: {
-          name: "search_tokens",
-          description: "Search for Ethereum tokens based on various criteria",
-          parameters: {
-            type: "object",
-            properties: {
-              name: { type: "string", description: "Token name" },
-              symbol: { type: "string", description: "Token symbol" },
-              address: { type: "string", description: "Token contract address" },
-              type: { type: "string", description: "Token type (ERC-20, ERC-721, ERC-1155)" },
-              decimals_min: { type: "integer", description: "Minimum decimals" },
-              decimals_max: { type: "integer", description: "Maximum decimals" },
-              holders_count_min: { type: "integer", description: "Minimum holder count" },
-              holders_count_max: { type: "integer", description: "Maximum holder count" },
-              total_supply_min: { type: "string", description: "Minimum total supply" },
-              total_supply_max: { type: "string", description: "Maximum total supply" },
-              exchange_rate_min: { type: "string", description: "Minimum exchange rate (USD)" },
-              exchange_rate_max: { type: "string", description: "Maximum exchange rate (USD)" },
-              volume_24h_min: { type: "string", description: "Minimum 24h volume" },
-              volume_24h_max: { type: "string", description: "Maximum 24h volume" },
-              circulating_market_cap_min: { type: "string", description: "Minimum circulating market cap" },
-              circulating_market_cap_max: { type: "string", description: "Maximum circulating market cap" },
-              transfers_count_min: { type: "integer", description: "Minimum transfer count" },
-              transfers_count_max: { type: "integer", description: "Maximum transfer count" },
-              icon_url: { type: "string", description: "Token icon URL" },
-              from_address: { type: "string", description: "Transfer from address" },
-              to_address: { type: "string", description: "Transfer to address" },
-              from_name: { type: "string", description: "Transfer from address name" },
-              to_name: { type: "string", description: "Transfer to address name" },
-              from_is_contract: { type: "boolean", description: "Transfer from address is contract" },
-              to_is_contract: { type: "boolean", description: "Transfer to address is contract" },
-              from_is_verified: { type: "boolean", description: "Transfer from address is verified" },
-              to_is_verified: { type: "boolean", description: "Transfer to address is verified" },
-              from_is_scam: { type: "boolean", description: "Transfer from address is scam" },
-              to_is_scam: { type: "boolean", description: "Transfer to address is scam" },
-              transfer_value_min: { type: "string", description: "Minimum transfer value" },
-              transfer_value_max: { type: "string", description: "Maximum transfer value" },
-              transfer_block_number_min: { type: "integer", description: "Minimum transfer block number" },
-              transfer_block_number_max: { type: "integer", description: "Maximum transfer block number" },
-              transfer_timestamp_min: { type: "string", description: "Minimum transfer timestamp" },
-              transfer_timestamp_max: { type: "string", description: "Maximum transfer timestamp" },
-              transfer_method: { type: "string", description: "Transfer method" },
-              transfer_log_index_min: { type: "integer", description: "Minimum transfer log index" },
-              transfer_log_index_max: { type: "integer", description: "Maximum transfer log index" },
-              limit: { type: "integer", description: "Number of results to return (default: 10, max: 50)" },
-              sort_by: { type: "string", description: "Field to sort by (e.g., holders_count, volume_24h, circulating_market_cap, transfers_count, etc.)" },
-              sort_order: { type: "string", description: "Sort order: 'asc' for ascending or 'desc' for descending (default: 'desc')" }
-            },
-            required: [],
-            additionalProperties: false
-          },
-          strict: true
-        }
-      }]
-    }.to_json
+        contents: [
+          {
+            role: "user",
+            parts: [
+              {
+                text: "#{system_prompt}\n\nUser Query: #{user_prompt}"
+              }
+            ]
+          }
+        ],
+        tools: [{
+          functionDeclarations: [{
+            name: "search_tokens",
+            description: "Search for Ethereum tokens based on various criteria",
+            parameters: {
+              type: "object",
+              properties: {
+                name: { type: "string", description: "Token name" },
+                symbol: { type: "string", description: "Token symbol" },
+                address: { type: "string", description: "Token contract address" },
+                type: { type: "string", description: "Token type (ERC-20, ERC-721, ERC-1155)" },
+                decimals_min: { type: "integer", description: "Minimum decimals" },
+                decimals_max: { type: "integer", description: "Maximum decimals" },
+                holders_count_min: { type: "integer", description: "Minimum holder count" },
+                holders_count_max: { type: "integer", description: "Maximum holder count" },
+                total_supply_min: { type: "string", description: "Minimum total supply" },
+                total_supply_max: { type: "string", description: "Maximum total supply" },
+                exchange_rate_min: { type: "string", description: "Minimum exchange rate (USD)" },
+                exchange_rate_max: { type: "string", description: "Maximum exchange rate (USD)" },
+                volume_24h_min: { type: "string", description: "Minimum 24h volume" },
+                volume_24h_max: { type: "string", description: "Maximum 24h volume" },
+                circulating_market_cap_min: { type: "string", description: "Minimum circulating market cap" },
+                circulating_market_cap_max: { type: "string", description: "Maximum circulating market cap" },
+                transfers_count_min: { type: "integer", description: "Minimum transfer count" },
+                transfers_count_max: { type: "integer", description: "Maximum transfer count" },
+                icon_url: { type: "string", description: "Token icon URL" },
+                from_address: { type: "string", description: "Transfer from address" },
+                to_address: { type: "string", description: "Transfer to address" },
+                from_name: { type: "string", description: "Transfer from address name" },
+                to_name: { type: "string", description: "Transfer to address name" },
+                from_is_contract: { type: "boolean", description: "Transfer from address is contract" },
+                to_is_contract: { type: "boolean", description: "Transfer to address is contract" },
+                from_is_verified: { type: "boolean", description: "Transfer from address is verified" },
+                to_is_verified: { type: "boolean", description: "Transfer to address is verified" },
+                from_is_scam: { type: "boolean", description: "Transfer from address is scam" },
+                to_is_scam: { type: "boolean", description: "Transfer to address is scam" },
+                transfer_value_min: { type: "string", description: "Minimum transfer value" },
+                transfer_value_max: { type: "string", description: "Maximum transfer value" },
+                transfer_block_number_min: { type: "integer", description: "Minimum transfer block number" },
+                transfer_block_number_max: { type: "integer", description: "Maximum transfer block number" },
+                transfer_timestamp_min: { type: "string", description: "Minimum transfer timestamp" },
+                transfer_timestamp_max: { type: "string", description: "Maximum transfer timestamp" },
+                transfer_method: { type: "string", description: "Transfer method" },
+                transfer_log_index_min: { type: "integer", description: "Minimum transfer log index" },
+                transfer_log_index_max: { type: "integer", description: "Maximum transfer log index" },
+                limit: { type: "integer", description: "Number of results to return (default: 10, max: 50)" },
+                sort_by: { type: "string", description: "Field to sort by (e.g., holders_count, volume_24h, circulating_market_cap, transfers_count, etc.)" },
+                sort_order: { type: "string", description: "Sort order: 'asc' for ascending or 'desc' for descending (default: 'desc')" }
+              },
+              required: []
+            }
+          }]
+        }]
+      }.to_json
 
       http.request(request)
     end.value
     
     raise ApiError, "API error: #{response.code}" unless response.code == '200'
     
-    parsed_response = JSON.parse(response.body)
-    tool_calls = parsed_response.dig("choices", 0, "message", "tool_calls")
-    
-    if tool_calls.nil?
-      raise InvalidQueryError, "No tool calls found in response"
-    end
-    
-    tool_calls.to_json
+    response.body
   end
 end

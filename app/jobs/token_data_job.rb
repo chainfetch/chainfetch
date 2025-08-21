@@ -11,7 +11,7 @@ class TokenDataJob < ApplicationJob
 
     if rand(15) == 0
       summary = Ethereum::TokenSummaryService.new(token_data).call
-      embedding = EmbeddingService.new(summary).call
+      embedding = Embedding::GeminiService.new(summary).embed_document
       QdrantService.new.upsert_point(collection: "tokens", id: token_id.to_i, vector: embedding, payload: { token_summary: summary })
     end
   rescue Ethereum::BaseService::ApiError => e

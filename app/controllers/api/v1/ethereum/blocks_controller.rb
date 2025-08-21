@@ -19,11 +19,11 @@ class Api::V1::Ethereum::BlocksController < Api::V1::Ethereum::BaseController
   # @parameter query(query) [!String] The query to search for
   # @parameter limit(query) [!Integer] The number of results to return (default: 10)
   # @response success(200) [Hash{result: Hash{points: Array<Hash{id: Integer, version: Integer, score: Float, payload: Hash{block_summary: String}}}>}}]
-  # This endpoint queries Qdrant to search blocks based on the provided input. Block summaries are embedded using dengcao/Qwen3-Embedding-0.6B:Q8_0 and stored in Qdrant's 'blocks' collection.
+  # This endpoint queries Qdrant to search for blocks based on the provided input. Block summaries are embedded using gemini-embedding-001 and stored in Qdrant's 'blocks' collection.
   def semantic_search
     query = params[:query]
     limit = params[:limit] || 10
-    embedding = EmbeddingService.new(query).call
+    embedding = Embedding::GeminiService.new(query).embed_query
     qdrant_objects = QdrantService.new.query_points(collection: "blocks", query: embedding, limit: limit)
     render json: qdrant_objects
   end

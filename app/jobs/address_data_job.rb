@@ -17,7 +17,7 @@ class AddressDataJob < ApplicationJob
 
     if rand(15) == 0
       summary = Ethereum::AddressSummaryService.new(address_data).call
-      embedding = EmbeddingService.new(summary).call
+      embedding = Embedding::GeminiService.new(summary).embed_document
       QdrantService.new.upsert_point(collection: "addresses", id: address_id.to_i, vector: embedding, payload: { summary: summary })
     end
   rescue Ethereum::BaseService::ApiError => e

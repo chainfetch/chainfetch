@@ -41,11 +41,11 @@ class Api::V1::Ethereum::TokensController < Api::V1::Ethereum::BaseController
   # @parameter query(query) [!String] The query to search for
   # @parameter limit(query) [!Integer] The number of results to return (default: 10)
   # @response success(200) [Hash{result: Hash{points: Array<Hash{id: Integer, version: Integer, score: Float, payload: Hash{token_summary: String}}}>}}]
-  # This endpoint queries Qdrant to search tokens based on the provided input. Token summaries are embedded using dengcao/Qwen3-Embedding-0.6B:Q8_0 and stored in Qdrant's 'tokens' collection.
+  # This endpoint queries Qdrant to search for tokens based on the provided input. Token summaries are embedded using gemini-embedding-001 and stored in Qdrant's 'tokens' collection.
   def semantic_search
     query = params[:query]
     limit = params[:limit] || 10
-    embedding = EmbeddingService.new(query).call
+    embedding = Embedding::GeminiService.new(query).embed_query
     qdrant_objects = QdrantService.new.query_points(collection: "tokens", query: embedding, limit: limit)
     render json: qdrant_objects
   end

@@ -3,7 +3,7 @@ class EthereumAddress < ApplicationRecord
   has_many :ethereum_transactions, through: :ethereum_address_transactions
 
   def self.semantic_search(query, limit = 10)
-    embedding = EmbeddingService.new(query).call
+    embedding = Embedding::GeminiService.new(query).embed_query
     qdrant_objects = qdrant_query(embedding, limit)
     qdrant_objects.dig("result", "points").map do |obj|
       {
@@ -62,7 +62,7 @@ class EthereumAddress < ApplicationRecord
   end
 
   def embedding
-    EmbeddingService.new(summary).call
+    Embedding::GeminiService.new(summary).embed_document
   end
 
   def fetch_data

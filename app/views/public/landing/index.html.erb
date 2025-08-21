@@ -131,14 +131,14 @@
                 <div class="mb-4">
                   <div class="flex items-center justify-between mb-3">
                     <span class="text-green-400 font-mono text-sm">Block Analysis</span>
-                    <span class="text-gray-400 text-sm">Generated <%= time_ago_in_words(@latest_block.created_at) %> ago</span>
+                    <span class="text-gray-400 text-sm">Generated <%= time_ago_in_words(@latest_block&.created_at) %> ago</span>
                   </div>
                   <div class="h-px bg-gradient-to-r from-green-500/20 via-green-500/40 to-green-500/20 mb-6"></div>
                 </div>
                 
                 <div class="text-gray-300 leading-relaxed text-base">
                   <% if @latest_block&.summary.present? %>
-                    <%= @latest_block.summary %>
+                    <%= @latest_block&.summary %>
                   <% else %>
                     <span class="text-gray-400 italic">
                       No recent block analysis available. Our AI is currently processing the latest Ethereum blocks to provide real-time insights.
@@ -151,12 +151,12 @@
               <% if @latest_block&.data.present? %>
                 <div class="grid grid-cols-2 md:grid-cols-4 gap-4 mt-6">
                   <div class="bg-[#1E293B]/40 rounded-lg p-4 border border-gray-700/30">
-                    <div class="text-2xl font-bold text-green-400"><%= @latest_block.data.dig('info', 'transactions_count') || 'N/A' %></div>
+                    <div class="text-2xl font-bold text-green-400"><%= @latest_block&.data&.dig('info', 'transactions_count') || 'N/A' %></div>
                     <div class="text-sm text-gray-400">Transactions</div>
                   </div>
                   <div class="bg-[#1E293B]/40 rounded-lg p-4 border border-gray-700/30">
                     <div class="text-2xl font-bold text-blue-400">
-                      <% gas_used_percentage = @latest_block.data.dig('info', 'gas_used_percentage') %>
+                      <% gas_used_percentage = @latest_block&.data&.dig('info', 'gas_used_percentage') %>
                       <% if gas_used_percentage %>
                         <%= number_with_precision(gas_used_percentage, precision: 1) %>%
                       <% else %>
@@ -169,7 +169,7 @@
                     <div class="text-2xl font-bold text-yellow-400">
                       <% 
                         # Calculate total ETH transferred from transactions
-                        transactions = @latest_block.data.dig('transactions', 'items') || []
+                        transactions = @latest_block&.data&.dig('transactions', 'items') || []
                         total_eth = 0
                         transactions.each do |tx|
                           if tx['value'] && tx['value'].to_f > 0
@@ -186,7 +186,7 @@
                     <div class="text-2xl font-bold text-purple-400">
                       <% 
                         # Calculate unique addresses from transactions
-                        transactions = @latest_block.data.dig('transactions', 'items') || []
+                        transactions = @latest_block&.data&.dig('transactions', 'items') || []
                         unique_addresses = Set.new
                         transactions.each do |tx|
                           unique_addresses.add(tx.dig('from', 'hash')) if tx.dig('from', 'hash')
