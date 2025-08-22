@@ -1249,7 +1249,7 @@
               Pay Only for What You Use
             </h2>
             <p class="text-xl text-gray-300 max-w-3xl mx-auto">
-              Transparent, credit-based pricing with no hidden fees. Every API endpoint costs exactly 1 credit - whether it's semantic search, LLM processing, or direct queries. <strong class="text-green-400">Start with 50 free credits!</strong>
+              Transparent, credit-based pricing with no hidden fees. API endpoints cost 1 credit each, address alerts cost 5 credits per trigger, and WebSocket broadcasts cost 0.1 credit each. <strong class="text-green-400">Start with 50 free credits!</strong>
             </p>
           </div>
 
@@ -1381,11 +1381,19 @@
                 <div class="space-y-3">
                   <div class="flex items-start justify-center">
                     <div class="w-2 h-2 bg-yellow-400 rounded-full mr-3 mt-2 flex-shrink-0"></div>
-                    <span class="text-gray-300 text-sm lg:text-base">Every API endpoint costs exactly <strong class="text-white">1 credit</strong></span>
+                    <span class="text-gray-300 text-sm lg:text-base">API endpoints cost <strong class="text-white">1 credit</strong> each</span>
                   </div>
                   <div class="flex items-start justify-center">
                     <div class="w-2 h-2 bg-yellow-400 rounded-full mr-3 mt-2 flex-shrink-0"></div>
                     <span class="text-gray-300 text-sm lg:text-base">Semantic search, LLM queries, JSON filtering - all 1 credit each</span>
+                  </div>
+                  <div class="flex items-start justify-center">
+                    <div class="w-2 h-2 bg-orange-400 rounded-full mr-3 mt-2 flex-shrink-0"></div>
+                    <span class="text-gray-300 text-sm lg:text-base">Address alert webhook triggers cost <strong class="text-white">5 credits</strong> each</span>
+                  </div>
+                  <div class="flex items-start justify-center">
+                    <div class="w-2 h-2 bg-blue-400 rounded-full mr-3 mt-2 flex-shrink-0"></div>
+                    <span class="text-gray-300 text-sm lg:text-base">WebSocket broadcasts cost <strong class="text-white">0.1 credit</strong> each</span>
                   </div>
                   <div class="flex items-start justify-center">
                     <div class="w-2 h-2 bg-yellow-400 rounded-full mr-3 mt-2 flex-shrink-0"></div>
