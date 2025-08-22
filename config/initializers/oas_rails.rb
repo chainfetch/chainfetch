@@ -30,7 +30,7 @@ OasRails.configure do |config|
     - **Transactions Collection**: Find transactions by intent, pattern, or behavior  
     - **Blocks Collection**: Discover blocks by activity type and characteristics
 
-    **🤖 LLM-Powered Query Processing**: LLaMA 3.2 3B model intelligently translates natural language queries into precise API parameters, supporting 150+ address parameters and 120+ block parameters.
+    **🤖 LLM-Powered Query Processing**: Gemini-2.5-flash model intelligently translates natural language queries into precise API parameters, supporting 150+ address parameters and 120+ block parameters.
 
     ## Advanced Search Capabilities
 
@@ -90,7 +90,7 @@ OasRails.configure do |config|
     **Natural Language** → **AI Processing** → **Vector/Parameter Search** → **Enriched Results**
 
     - **Semantic Search**: Query embedding → Qdrant vector similarity → Ranked semantic results
-    - **LLM Search**: Natural language → LLaMA 3.2 3B → Smart parameter selection (150+ address params, 120+ block params)
+    - **LLM Search**: Natural language → Gemini-2.5-flash → Smart parameter selection (150+ address params, 120+ block params)
     - **JSON Search**: Direct parameter filtering → Real-time data enrichment → Structured responses
 
     **Key Performance Features:**

@@ -28,7 +28,7 @@ class Api::V1::Ethereum::AddressesController < Api::V1::Ethereum::BaseController
   # @summary LLM Search for addresses
   # @parameter query(query) [!String] The query to search for
   # @response success(200) [Hash{results: String}]
-  # This endpoint leverages LLaMA 3.2 3B model to analyze and select the most suitable parameters from over 150 available options
+  # This endpoint leverages gemini-2.5-flash model to analyze and select the most suitable parameters from over 150 available options
   def llm_search
     query = params[:query]
     response = AddressDataSearchService.new(query).call

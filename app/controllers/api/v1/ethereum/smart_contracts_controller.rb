@@ -43,7 +43,7 @@ class Api::V1::Ethereum::SmartContractsController < Api::V1::Ethereum::BaseContr
   # @summary LLM Search for smart contracts
   # @parameter query(query) [!String] The query to search for
   # @response success(200) [Hash{results: String}]
-  # This endpoint leverages LLaMA 3.2 3B model to analyze and select the most suitable parameters from 150+ available options for smart contract search
+  # This endpoint leverages gemini-2.5-flash model to analyze and select the most suitable parameters from 150+ available options for smart contract search
   def llm_search
     query = params[:query]
     

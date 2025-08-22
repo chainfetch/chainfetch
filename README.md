@@ -21,8 +21,8 @@ ChainFetch transforms how developers interact with Ethereum blockchain data by o
 - **Database**: PostgreSQL 17 with pgvector extension for vector storage
 - **Vector Database**: Qdrant for semantic search capabilities
 - **AI Models**: 
-  - Qwen3-Embedding-0.6B (Q8_0) for text embeddings
-  - LLaMA 3.2 3B for LLM-powered query processing
+  - gemini-embedding-001 for text embeddings
+  - gemini-2.5-flash for LLM-powered query processing
 - **Real-time Processing**: Async WebSocket connections with Ruby Async library
 - **Background Jobs**: SolidQueue for asynchronous job processing
 - **Frontend**: Hotwire (Turbo + Stimulus) with Tailwind CSS
@@ -271,7 +271,7 @@ k0s start
 - Continuous block and transaction processing
 
 ### AI-Enhanced Intelligence
-- Automated data summarization using LLaMA 3.2 3B
+- Automated data summarization using gemini-2.5-flash
 - Vector embeddings for semantic search
 - Smart parameter extraction from natural language
 

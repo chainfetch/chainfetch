@@ -45,7 +45,7 @@ class Api::V1::Ethereum::TransactionsController < Api::V1::Ethereum::BaseControl
   # @summary LLM Search for transactions
   # @parameter query(query) [!String] The query to search for
   # @response success(200) [Hash{results: String}]
-  # This endpoint leverages LLaMA 3.2 3B model to analyze and select the most suitable parameters from 254 carefully curated options
+  # This endpoint leverages gemini-2.5-flash model to analyze and select the most suitable parameters from 254 carefully curated options
   def llm_search
     query = params[:query]
     response = TransactionDataSearchServiceCurated.new(query).call

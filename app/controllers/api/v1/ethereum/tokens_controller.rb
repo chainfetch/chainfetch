@@ -20,7 +20,7 @@ class Api::V1::Ethereum::TokensController < Api::V1::Ethereum::BaseController
   # @summary LLM Search for tokens
   # @parameter query(query) [!String] The query to search for
   # @response success(200) [Hash{results: String}]
-  # This endpoint leverages LLaMA 3.2 3B model to analyze and select the most suitable parameters from available token options
+  # This endpoint leverages gemini-2.5-flash model to analyze and select the most suitable parameters from available token options
   def llm_search
     query = params[:query]
     response = TokenDataSearchService.new(query).call
