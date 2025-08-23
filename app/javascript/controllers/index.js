@@ -6,6 +6,8 @@ import { application } from "./application"
 
 import HelloController from "./hello_controller"
 import BlockController from "./block_controller"
+import AddressController from "./address_controller"
 
 application.register("hello", HelloController)
 application.register("block", BlockController)
+application.register("address", AddressController)

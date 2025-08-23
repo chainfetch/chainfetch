@@ -1,6 +1,7 @@
-class App::Ethereum::BlocksController < ApplicationController
+class App::Ethereum::BlocksController < App::BaseController
   def search
     @results = BlockDataSearchService.new(params[:query], full_json: true).call
+    Current.user.decrement!(:api_credit, 1)
   end
 
   def summary
