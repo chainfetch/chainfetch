@@ -118,8 +118,12 @@ class Api::V1::Ethereum::SmartContractsController < Api::V1::Ethereum::BaseContr
   # @response success(200) [Hash{results: Array<Hash{id: Integer, address_hash: String, data: Hash}>, pagination: Hash{total: Integer, limit: Integer, offset: Integer, page: Integer, total_pages: Integer}}]
   # This endpoint provides 50+ parameters to search for smart contracts based on the provided input.
   def json_search
-    # Start with all addresses and filter for contracts only
-    contracts = EthereumSmartContract.where(nil)
+    # When full_json is requested, only return contracts with data
+    if params&.dig(:full_json) == 'true'
+      contracts = EthereumSmartContract.where.not(data: nil)
+    else
+      contracts = EthereumSmartContract.where(nil)
+    end
     
     # Contract-specific boolean fields (from flat smart contract data structure)
     contracts = contracts.where("data->>'is_self_destructed' = ?", params[:is_self_destructed].to_s) if params[:is_self_destructed].present?

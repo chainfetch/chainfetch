@@ -1,0 +1,274 @@
+<% 
+  # Handle different data structures from the API response
+  address = smart_contract['address_hash'] || smart_contract['address'] || smart_contract.dig('data', 'address') || 'unknown'
+  contract_data = smart_contract['data'] || smart_contract
+%>
+<div id="smart_contract_<%= address %>" data-controller="smart-contract" class="bg-[#1E293B]/80 backdrop-blur-sm rounded-lg p-6 text-white border border-yellow-500/20 shadow-[0_0_30px_rgba(234,179,8,0.1)] hover:transform hover:translate-y-[-4px] transition-all duration-300">
+  <div class="flex flex-col lg:flex-row lg:justify-between lg:items-start mb-6">
+    <div class="flex-1">
+      <div class="flex items-center mb-4 justify-between">
+        <h2 class="text-2xl font-bold text-white mb-4">
+          Smart Contract <%= address[0..9] %>...
+        </h2>
+        <button 
+          data-action="click->smart-contract#toggleSummary"
+          data-smart-contract-address="<%= address %>"
+          class="bg-gradient-to-r from-yellow-500 to-orange-600 hover:from-yellow-600 hover:to-orange-700 text-white px-4 py-2 rounded-lg text-sm font-medium transition-all duration-200 transform hover:scale-105 shadow-lg hover:shadow-xl flex items-center gap-2 cursor-pointer">
+          <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9.663 17h4.673M12 3v1m6.364 1.636l-.707.707M21 12h-1M4 12H3m3.343-5.657l-.707-.707m2.828 9.9a5 5 0 117.072 0l-.548.547A3.374 3.374 0 0014 18.469V19a2 2 0 11-4 0v-.531c0-.895-.356-1.754-.988-2.386l-.548-.547z"></path>
+          </svg>
+          AI Summary
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Address and Basic Info -->
+  <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mb-6">
+    <div class="bg-[#0F172A]/50 rounded-lg p-4 border border-gray-800">
+      <span class="font-semibold text-blue-400">Address:</span>
+      <p class="text-gray-300 font-mono text-sm mt-1 break-all">
+        <%= address %>
+      </p>
+    </div>
+    <div class="bg-[#0F172A]/50 rounded-lg p-4 border border-gray-800">
+      <span class="font-semibold text-green-400">Name:</span>
+      <p class="text-gray-300 mt-1">
+        <%= contract_data['name'] || 'N/A' %>
+      </p>
+    </div>
+    <div class="bg-[#0F172A]/50 rounded-lg p-4 border border-gray-800">
+      <span class="font-semibold text-purple-400">Verified:</span>
+      <p class="text-gray-300 mt-1">
+        <% is_verified = contract_data['is_verified'] %>
+        <% if is_verified == true %>
+          <span class="text-green-400">✓ Verified</span>
+        <% elsif is_verified == false %>
+          <span class="text-red-400">✗ Not Verified</span>
+        <% else %>
+          N/A
+        <% end %>
+      </p>
+    </div>
+  </div>
+
+  <!-- Verification and Language Info -->
+  <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 mb-6">
+    <div class="bg-[#0F172A]/50 rounded-lg p-4 border border-gray-800">
+      <span class="font-semibold text-yellow-400">Language:</span>
+      <p class="text-gray-300 mt-1">
+        <%= contract_data['language']&.capitalize || 'N/A' %>
+      </p>
+    </div>
+    <div class="bg-[#0F172A]/50 rounded-lg p-4 border border-gray-800">
+      <span class="font-semibold text-indigo-400">Compiler:</span>
+      <p class="text-gray-300 text-sm mt-1">
+        <%= contract_data['compiler_version'] || 'N/A' %>
+      </p>
+    </div>
+    <div class="bg-[#0F172A]/50 rounded-lg p-4 border border-gray-800">
+      <span class="font-semibold text-pink-400">Optimization:</span>
+      <p class="text-gray-300 mt-1">
+        <% optimization = contract_data['optimization_enabled'] %>
+        <% if optimization == true %>
+          <span class="text-green-400">Enabled</span>
+        <% elsif optimization == false %>
+          <span class="text-red-400">Disabled</span>
+        <% else %>
+          N/A
+        <% end %>
+      </p>
+    </div>
+    <div class="bg-[#0F172A]/50 rounded-lg p-4 border border-gray-800">
+      <span class="font-semibold text-cyan-400">Proxy Type:</span>
+      <p class="text-gray-300 mt-1">
+        <%= contract_data['proxy_type'] || 'N/A' %>
+      </p>
+    </div>
+  </div>
+
+  <!-- Status and Verification Details -->
+  <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 mb-6">
+    <div class="bg-[#0F172A]/50 rounded-lg p-4 border border-gray-800">
+      <span class="font-semibold text-orange-400">Self Destructed:</span>
+      <p class="text-gray-300 mt-1">
+        <% is_destructed = contract_data['is_self_destructed'] %>
+        <% if is_destructed == true %>
+          <span class="text-red-400">Yes</span>
+        <% elsif is_destructed == false %>
+          <span class="text-green-400">No</span>
+        <% else %>
+          N/A
+        <% end %>
+      </p>
+    </div>
+    <div class="bg-[#0F172A]/50 rounded-lg p-4 border border-gray-800">
+      <span class="font-semibold text-teal-400">Blueprint:</span>
+      <p class="text-gray-300 mt-1">
+        <% is_blueprint = contract_data['is_blueprint'] %>
+        <% if is_blueprint == true %>
+          <span class="text-blue-400">Yes</span>
+        <% elsif is_blueprint == false %>
+          <span class="text-gray-400">No</span>
+        <% else %>
+          N/A
+        <% end %>
+      </p>
+    </div>
+    <div class="bg-[#0F172A]/50 rounded-lg p-4 border border-gray-800">
+      <span class="font-semibold text-amber-400">Verified At:</span>
+      <p class="text-gray-300 text-sm mt-1">
+        <% verified_at = contract_data['verified_at'] %>
+        <% if verified_at %>
+          <%= Time.parse(verified_at).strftime('%b %d, %Y') rescue 'Invalid date' %>
+        <% else %>
+          N/A
+        <% end %>
+      </p>
+    </div>
+  </div>
+
+  <!-- Implementations (for proxy contracts) -->
+  <% implementations = contract_data['implementations'] %>
+  <% if implementations && implementations.any? %>
+    <div class="mt-6 pt-4 border-t border-gray-700">
+      <h4 class="font-semibold text-yellow-400 mb-3">Implementations (<%= implementations.length %>)</h4>
+      <div class="space-y-3">
+        <% implementations.each do |impl| %>
+          <div class="bg-[#0F172A]/50 rounded-lg p-4 border border-gray-800">
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-4 text-sm">
+              <div>
+                <span class="font-semibold text-blue-400">Name:</span>
+                <p class="text-gray-300 mt-1">
+                  <%= impl['name'] || 'Unknown Implementation' %>
+                </p>
+              </div>
+              <div>
+                <span class="font-semibold text-green-400">Address:</span>
+                <p class="text-gray-300 font-mono text-xs mt-1">
+                  <%= impl['address'] || impl['address_hash'] || 'N/A' %>
+                </p>
+              </div>
+            </div>
+          </div>
+        <% end %>
+      </div>
+    </div>
+  <% end %>
+
+  <!-- ABI Functions Count -->
+  <% abi = contract_data['abi'] %>
+  <% if abi && abi.any? %>
+    <div class="mt-6 pt-4 border-t border-gray-700">
+      <h4 class="font-semibold text-yellow-400 mb-3">Contract Interface</h4>
+      <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+        <div class="bg-[#0F172A]/50 rounded-lg p-4 border border-gray-800">
+          <span class="font-semibold text-purple-400">Total Functions:</span>
+          <p class="text-gray-300 mt-1">
+            <%= abi.select { |item| item['type'] == 'function' }.length %>
+          </p>
+        </div>
+        <div class="bg-[#0F172A]/50 rounded-lg p-4 border border-gray-800">
+          <span class="font-semibold text-pink-400">Events:</span>
+          <p class="text-gray-300 mt-1">
+            <%= abi.select { |item| item['type'] == 'event' }.length %>
+          </p>
+        </div>
+        <div class="bg-[#0F172A]/50 rounded-lg p-4 border border-gray-800">
+          <span class="font-semibold text-indigo-400">Constructor:</span>
+          <p class="text-gray-300 mt-1">
+            <% has_constructor = abi.any? { |item| item['type'] == 'constructor' } %>
+            <%= has_constructor ? 'Yes' : 'No' %>
+          </p>
+        </div>
+      </div>
+    </div>
+  <% end %>
+
+  <!-- Constructor Arguments -->
+  <% constructor_args = contract_data['decoded_constructor_args'] %>
+  <% if constructor_args && constructor_args.any? %>
+    <div class="mt-6 pt-4 border-t border-gray-700">
+      <h4 class="font-semibold text-yellow-400 mb-3">Constructor Arguments</h4>
+      <div class="space-y-2">
+        <% constructor_args.each_with_index do |arg, index| %>
+          <div class="bg-[#0F172A]/50 rounded-lg p-3 border border-gray-800">
+            <div class="flex flex-col md:flex-row md:gap-4 text-sm">
+              <div class="md:w-1/3">
+                <span class="font-semibold text-blue-400">Name:</span>
+                <span class="text-gray-300 ml-2"><%= arg[1]['name'] rescue "arg#{index}" %></span>
+              </div>
+              <div class="md:w-1/3">
+                <span class="font-semibold text-green-400">Type:</span>
+                <span class="text-gray-300 ml-2"><%= arg[1]['type'] rescue 'unknown' %></span>
+              </div>
+              <div class="md:w-1/3">
+                <span class="font-semibold text-purple-400">Value:</span>
+                <span class="text-gray-300 font-mono text-xs ml-2 break-all"><%= arg[0] rescue 'N/A' %></span>
+              </div>
+            </div>
+          </div>
+        <% end %>
+      </div>
+    </div>
+  <% end %>
+
+  <!-- External Libraries -->
+  <% libraries = contract_data['external_libraries'] %>
+  <% if libraries && libraries.any? %>
+    <div class="mt-6 pt-4 border-t border-gray-700">
+      <h4 class="font-semibold text-yellow-400 mb-3">External Libraries (<%= libraries.length %>)</h4>
+      <div class="flex flex-wrap gap-2">
+        <% libraries.each do |library| %>
+          <span class="inline-block bg-gradient-to-r from-purple-500/20 to-blue-500/20 border border-purple-500/30 text-purple-300 rounded-full px-3 py-1 text-sm">
+            <%= library %>
+          </span>
+        <% end %>
+      </div>
+    </div>
+  <% end %>
+
+  <!-- Source Code (if available) -->
+  <% source_code = contract_data['source_code'] %>
+  <% if source_code && source_code.length > 0 %>
+    <div class="mt-6 pt-4 border-t border-gray-700">
+      <h4 class="font-semibold text-yellow-400 mb-3">Source Code (<%= source_code.length %> characters)</h4>
+      <div class="bg-[#0F172A] rounded-lg p-4 border border-gray-800 max-h-96 overflow-auto">
+        <pre class="text-gray-300 text-xs leading-relaxed whitespace-pre-wrap"><%= source_code %></pre>
+      </div>
+    </div>
+  <% end %>
+
+  <!-- Verification Sources -->
+  <% if contract_data['is_verified_via_sourcify'] || contract_data['is_verified_via_eth_bytecode_db'] || contract_data['is_verified_via_verifier_alliance'] %>
+    <div class="mt-6 pt-4 border-t border-gray-700">
+      <h4 class="font-semibold text-yellow-400 mb-3">Verification Sources</h4>
+      <div class="flex flex-wrap gap-3">
+        <% if contract_data['is_verified_via_sourcify'] %>
+          <span class="inline-flex items-center bg-gradient-to-r from-green-500/20 to-blue-500/20 border border-green-500/30 text-green-300 rounded-full px-3 py-1 text-sm">
+            <svg class="w-4 h-4 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path>
+            </svg>
+            Sourcify
+          </span>
+        <% end %>
+        <% if contract_data['is_verified_via_eth_bytecode_db'] %>
+          <span class="inline-flex items-center bg-gradient-to-r from-blue-500/20 to-purple-500/20 border border-blue-500/30 text-blue-300 rounded-full px-3 py-1 text-sm">
+            <svg class="w-4 h-4 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path>
+            </svg>
+            ETH Bytecode DB
+          </span>
+        <% end %>
+        <% if contract_data['is_verified_via_verifier_alliance'] %>
+          <span class="inline-flex items-center bg-gradient-to-r from-purple-500/20 to-pink-500/20 border border-purple-500/30 text-purple-300 rounded-full px-3 py-1 text-sm">
+            <svg class="w-4 h-4 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path>
+            </svg>
+            Verifier Alliance
+          </span>
+        <% end %>
+      </div>
+    </div>
+  <% end %>
+</div>
