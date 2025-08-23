@@ -1,0 +1,213 @@
+<% 
+  # Handle different data structures from the API response
+  address = token['address_hash'] || token['address'] || token.dig('data', 'info', 'address_hash') || token.dig('data', 'info', 'address') || 'unknown'
+  token_data = token['data'] || token
+  info = token_data['info'] || token_data
+%>
+<div id="token_<%= address %>" data-controller="token" class="bg-[#1E293B]/80 backdrop-blur-sm rounded-lg p-6 text-white border border-yellow-500/20 shadow-[0_0_30px_rgba(234,179,8,0.1)] hover:transform hover:translate-y-[-4px] transition-all duration-300">
+  <div class="flex flex-col lg:flex-row lg:justify-between lg:items-start mb-6">
+    <div class="flex-1">
+      <div class="flex items-center mb-4 justify-between">
+        <h2 class="text-2xl font-bold text-white mb-4">
+          Token <%= address[0..9] %>...
+        </h2>
+        <button 
+          data-action="click->token#toggleSummary"
+          data-token-address="<%= address %>"
+          class="bg-gradient-to-r from-yellow-500 to-orange-600 hover:from-yellow-600 hover:to-orange-700 text-white px-4 py-2 rounded-lg text-sm font-medium transition-all duration-200 transform hover:scale-105 shadow-lg hover:shadow-xl flex items-center gap-2 cursor-pointer">
+          <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9.663 17h4.673M12 3v1m6.364 1.636l-.707.707M21 12h-1M4 12H3m3.343-5.657l-.707-.707m2.828 9.9a5 5 0 117.072 0l-.548.547A3.374 3.374 0 0014 18.469V19a2 2 0 11-4 0v-.531c0-.895-.356-1.754-.988-2.386l-.548-.547z"></path>
+          </svg>
+          AI Summary
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Token Basic Info -->
+  <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mb-6">
+    <div class="bg-[#0F172A]/50 rounded-lg p-4 border border-gray-800">
+      <span class="font-semibold text-blue-400">Address:</span>
+      <p class="text-gray-300 font-mono text-sm mt-1 break-all">
+        <%= address %>
+      </p>
+    </div>
+    <div class="bg-[#0F172A]/50 rounded-lg p-4 border border-gray-800">
+      <span class="font-semibold text-green-400">Name:</span>
+      <p class="text-gray-300 mt-1">
+        <%= info['name'] || 'N/A' %>
+      </p>
+    </div>
+    <div class="bg-[#0F172A]/50 rounded-lg p-4 border border-gray-800">
+      <span class="font-semibold text-purple-400">Symbol:</span>
+      <p class="text-gray-300 mt-1">
+        <%= info['symbol'] || 'N/A' %>
+      </p>
+    </div>
+  </div>
+
+  <!-- Token Metrics -->
+  <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 mb-6">
+    <div class="bg-[#0F172A]/50 rounded-lg p-4 border border-gray-800">
+      <span class="font-semibold text-yellow-400">Type:</span>
+      <p class="text-gray-300 mt-1">
+        <%= info['type'] || 'N/A' %>
+      </p>
+    </div>
+    <div class="bg-[#0F172A]/50 rounded-lg p-4 border border-gray-800">
+      <span class="font-semibold text-indigo-400">Decimals:</span>
+      <p class="text-gray-300 mt-1">
+        <%= info['decimals'] || 'N/A' %>
+      </p>
+    </div>
+    <div class="bg-[#0F172A]/50 rounded-lg p-4 border border-gray-800">
+      <span class="font-semibold text-pink-400">Holders:</span>
+      <p class="text-gray-300 mt-1">
+        <% holders = info['holders_count'] || info['holders'] %>
+        <% if holders %>
+          <%= number_with_delimiter(holders) %>
+        <% else %>
+          N/A
+        <% end %>
+      </p>
+    </div>
+    <div class="bg-[#0F172A]/50 rounded-lg p-4 border border-gray-800">
+      <span class="font-semibold text-cyan-400">Exchange Rate:</span>
+      <p class="text-gray-300 mt-1">
+        <% rate = info['exchange_rate'] %>
+        <% if rate %>
+          $<%= sprintf("%.6f", rate.to_f) %>
+        <% else %>
+          N/A
+        <% end %>
+      </p>
+    </div>
+  </div>
+
+  <!-- Financial Metrics -->
+  <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 mb-6">
+    <div class="bg-[#0F172A]/50 rounded-lg p-4 border border-gray-800">
+      <span class="font-semibold text-orange-400">Total Supply:</span>
+      <p class="text-gray-300 mt-1">
+        <% supply = info['total_supply'] %>
+        <% decimals = info['decimals'] %>
+        <% if supply && decimals %>
+          <% human_supply = supply.to_f / (10 ** decimals.to_i) %>
+          <%= number_with_delimiter(sprintf("%.2f", human_supply)) %>
+        <% elsif supply %>
+          <%= number_with_delimiter(supply) %>
+        <% else %>
+          N/A
+        <% end %>
+      </p>
+    </div>
+    <div class="bg-[#0F172A]/50 rounded-lg p-4 border border-gray-800">
+      <span class="font-semibold text-teal-400">Market Cap:</span>
+      <p class="text-gray-300 mt-1">
+        <% market_cap = info['circulating_market_cap'] %>
+        <% if market_cap %>
+          $<%= number_with_delimiter(sprintf("%.2f", market_cap.to_f)) %>
+        <% else %>
+          N/A
+        <% end %>
+      </p>
+    </div>
+    <div class="bg-[#0F172A]/50 rounded-lg p-4 border border-gray-800">
+      <span class="font-semibold text-amber-400">24h Volume:</span>
+      <p class="text-gray-300 mt-1">
+        <% volume = info['volume_24h'] %>
+        <% if volume %>
+          $<%= number_with_delimiter(sprintf("%.2f", volume.to_f)) %>
+        <% else %>
+          N/A
+        <% end %>
+      </p>
+    </div>
+  </div>
+
+  <!-- Token Icon -->
+  <% if info['icon_url'] %>
+    <div class="mb-6">
+      <div class="bg-[#0F172A]/50 rounded-lg p-4 border border-gray-800">
+        <span class="font-semibold text-purple-400 block mb-3">Token Icon:</span>
+        <img src="<%= info['icon_url'] %>" alt="<%= info['name'] || 'Token' %> icon" class="w-16 h-16 rounded-full border border-gray-600" onerror="this.style.display='none'">
+      </div>
+    </div>
+  <% end %>
+
+  <!-- Recent Transfers -->
+  <% transfers = token_data['transfers'] %>
+  <% transfer_items = transfers.is_a?(Hash) ? transfers['items'] : transfers %>
+  <% if transfer_items && transfer_items.any? %>
+    <div class="mt-6 pt-4 border-t border-gray-700">
+      <h4 class="font-semibold text-yellow-400 mb-3">Recent Transfers (<%= transfer_items.length %>)</h4>
+      <div class="<%= transfer_items.length > 3 ? 'max-h-96 overflow-y-auto' : '' %> space-y-3">
+        <% transfer_items.each do |transfer| %>
+          <div class="bg-[#0F172A]/50 rounded-lg p-4 border border-gray-800">
+            <div class="grid grid-cols-1 md:grid-cols-4 gap-4 text-sm">
+              <div>
+                <span class="font-semibold text-blue-400">Type:</span>
+                <p class="text-gray-300 mt-1">
+                  <% type = transfer['type']&.gsub('_', ' ')&.titleize %>
+                  <span class="<%= type&.include?('Burning') ? 'text-red-400' : 'text-green-400' %>">
+                    <%= type || 'Transfer' %>
+                  </span>
+                </p>
+              </div>
+              <div>
+                <span class="font-semibold text-green-400">Amount:</span>
+                <p class="text-gray-300 mt-1">
+                  <% amount = transfer.dig('total', 'value') %>
+                  <% token_decimals = transfer.dig('token', 'decimals') || transfer.dig('total', 'decimals') %>
+                  <% if amount && token_decimals %>
+                    <%= sprintf("%.6f", amount.to_f / (10 ** token_decimals.to_i)) %>
+                  <% elsif amount %>
+                    <%= number_with_delimiter(amount) %>
+                  <% else %>
+                    N/A
+                  <% end %>
+                </p>
+              </div>
+              <div>
+                <span class="font-semibold text-purple-400">From:</span>
+                <p class="text-gray-300 font-mono text-xs mt-1">
+                  <% from_hash = transfer.dig('from', 'hash') %>
+                  <% from_name = transfer.dig('from', 'name') %>
+                  <% if from_name %>
+                    <%= from_name %>
+                  <% elsif from_hash %>
+                    <%= from_hash[0..9] %>...
+                  <% else %>
+                    N/A
+                  <% end %>
+                </p>
+              </div>
+              <div>
+                <span class="font-semibold text-orange-400">To:</span>
+                <p class="text-gray-300 font-mono text-xs mt-1">
+                  <% to_hash = transfer.dig('to', 'hash') %>
+                  <% to_name = transfer.dig('to', 'name') %>
+                  <% if to_name %>
+                    <%= to_name %>
+                  <% elsif to_hash %>
+                    <%= to_hash[0..9] %>...
+                  <% else %>
+                    N/A
+                  <% end %>
+                </p>
+              </div>
+            </div>
+            <% if transfer['timestamp'] %>
+              <div class="mt-2 pt-2 border-t border-gray-700">
+                <span class="font-semibold text-cyan-400 text-xs">Timestamp:</span>
+                <span class="text-gray-400 text-xs ml-2">
+                  <%= Time.parse(transfer['timestamp']).strftime('%b %d, %Y %H:%M UTC') rescue transfer['timestamp'] %>
+                </span>
+              </div>
+            <% end %>
+          </div>
+        <% end %>
+      </div>
+    </div>
+  <% end %>
+</div>

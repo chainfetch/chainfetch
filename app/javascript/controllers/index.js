@@ -9,9 +9,11 @@ import BlockController from "./block_controller"
 import AddressController from "./address_controller"
 import TransactionController from "./transaction_controller"
 import SmartContractController from "./smart_contract_controller"
+import TokenController from "./token_controller"
 
 application.register("hello", HelloController)
 application.register("block", BlockController)
 application.register("address", AddressController)
 application.register("transaction", TransactionController)
 application.register("smart-contract", SmartContractController)
+application.register("token", TokenController)

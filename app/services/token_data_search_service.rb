@@ -7,11 +7,12 @@ class TokenDataSearchService
   class ApiError < StandardError; end
   class InvalidQueryError < StandardError; end
 
-  def initialize(query)
+  def initialize(query, full_json: false)
     @query = query
     @api_url = "https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:generateContent"
     @api_key = Rails.application.credentials.gemini_api_key
     @base_url = Rails.env.production? ? 'https://chainfetch.app' : 'http://localhost:3000'
+    @full_json = full_json
   end
 
   def call
@@ -93,6 +94,7 @@ class TokenDataSearchService
 
   def execute_api_request(parameters)
     uri = URI("#{@base_url}/api/v1/ethereum/tokens/json_search")
+    parameters = parameters.merge(full_json: @full_json) if @full_json
     uri.query = URI.encode_www_form(parameters) if parameters&.any?
     
     retries = 0

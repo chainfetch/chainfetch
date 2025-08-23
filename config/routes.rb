@@ -63,6 +63,13 @@ Rails.application.routes.draw do
           get 'detail'
         end
       end
+      resources :tokens, only: [] do
+        collection do
+          get 'search'
+          get 'summary'
+          get 'detail'
+        end
+      end
     end
     root 'dashboard#index'
   end

@@ -76,7 +76,12 @@ class Api::V1::Ethereum::TokensController < Api::V1::Ethereum::BaseController
   # @response success(200) [Hash{results: Array<Hash{id: Integer, address_hash: String, data: Hash}>, pagination: Hash{total: Integer, limit: Integer, offset: Integer, page: Integer, total_pages: Integer}}]
   # This endpoint provides comprehensive search parameters for tokens based on the provided input.
   def json_search
-    tokens = EthereumToken.where(nil)
+    # When full_json is requested, only return tokens with data
+    if params&.dig(:full_json) == 'true'
+      tokens = EthereumToken.where.not(data: nil)
+    else
+      tokens = EthereumToken.where(nil)
+    end
     
     # Basic info fields - String exact matches
     tokens = tokens.where("data->'info'->>'name' = ?", params[:name]) if params[:name].present?
@@ -161,7 +166,7 @@ class Api::V1::Ethereum::TokensController < Api::V1::Ethereum::BaseController
     total_pages = (total_count.to_f / limit).ceil
     
     render json: {
-      results: paginated_tokens.pluck(:address_hash),
+      results: params&.dig(:full_json) == 'true' ? paginated_tokens : paginated_tokens.pluck(:address_hash),
       pagination: {
         total: total_count,
         limit: limit,
