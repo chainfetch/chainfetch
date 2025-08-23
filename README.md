@@ -56,7 +56,7 @@ sessions                 # User authentication sessions
 Blockchain Data → AI Summary Generation → Text Embedding → Qdrant Storage → Semantic Search
 ```
 
-1. **Text Embedding Service**: Uses Qwen3-Embedding-0.6B model via Ollama
+1. **Text Embedding Service**: Uses Gemini-embedding-001
 2. **Vector Storage**: Qdrant collections for each data type (addresses, blocks, transactions, etc.)
 3. **Similarity Search**: Cosine similarity matching for semantic queries
 

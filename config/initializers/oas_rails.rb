@@ -23,7 +23,7 @@ OasRails.configure do |config|
 
     ## AI-Powered Semantic Search
 
-    **🧠 Advanced Embedding Technology**: Leveraging Qwen3-Embedding-0.6B (Q8_0 quantized) model to transform blockchain data into high-dimensional vector embeddings that capture semantic meaning.
+    **🧠 Advanced Embedding Technology**: Leveraging Gemini-embedding-001 model to transform blockchain data into high-dimensional vector embeddings that capture semantic meaning.
 
     **🎯 Qdrant Vector Database**: Ultra-fast vector similarity search across three specialized collections:
     - **Addresses Collection**: Semantic search across millions of Ethereum addresses
