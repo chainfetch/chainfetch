@@ -38,6 +38,8 @@ Rails.application.routes.draw do
       resources :blocks, only: [] do
         collection do
           get 'search'
+          get 'summary'
+          get 'detail'
         end
       end
     end
