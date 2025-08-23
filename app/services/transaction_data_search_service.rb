@@ -7,11 +7,12 @@ class TransactionDataSearchService
   class ApiError < StandardError; end
   class InvalidQueryError < StandardError; end
 
-  def initialize(query)
+  def initialize(query, full_json: false)
     @query = query
     @api_url = "https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:generateContent"
     @api_key = Rails.application.credentials.gemini_api_key
     @base_url = Rails.env.production? ? 'https://chainfetch.app' : 'http://localhost:3000'
+    @full_json = full_json
   end
 
   def call
@@ -102,7 +103,8 @@ class TransactionDataSearchService
 
   def execute_api_request(parameters)
     uri = URI("#{@base_url}/api/v1/ethereum/transactions/json_search")
-    uri.query = URI.encode_www_form(parameters) if parameters&.any?
+    parameters = parameters.merge(full_json: @full_json)
+    uri.query = URI.encode_www_form(parameters)
     
     retries = 0
     max_retries = 2
@@ -120,6 +122,7 @@ class TransactionDataSearchService
       
       request = Net::HTTP::Get.new(uri)
       request['Content-Type'] = 'application/json'
+      request['Authorization'] = "Bearer #{Ethereum::BaseService::BEARER_TOKEN}"
       
       response = http.request(request)
       

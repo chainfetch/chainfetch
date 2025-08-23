@@ -278,7 +278,12 @@ class Api::V1::Ethereum::TransactionsController < Api::V1::Ethereum::BaseControl
   # @response success(200) [Hash{results: Array<Hash{id: Integer, transaction_hash: String, data: Hash}>, pagination: Hash{total: Integer, limit: Integer, offset: Integer, page: Integer, total_pages: Integer}}]
   # This endpoint provides transaction search with string-based comparisons for scalability (no CAST operations).
   def json_search
-    transactions = EthereumTransaction.where(nil)
+    # When full_json is requested, only return transactions with data
+    if params&.dig(:full_json) == 'true'
+      transactions = EthereumTransaction.where.not(data: nil)
+    else
+      transactions = EthereumTransaction.where(nil)
+    end
 
     # Core transaction fields with min/max ranges using string comparisons
     transactions = transactions.where("data->'info'->>'priority_fee' >= ?", params[:priority_fee_min]) if params[:priority_fee_min].present?
@@ -538,7 +543,7 @@ class Api::V1::Ethereum::TransactionsController < Api::V1::Ethereum::BaseControl
     total_pages = (total_count.to_f / limit).ceil
 
     render json: {
-      results: paginated_transactions.pluck(:transaction_hash),
+      results: params&.dig(:full_json) == 'true' ? paginated_transactions : paginated_transactions.pluck(:transaction_hash),
       pagination: {
         total: total_count,
         limit: limit,

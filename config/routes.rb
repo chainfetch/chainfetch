@@ -49,6 +49,13 @@ Rails.application.routes.draw do
           get 'detail'
         end
       end
+      resources :transactions, only: [] do
+        collection do
+          get 'search'
+          get 'summary'
+          get 'detail'
+        end
+      end
     end
     root 'dashboard#index'
   end
