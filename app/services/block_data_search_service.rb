@@ -7,11 +7,12 @@ class BlockDataSearchService
   class ApiError < StandardError; end
   class InvalidQueryError < StandardError; end
 
-  def initialize(query)
+  def initialize(query, full_json: false)
     @query = query
     @api_url = "https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:generateContent"
     @api_key = Rails.application.credentials.gemini_api_key
     @base_url = Rails.env.production? ? 'https://chainfetch.app' : 'http://localhost:3000'
+    @full_json = full_json
   end
 
   def call
@@ -99,74 +100,80 @@ class BlockDataSearchService
 
   def execute_api_request(parameters)
     uri = URI("#{@base_url}/api/v1/ethereum/blocks/json_search")
-    uri.query = URI.encode_www_form(parameters) if parameters&.any?
+    parameters = parameters.merge(full_json: @full_json)
+    uri.query = URI.encode_www_form(parameters)
     
     retries = 0
     max_retries = 2
     
-    begin
-      http = Net::HTTP.new(uri.host, uri.port)
-      http.open_timeout = 10
-      http.read_timeout = 30
-      http.write_timeout = 10
-      
-      if uri.scheme == 'https'
-        http.use_ssl = true
-        http.verify_mode = OpenSSL::SSL::VERIFY_PEER
-      end
-      
-      request = Net::HTTP::Get.new(uri)
-      request['Content-Type'] = 'application/json'
-      request['Authorization'] = "Bearer #{Ethereum::BaseService::BEARER_TOKEN}"
+    # Use a thread to avoid deadlock when making external requests
+    response = Thread.new do
+      begin
+        http = Net::HTTP.new(uri.host, uri.port)
+        http.open_timeout = 10
+        http.read_timeout = 30
+        http.write_timeout = 10
+        
+        if uri.scheme == 'https'
+          http.use_ssl = true
+          http.verify_mode = OpenSSL::SSL::VERIFY_PEER
+        end
+        
+        request = Net::HTTP::Get.new(uri)
+        request['Content-Type'] = 'application/json'
+        request['Authorization'] = "Bearer #{Ethereum::BaseService::BEARER_TOKEN}"
 
-      response = http.request(request)
-      
-      if response.code == '200'
-        result = JSON.parse(response.body)
-        {
-          count: result.dig("results")&.length || 0,
-          parameters_used: parameters,
-          api_endpoint: uri.to_s,
-          blocks: result.dig("results") || []
-        }
-      else
-        {
-          error: "API request failed with status: #{response.code}",
-          response_body: response.body,
-          parameters_used: parameters,
-          count: 0,
-          blocks: []
-        }
+        http.request(request)
+      rescue Net::ReadTimeout, Net::OpenTimeout, Net::WriteTimeout => e
+        retries += 1
+        if retries <= max_retries
+          Rails.logger.warn "Timeout on attempt #{retries}/#{max_retries} for block search: #{e.message}"
+          sleep(1 * retries)
+          retry
+        else
+          raise e
+        end
       end
-    rescue Net::ReadTimeout, Net::OpenTimeout, Net::WriteTimeout => e
-      retries += 1
-      if retries <= max_retries
-        Rails.logger.warn "Timeout on attempt #{retries}/#{max_retries} for block search: #{e.message}"
-        sleep(1 * retries)
-        retry
-      else
-        {
-          error: "Request timeout after #{max_retries} retries: #{e.message}",
-          parameters_used: parameters,
-          count: 0,
-          blocks: []
-        }
-      end
-    rescue JSON::ParserError => e
+    end.value
+    
+    if response.code == '200'
+      result = JSON.parse(response.body)
       {
-        error: "Failed to parse API response: #{e.message}",
+        count: result.dig("results")&.length || 0,
         parameters_used: parameters,
-        count: 0,
-        blocks: []
+        api_endpoint: uri.to_s,
+        blocks: result.dig("results") || []
       }
-    rescue => e
+    else
       {
-        error: "Request failed: #{e.message}",
+        error: "API request failed with status: #{response.code}",
+        response_body: response.body,
         parameters_used: parameters,
         count: 0,
         blocks: []
       }
     end
+  rescue Net::ReadTimeout, Net::OpenTimeout, Net::WriteTimeout => e
+    {
+      error: "Request timeout after #{max_retries} retries: #{e.message}",
+      parameters_used: parameters,
+      count: 0,
+      blocks: []
+    }
+  rescue JSON::ParserError => e
+    {
+      error: "Failed to parse API response: #{e.message}",
+      parameters_used: parameters,
+      count: 0,
+      blocks: []
+    }
+  rescue => e
+    {
+      error: "Request failed: #{e.message}",
+      parameters_used: parameters,
+      count: 0,
+      blocks: []
+    }
   end
 
   def make_gemini_request(system_prompt, user_prompt)

@@ -1,7 +1,7 @@
 class Api::V1::Ethereum::TokensController < Api::V1::Ethereum::BaseController
 
   # @summary Get token information
-  # @parameter token(path) [!String] The token address or symbol
+  # @parameter token(path) [!String] The token address hash
   # @response success(200) [Hash{info: Hash, transfers: Hash, holders: Hash, counters: Hash, instances: Hash}]
   def show
     token = params[:token]

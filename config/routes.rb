@@ -34,6 +34,13 @@ Rails.application.routes.draw do
     post 'set_solana_key', to: 'token_purchases#set_solana_key'
     post 'buy_token', to: 'token_purchases#create'
     resources :ethereum_alerts
+    namespace :ethereum do
+      resources :blocks, only: [] do
+        collection do
+          get 'search'
+        end
+      end
+    end
     root 'dashboard#index'
   end
 
